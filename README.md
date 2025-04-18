@@ -33,18 +33,18 @@ There are two separate Laravel projects inside this repository:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-team/loyola-travel-system.git
-cd loyola-travel-system
+git clone https://github.com/pcsn99/Travel-Form-Management-System.git
+
 ```
 
-> Replace the above URL with your actual repo link.
+> Make sure you are in the project folder, either Member or Admin, before running any further commands
 
 ---
 
 ### 2. Set Up Each Project Individually
 
 ```bash
-cd member-portal     # or cd admin-portal
+cd member     # or cd admin
 ```
 
 Then run:
@@ -76,8 +76,8 @@ php artisan migrate --seed
 
 This creates:
 - Admin (user_id = 1)
-- Members (user_id = 2 and 3)
-- Sample travel requests and forms
+- Members 
+
 
 ---
 
@@ -119,3 +119,4 @@ php artisan serve
 - Projects share the same MySQL database.
 - You may run both portals on different ports, or switch while testing.
 - Feel free to update layouts, modals, UI components—just don’t remove essential logic!
+- If you have concerns or any backend logic you want added, just message me.
