@@ -3,21 +3,21 @@
 This is a Laravel-based system designed for managing **community travel requests and forms**.
 
 There are two separate Laravel projects inside this repository:
-- `member-portal` → For **Community Members**
-- `admin-portal` → For **Admin Management**
+- `member` → For **Community Members**
+- `admin` → For **Admin Management**
 
 ---
 
-## 🧰 System Features
+## System Features
 
-### 🧑 Member Portal
+### Member Portal
 - Submit travel requests (local or overseas)
 - Fill out dynamic travel forms
 - Upload documents
 - View past requests and forms
 - Notifications and account info
 
-### 🛠 Admin Portal
+### Admin Portal
 - Approve or reject travel requests/forms
 - Manage questions
 - Upload attachments and sign forms
@@ -87,41 +87,35 @@ This creates:
 php artisan serve
 ```
 
-Visit:
-- Member portal → `http://127.0.0.1:8000`
-- Admin portal → `http://127.0.0.1:8000`
-
----
-
-## 👤 Default Test Accounts
+## Default Test Accounts
 
 | Role        | Email             | Password  |
 |-------------|-------------------|-----------|
 | Admin       | admin@example.com | password  |
-| Member 1    | user1@example.com | password  |
-| Member 2    | user2@example.com | password  |
+| Member 1    | member1@example.com | member123  |
+| Member 2    | member2@example.com | member123  |
 
 ---
 
-## ✅ Frontend Development Guide
+## Frontend Development Guide
 
 - You can edit Blade files in:
   - `/resources/views/` (for pages and components)
 - Styling is using:
   - **Bootstrap 5** (CDN)
   - Minimal custom CSS (inline or scoped)
-- Use Laravel Mix or plain Blade for styling.
+
 
 ---
 
-## 🔔 Notifications
+## Notifications
 
 - Notifications show in the 🔔 bell icon.
 - Admin and member systems use Laravel’s built-in notification system.
 
 ---
 
-## ✨ Notes
+## Notes
 - Projects share the same MySQL database.
 - You may run both portals on different ports, or switch while testing.
 - Feel free to update layouts, modals, UI components—just don’t remove essential logic!
