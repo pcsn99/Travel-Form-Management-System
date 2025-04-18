@@ -36,7 +36,7 @@ There are two separate Laravel projects inside this repository:
 git clone https://github.com/pcsn99/Travel-Form-Management-System.git
 
 ```
--MAKE SURE YOU ARE IN YOUR OWN BRANCH. SCROLL DOWN AT THE BOTTOM FOR THE BRANCHING GUIDE
+- MAKE SURE YOU ARE IN YOUR OWN BRANCH. SCROLL DOWN AT THE BOTTOM FOR THE BRANCHING GUIDE
 ---
 > Make sure you are in the project folder, either Member or Admin, before running any further commands
 
