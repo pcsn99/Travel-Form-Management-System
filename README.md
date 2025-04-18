@@ -1,4 +1,4 @@
-# Loyola Travel Request System
+# Travel Form Management System
 
 This is a Laravel-based system designed for managing **community travel requests and forms**.
 
@@ -28,7 +28,7 @@ There are two separate Laravel projects inside this repository:
 
 ---
 
-## 🚀 Getting Started (For Developers)
+# 🚀 Getting Started (For Developers)
 
 ### 1. Clone the Repository
 
@@ -36,7 +36,8 @@ There are two separate Laravel projects inside this repository:
 git clone https://github.com/pcsn99/Travel-Form-Management-System.git
 
 ```
-
+-MAKE SURE YOU ARE IN YOUR OWN BRANCH. SCROLL DOWN AT THE BOTTOM FOR THE BRANCHING GUIDE
+---
 > Make sure you are in the project folder, either Member or Admin, before running any further commands
 
 ---
@@ -208,4 +209,75 @@ You can use it like this in any page:
 | Components  | Reusable pieces of HTML             | `<x-alert>...</x-alert>`           |
 | `@yield`    | Placeholder inside layout            | `@yield('content')`                |
 | `@extends`  | Page inherits from layout            | `@extends('layouts.app')`          |
+
+
+---
+---
+
+##  Git Branching Guide for Front-End Development
+
+This guide explains how to create and manage your own branches when working on the front-end using Git.
+
+---
+
+### Basic Rules
+
+1. **DO NOT work directly on the `main` branch.**
+2. **Each member must work on their own branch.**
+3. **Commit often with clear, descriptive messages.**
+4. **Pull the latest changes before starting new work.**
+5. **Push your changes to GitHub regularly.**
+
+---
+
+### How to Create and Work on Your Own Branch
+
+```bash
+# 1. Make sure you're in the project directory
+cd path/to/your/project
+
+# 2. Pull the latest code from main
+git checkout main
+git pull origin main
+
+# 3. Create your own branch (replace 'your-name-feature' with something relevant)
+git checkout -b your-name-feature
+
+# 4. Start working and commit your changes
+git add .
+git commit -m "Added XYZ section to dashboard"
+
+# 5. Push your branch to GitHub
+git push origin your-name-feature
+```
+
+---
+
+### Why Descriptive Commit Messages Matter
+
+Good commit messages help everyone understand:
+
+- What was changed
+- Why it was changed
+- Who changed it
+
+Examples of good commit messages:
+
+- `"Added modal to edit user account info"`
+- `"Fixed form alignment issue in travel request page"`
+- `"Updated notification bell layout"`
+
+Bad examples:
+
+- `"stuff"`
+- `"fixed"`
+- `"edit"`
+
+---
+
+### Merging Your Work (Advanced Step - ask Paul first)
+
+Before merging into `main`, your work will be reviewed and tested. We’ll use Pull Requests on GitHub to do that.
+
+---
 
