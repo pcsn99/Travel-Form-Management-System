@@ -14,6 +14,8 @@
         </div>
     @endif
 
+    <p>TEST</p>
+
     <form method="POST" action="{{ route("admin.login") }}">
         @csrf
         <div>
