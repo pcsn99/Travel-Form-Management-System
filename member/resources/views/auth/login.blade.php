@@ -118,7 +118,7 @@
         </form>
 
         <p>
-            <a href="{{ route('register') }}">Register</a>
+            DO NOT HAVE AN ACCOUNT? <a href="{{ route('register') }}">REGISTER HERE</a>
         </p>
     </div>
 </body>
