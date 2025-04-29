@@ -7,9 +7,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\TravelRequestController;
 use App\Http\Controllers\FormAttachmentController;
-use App\Http\Controllers\Member\DashboardController;
-use App\Http\Controllers\Member\LocalFormController;
-use App\Http\Controllers\Member\OverseasFormController;
+use App\Http\Controllers\member\DashboardController;
+use App\Http\Controllers\member\LocalFormController;
+use App\Http\Controllers\member\OverseasFormController;
 
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/', [LoginController::class, 'login']);
