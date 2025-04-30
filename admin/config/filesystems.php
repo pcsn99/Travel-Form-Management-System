@@ -60,6 +60,13 @@ return [
             'report' => false,
         ],
 
+        'shared' => [
+            'driver' => 'local',
+            'root' => 'D:/Loyola/shared-laravel-storage', // or whatever your shared path is
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+        ],
+
     ],
 
     /*

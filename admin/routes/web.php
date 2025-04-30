@@ -2,19 +2,21 @@
 
 use Maatwebsite\Excel\Facades\Excel;
 
-use App\Exports\OverseasTravelFormExport;
 use Illuminate\Support\Facades\Route;
 use App\Exports\LocalTravelFormExport;
-use App\Http\Controllers\OverseasFormController;
+use App\Exports\OverseasTravelFormExport;
+
+use App\Http\Controllers\UserFileController;
 use App\Http\Controllers\LocalFormController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\OverseasFormController;
 use App\Http\Controllers\TravelRequestController;
 use App\Http\Controllers\FormAttachmentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SignatureController;
-use App\Http\Controllers\OverseasFormQuestionController;
 use App\Http\Controllers\LocalFormQuestionController;
 use App\Http\Controllers\AdminTravelRequestController;
+use App\Http\Controllers\OverseasFormQuestionController;
 use App\Http\Controllers\Admin\CommunityMemberController;
 use App\Http\Controllers\TravelRequestQuestionController;
 
@@ -27,6 +29,7 @@ Route::middleware('auth.admin')->group(function () {
 
 
     Route::resource('travel-request-questions', TravelRequestQuestionController::class)->except(['show']);
+    Route::get('/user-file/download/{id}', [\App\Http\Controllers\UserFileController::class, 'download'])->name('user-file.download');
 
 
     Route::get('/travel-requests', [TravelRequestController::class, 'index'])->name('travel-requests.index');
@@ -77,6 +80,8 @@ Route::middleware('auth.admin')->group(function () {
     Route::get('/admin/community-members', [CommunityMemberController::class, 'index'])->name('admin.members.index');
     Route::get('/admin/community-members/{id}', [CommunityMemberController::class, 'show'])->name('admin.members.show');
     Route::get('/admin/community-members/{id}/history', [CommunityMemberController::class, 'history'])->name('admin.members.history');
+
+    
 
     
 

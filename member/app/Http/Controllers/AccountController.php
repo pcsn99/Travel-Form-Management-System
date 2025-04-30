@@ -10,8 +10,13 @@ class AccountController extends Controller
     public function show()
     {
         $user = Auth::user();
-        return view('account', compact('user'));
+        return view('account', [
+            'user' => $user,
+            'files' => $user->files->groupBy('type'),
+            'photo' => $user->profilePhoto()->first(),
+        ]);
     }
+    
 
     public function update(Request $request)
     {

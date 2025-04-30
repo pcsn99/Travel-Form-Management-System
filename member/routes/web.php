@@ -10,6 +10,8 @@ use App\Http\Controllers\FormAttachmentController;
 use App\Http\Controllers\Member\DashboardController;
 use App\Http\Controllers\Member\LocalFormController;
 use App\Http\Controllers\Member\OverseasFormController;
+use App\Http\Controllers\UserFileController;
+use App\Http\Controllers\UserProfilePhotoController;
 
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/', [LoginController::class, 'login']);
@@ -56,9 +58,15 @@ Route::middleware('auth.member')->group(function () {
 
     Route::get('/travel-requests/{id}', [TravelRequestController::class, 'show'])->name('travel-requests.show');
 
+    //files and photo
+    Route::post('/upload/profile-photo', [UserProfilePhotoController::class, 'update'])->name('profile-photo.update');
+    Route::post('/upload/file', [UserFileController::class, 'store'])->name('user-file.store');
+    Route::delete('/delete/file/{id}', [UserFileController::class, 'destroy'])->name('user-file.destroy');
 
     Route::get('/account', [AccountController::class, 'show'])->name('account.show');
     Route::patch('/account', [AccountController::class, 'update'])->name('account.update');
+    Route::get('/user-files/{id}/download', [UserFileController::class, 'download'])->name('user-file.download');
+
 
     Route::post('/notifications/{id}/read', function ($id) {
         $notification = auth()->user()->notifications()->findOrFail($id);

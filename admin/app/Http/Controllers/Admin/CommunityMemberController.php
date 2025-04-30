@@ -22,6 +22,7 @@ class CommunityMemberController extends Controller
             'travelRequests' => fn($q) => $q->latest(),
             'localForms.request',
             'OverseasForms.request',
+            'userFiles',  
         ])->findOrFail($id);
     
         $now = Carbon::now();
@@ -55,8 +56,12 @@ class CommunityMemberController extends Controller
             }
         }
     
-        return view('admin.community-members.show', compact('member', 'isInTravel'));
+        
+        $files = $member->userFiles->groupBy('type');
+    
+        return view('admin.community-members.show', compact('member', 'isInTravel', 'files'));
     }
+    
     
 
     public function history($id)

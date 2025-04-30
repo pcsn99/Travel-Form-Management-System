@@ -46,5 +46,16 @@ class User extends Authenticatable
         );
     }
 
+    public function files()
+    {
+        return $this->hasMany(UserFile::class);
+    }
+
+    public function profilePhoto()
+    {
+        return $this->hasOne(UserProfilePhoto::class);
+    }
+
+
     
 }

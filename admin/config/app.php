@@ -2,6 +2,11 @@
 
 return [
 
+    'shared' => [
+        'driver' => 'local',
+        'root' => 'D:/Loyola/var/www/shared-storage',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
