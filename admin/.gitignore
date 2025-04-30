@@ -21,3 +21,10 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+
+/storage/app/public/*
+!/storage/app/public/.gitignore
+
+/public/storage/*
+!/public/storage/.gitignore

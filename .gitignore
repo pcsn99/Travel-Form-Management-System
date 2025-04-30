@@ -1,0 +1,2 @@
+/shared-laravel-storage/public/*
+!/shared-laravel-storage/public/.gitignore
