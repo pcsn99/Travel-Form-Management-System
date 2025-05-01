@@ -10,7 +10,7 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            background-color: #f6f8fa;
+            background-color: #f6f8fa; /* Default background color */
             display: flex;
             flex-direction: column;
             height: 100vh;
@@ -57,18 +57,22 @@
             gap: 10px;
         }
 
-        .sidebar a button {
-            width: 100%;
-            background-color: #3498db;
-            border: none;
-            padding: 10px;
-            color: white;
-            font-size: 14px;
-            border-radius: 4px;
-            text-align: left;
+        .sidebar a img {
+            width: 40px;
+            height: 40px;
         }
 
-        .sidebar a button:hover {
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .sidebar a:hover {
             background-color: #2980b9;
         }
 
@@ -79,16 +83,6 @@
             overflow-y: auto;
         }
 
-        table {
-            width: 100%;
-            background: #fff;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
     </style>
 </head>
 <body>
@@ -97,34 +91,10 @@
     <div class="topbar d-flex justify-content-end align-items-center gap-3">
         <!-- 🔔 Notification Bell -->
         <div class="dropdown position-relative">
-            @php
-                $notifications = Auth::user()->unreadNotifications;
-            @endphp
-
             <button class="btn btn-light dropdown-toggle position-relative" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 🔔
-                @if($notifications->count())
-                    <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">
-                        {{ $notifications->count() }}
-                    </span>
-                @endif
+                <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">3</span>
             </button>
-
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="max-height: 300px; overflow-y: auto;">
-                @forelse($notifications as $notif)
-                    <li class="dropdown-item d-flex justify-content-between align-items-center">
-                        <a href="{{ $notif->data['url'] ?? '#' }}" class="text-decoration-none">
-                            {{ $notif->data['message'] ?? 'New notification' }}
-                        </a>
-                        <form action="{{ route('notifications.read', $notif->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-sm btn-link p-0">✔</button>
-                        </form>
-                    </li>
-                @empty
-                    <li class="dropdown-item text-muted">No new notifications</li>
-                @endforelse
-            </ul>
         </div>
 
         <!-- 🚪 Logout -->
@@ -139,19 +109,38 @@
 
         <!-- 📁 Sidebar -->
         <div class="sidebar">
-            <a href="{{ route('admin.dashboard') }}"><button>🏠 Dashboard</button></a>
-            <a href="{{ route('admin.upload.signature.form') }}"><button>🖋️ Signature</button></a>
-            <a href="{{ route('travel-requests.index', ['status' => 'pending']) }}"><button>📋 Travel Requests</button></a>
-            <a href="{{ route('local-forms.index') }}"><button>📄 Local Travel Forms</button></a>
-            <a href="{{ route('Overseas-forms.index') }}"><button>🌍 Overseas Travel Forms</button></a>
-            <a href="{{ route('admin.members.index') }}"><button>👥 Community Members</button></a>
+            <a href="{{ route('admin.dashboard') }}">
+                <img src="{{ asset('icons/Dashboard.png') }}" alt="Dashboard"> Dashboard
+            </a>
+            <a href="{{ route('admin.upload.signature.form') }}">
+                <img src="{{ asset('icons/Upload.png') }}" alt="Signature"> Uploads
+            </a>
+            <a href="{{ route('travel-requests.index', ['status' => 'pending']) }}">
+                <img src="{{ asset('icons/TR.png') }}" alt="Travel Requests"> Travel Requests
+            </a>
+            <a href="{{ route('local-forms.index') }}">
+                <img src="{{ asset('icons/LTF.png') }}" alt="Local Travel Forms"> Local Travel Forms
+            </a>
+            <a href="{{ route('Overseas-forms.index') }}">
+                <img src="{{ asset('icons/OTF.png') }}" alt="Overseas Travel Forms"> Overseas Travel Forms
+            </a>
+            <a href="{{ route('admin.members.index') }}">
+                <img src="{{ asset('icons/Profile.png') }}" alt="Community Members"> Community Members
+            </a>
 
-            <!-- ⚙️ Settings collapsible section -->
-            <button onclick="toggleSettings()" style="background-color: #1abc9c;">⚙️ Settings ▾</button>
+            <a href="#" onclick="toggleSettings()">
+                <img src="{{ asset('icons/Settings.png') }}" alt="Settings"> Settings ▾
+            </a>
             <div id="settingsMenu" style="display: none; margin-left: 10px;">
-                <a href="{{ route('travel-request-questions.index') }}"><button style="background-color:#16a085;">📝 Travel Request Qs</button></a>
-                <a href="{{ route('local-form-questions.index') }}"><button style="background-color:#16a085;">📄 Local Form Qs</button></a>
-                <a href="{{ route('Overseas-form-questions.index') }}"><button style="background-color:#16a085;">🌐 Overseas Form Qs</button></a>
+                <a href="{{ route('travel-request-questions.index') }}">
+                    <img src="{{ asset('icons/Settings.png') }}" alt="Travel Request Qs"> Travel Request Qs
+                </a>
+                <a href="{{ route('local-form-questions.index') }}">
+                    <img src="{{ asset('icons/Settings.png') }}" alt="Local Form Qs"> Local Form Qs
+                </a>
+                <a href="{{ route('Overseas-form-questions.index') }}">
+                    <img src="{{ asset('icons/Settings.png') }}" alt="Overseas Form Qs"> Overseas Form Qs
+                </a>
             </div>
         </div>
 
@@ -160,10 +149,6 @@
             @yield('content')
         </div>
     </div>
-
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         function toggleSettings() {

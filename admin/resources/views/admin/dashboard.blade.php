@@ -8,7 +8,7 @@
 
 
     {{-- CALENDAR --}}
-    <h2 style="margin-top:40px;">🗓️ Travel Calendar</h2>
+    <h2 style="margin-top:40px;">Travel Calendar</h2>
     <div id="travel-calendar" style="max-width: 1000px; margin: auto; border: 1px solid #ccc; padding: 10px;"></div>
 
     {{-- PENDING REQUESTS --}}
