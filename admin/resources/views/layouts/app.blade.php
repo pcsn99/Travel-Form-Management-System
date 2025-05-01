@@ -3,14 +3,13 @@
 <head>
     <title>Admin Panel - @yield('title', 'Dashboard')</title>
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            background-color: #f6f8fa; /* Default background color */
+            background-color: #f6f8fa;
             display: flex;
             flex-direction: column;
             height: 100vh;
@@ -87,9 +86,9 @@
 </head>
 <body>
 
-    <!-- 🔝 Topbar -->
+  
     <div class="topbar d-flex justify-content-end align-items-center gap-3">
-        <!-- 🔔 Notification Bell -->
+        
         <div class="dropdown position-relative">
             <button class="btn btn-light dropdown-toggle position-relative" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 🔔
@@ -97,7 +96,7 @@
             </button>
         </div>
 
-        <!-- 🚪 Logout -->
+   
         <form action="{{ route('logout') }}" method="POST" class="logout-form">
             @csrf
             <button type="submit" class="btn btn-sm btn-danger">🚪 Logout</button>
