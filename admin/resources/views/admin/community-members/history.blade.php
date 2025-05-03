@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2>📜 Travel History: {{ $member->name }}</h2>
+    <h2>Travel History: {{ $member->name }}</h2>
 
-    <h3>📝 Travel Requests</h3>
+    <h3>Travel Requests</h3>
     @if($travelRequests->count())
         <table id="requests-table" class="display" style="width:100%">
             <thead>
