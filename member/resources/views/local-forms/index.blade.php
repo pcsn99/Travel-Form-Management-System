@@ -122,7 +122,7 @@
         </div>
     </div>
 
-    <a href="{{ route('dashboard') }}" class="btn btn-secondary">⬅ Back to Dashboard</a>
+{{-- <a href="{{ route('dashboard') }}" class="btn btn-secondary">⬅ Back to Dashboard</a> --}}
 </div>
 
 @endsection
