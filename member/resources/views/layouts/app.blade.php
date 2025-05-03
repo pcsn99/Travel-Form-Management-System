@@ -34,11 +34,11 @@
             z-index: 1000;
         }
 
-        /* ✅ Notification Bell - Smaller & Beside Logout */
+        
         .topbar-right {
             display: flex;
             align-items: center;
-            gap: 10px; /* ✅ Creates space between bell and logout */
+            gap: 10px;
         }
 
         .notif-container {
@@ -48,7 +48,7 @@
         }
 
         .notif-bell {
-            width: 25px; /* ✅ Made the icon even smaller */
+            width: 25px;
             height: 25px;
             cursor: pointer;
         }
@@ -60,7 +60,7 @@
             right: -3px;
             background-color: red;
             color: white;
-            font-size: 9px; /* ✅ Reduced text size */
+            font-size: 9px;
             font-weight: bold;
             padding: 2px 5px;
             border-radius: 50%;
@@ -79,7 +79,7 @@
 
         /* ✅ Sidebar */
         .sidebar {
-            width: 255px;
+            width: 315x;
             background-color: #17224D;
             color: white;
             padding: 20px 10px;
@@ -192,9 +192,14 @@
             <span>Create Travel Request</span>
         </a>
 
+        <a href="{{ route('member.local-forms.all') }}">
+            <img src="{{ asset('icons/LF.png') }}" alt="Local Forms Icon" onerror="this.src='{{ asset('icons/placeholder.png') }}'">
+            <span>Local Forms</span>
+        </a>
+
         <a href="{{ route('member.Overseas-forms.all') }}">
             <img src="{{ asset('icons/OTF.png') }}" alt="Overseas Forms Icon">
-            <span>View All Overseas Forms</span>
+            <span>Overseas Forms</span>
         </a>
 
         <a href="#">
