@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Add Local Form Question')
+@section('title', 'Add Overseas Form Question')
 
 @section('styles')
 <style>
-    
+
     body {
         background-color: #f0f2f5;
         color: #17224D;
@@ -12,13 +12,14 @@
         padding: 40px;
     }
 
+    
     .container-custom {
         max-width: 800px;
         margin: auto;
         padding-top: 20px;
     }
 
-    
+
     .card {
         border-radius: 12px;
         box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
@@ -37,7 +38,6 @@
         text-align: center;
     }
 
-  
     .form-group {
         margin-bottom: 15px;
     }
@@ -78,6 +78,7 @@
         background-color: #1f2f5f;
     }
 
+   
     .back-btn {
         background-color: #6c757d;
         color: white;
@@ -101,12 +102,12 @@
 @section('content')
 
 <div class="container-custom">
-    <!-- ✅ Add Local Form Question -->
+    
     <div class="card">
-        <div class="card-header">+ Add Local Form Question</div>
+        <div class="card-header">+ Add Overseas Form Question</div>
         <div class="card-body">
             
-            <form method="POST" action="{{ route('local-form-questions.store') }}">
+            <form method="POST" action="{{ route('Overseas-form-questions.store') }}">
                 @csrf
 
                 <div class="form-group">
@@ -127,7 +128,7 @@
                     <textarea name="choices" rows="5" placeholder="Option 1&#10;Option 2&#10;Option 3"></textarea>
                     <div class="checkbox-container">
                         <label>
-                            <input type="checkbox" name="allow_other"> Allow "Other (please specify)"
+                            <input type="checkbox" name="allow_other" value="1"> Allow "Other (please specify)"
                         </label>
                     </div>
                 </div>
@@ -135,7 +136,7 @@
                 <button type="submit">Save Question</button>
             </form>
 
-            <a href="{{ route('local-form-questions.index') }}" class="back-btn">Back</a>
+            <a href="{{ route('Overseas-form-questions.index') }}" class="back-btn">Back</a>
         </div>
     </div>
 </div>

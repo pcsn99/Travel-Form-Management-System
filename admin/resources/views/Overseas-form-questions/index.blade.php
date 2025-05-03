@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Travel Request Questions')
+@section('title', 'Overseas Form Questions')
 
 @section('styles')
 <style>
@@ -12,13 +12,13 @@
         padding: 40px;
     }
 
+   
     .container-custom {
         max-width: 800px;
         margin: auto;
         padding-top: 20px;
     }
 
-   
     .card {
         border-radius: 12px;
         box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
@@ -37,7 +37,7 @@
         text-align: center;
     }
 
- 
+   
     .success-message {
         color: green;
         font-weight: bold;
@@ -45,7 +45,7 @@
         margin-bottom: 15px;
     }
 
-
+    
     .add-btn {
         background-color: #17224D;
         color: white;
@@ -64,7 +64,6 @@
         background-color: #1f2f5f;
     }
 
-    
     .table {
         width: 100%;
         border-radius: 8px;
@@ -80,10 +79,11 @@
     .table th, .table td {
         padding: 12px;
         border: 1px solid #17224D;
+        text-align: center;
     }
 
-    
-    .edit-btn {
+  
+    .edit-btn, .disable-btn, .reorder-btn {
         background-color: #2980b9;
         color: white;
         padding: 8px 12px;
@@ -91,6 +91,8 @@
         font-size: 14px;
         text-decoration: none;
         display: inline-block;
+        border: none;
+        cursor: pointer;
     }
 
     .edit-btn:hover {
@@ -99,20 +101,22 @@
 
     .disable-btn {
         background-color: red;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 6px;
-        font-size: 14px;
-        border: none;
-        cursor: pointer;
     }
 
     .disable-btn:hover {
         background-color: darkred;
     }
 
+    .reorder-btn {
+        background-color: #27AE60;
+    }
+
+    .reorder-btn:hover {
+        background-color: #1D8348;
+    }
+
     .disabled-text {
-        color: rgb(255, 251, 251);
+        color: gray;
     }
 </style>
 @endsection
@@ -120,44 +124,54 @@
 @section('content')
 
 <div class="container-custom">
-
+ 
     <div class="card">
-        <div class="card-header">Travel Request Questions</div>
+        <div class="card-header">Overseas Form Questions</div>
         <div class="card-body">
             
             @if(session('success'))
                 <p class="success-message">{{ session('success') }}</p>
             @endif
 
-            <a href="{{ route('travel-request-questions.create') }}" class="add-btn">+ Add New Question</a>
+            <a href="{{ route('Overseas-form-questions.create') }}" class="add-btn">+ Add New Question</a>
 
+            
             <table class="table">
                 <thead>
                     <tr>
                         <th>Question</th>
                         <th>Status</th>
                         <th>Actions</th>
+                        <th>Reorder</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($questions as $q)
+                        @if($q->status === 'active')
                         <tr>
                             <td>{{ $q->question }}</td>
                             <td>{{ ucfirst($q->status) }}</td>
                             <td>
-                                <a href="{{ route('travel-request-questions.edit', $q->id) }}" class="edit-btn">Edit</a>
+                                <a href="{{ route('Overseas-form-questions.edit', $q->id) }}" class="edit-btn">Edit</a>
 
-                                @if($q->status === 'active')
-                                <form action="{{ route('travel-request-questions.destroy', $q->id) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('Overseas-form-questions.destroy', $q->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="disable-btn" onclick="return confirm('Disable this question?')">Disable</button>
                                 </form>
-                                @else
-                                <span class="disabled-text">(Disabled)</span>
-                                @endif
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ route('Overseas-form-questions.move', [$q->id, 'up']) }}" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="reorder-btn">Move Up</button>
+                                </form>
+                                <form method="POST" action="{{ route('Overseas-form-questions.move', [$q->id, 'down']) }}" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="reorder-btn">Move Down</button>
+                                </form>
                             </td>
                         </tr>
+                        @endif
                     @endforeach
                 </tbody>
             </table>
