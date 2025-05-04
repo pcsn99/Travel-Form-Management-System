@@ -4,7 +4,7 @@
 
 @section('styles')
 <style>
- 
+   
     body {
         background-color: #f0f2f5;
         color: #17224D;
@@ -12,12 +12,14 @@
         padding: 40px;
     }
 
+   
     .container-custom {
         max-width: 800px;
         margin: auto;
         padding-top: 20px;
     }
 
+    
     .card {
         border-radius: 12px;
         box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
@@ -36,12 +38,17 @@
         text-align: center;
     }
 
+ 
     .form-group {
-        margin-bottom: 15px;
+        display: flex;
+        align-items: center; 
+        justify-content: space-between;
+        width: 100%;
+        gap: 15px; 
     }
 
     input[type="file"] {
-        width: 100%;
+        flex-grow: 1; 
         padding: 12px;
         border: 1px solid #17224D;
         border-radius: 6px;
@@ -55,10 +62,9 @@
         font-weight: bold;
         padding: 12px;
         border-radius: 6px;
-        width: 100%;
         border: none;
-        margin-top: 15px;
         cursor: pointer;
+        flex-shrink: 0; 
     }
 
     button:hover {
@@ -83,7 +89,7 @@
         background-color: #5a6268;
     }
 
-    
+
     .signature-preview {
         height: 80px;
         border: 2px solid #17224D;
@@ -97,6 +103,7 @@
 @section('content')
 
 <div class="container-custom">
+   
     <div class="card">
         <div class="card-header">Upload Your Signature</div>
         <div class="card-body">
@@ -116,12 +123,11 @@
                 <div class="form-group">
                     <label><strong>Select Signature Image (PNG, JPG):</strong></label>
                     <input type="file" name="signature" required>
+                    <button type="submit">Upload / Replace </button>
                 </div>
-
-                <button type="submit">Upload / Replace Signature</button>
             </form>
 
-            <a href="{{ route('admin.dashboard') }}" class="back-btn">⬅Back to Dashboard</a>
+            <a href="{{ route('admin.dashboard') }}" class="back-btn">⬅ Back to Dashboard</a>
         </div>
     </div>
 </div>
