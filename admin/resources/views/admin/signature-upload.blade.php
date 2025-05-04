@@ -127,7 +127,7 @@
                 </div>
             </form>
 
-            <a href="{{ route('admin.dashboard') }}" class="back-btn">⬅ Back to Dashboard</a>
+            <!--a href="{{ route('admin.dashboard') }}" class="back-btn">⬅ Back to Dashboard</a-->
         </div>
     </div>
 </div>
