@@ -1,111 +1,231 @@
 @extends('layouts.app')
 
+@section('title', 'Travel History: {{ $member->name }}')
+
+@section('styles')
+<style>
+  
+    body {
+        background-color: #f0f2f5;
+        color: #17224D;
+        font-family: 'Inter', sans-serif;
+        padding: 40px;
+    }
+
+    .container-custom {
+        max-width: 1000px;
+        margin: auto;
+        padding-top: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+
+    h3 {
+        font-size: 20px;
+        font-weight: bold;
+        color: #17224D;
+        margin-bottom: 15px;
+    }
+
+    .card {
+        border-radius: 12px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+        background: rgba(255, 255, 255, 0.95);
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+
+    .card-header {
+        background-color: #17224D;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 6px 6px 0 0;
+        padding: 15px;
+        text-align: center;
+    }
+
+   
+    table {
+        width: 100%;
+        border-radius: 8px;
+        border-collapse: collapse;
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    table th, table td {
+        padding: 12px;
+        border: 1px solid #17224D;
+        text-align: center;
+    }
+
+    table th {
+        background-color: #17224D;
+        color: white;
+        font-size: 16px;
+    }
+
+    .back-btn {
+        display: block;
+        background-color: #6c757d;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 12px;
+        border-radius: 6px;
+        text-align: center;
+        text-decoration: none;
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    .back-btn:hover {
+        background-color: #5a6268;
+    }
+
+ 
+    a {
+        color: #2980b9;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    @media screen and (max-width: 768px) {
+        table th, table td {
+            font-size: 14px;
+            padding: 8px;
+        }
+    }
+</style>
+@endsection
+
 @section('content')
-    <h2>📜 Travel History: {{ $member->name }}</h2>
 
-    <h3>📝 Travel Requests</h3>
-    @if($travelRequests->count())
-        <table id="requests-table" class="display" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>View</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($travelRequests as $request)
-                    <tr>
-                        <td>{{ $request->created_at->format('Y-m-d') }}</td>
-                        <td>{{ ucfirst($request->type) }}</td>
-                        <td>{{ ucfirst($request->status) }}</td>
-                        <td><a href="{{ route('travel-requests.show', $request->id) }}">🔍</a></td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <p><i>No travel requests.</i></p>
-    @endif
+<div class="container-custom">
+    <h2>Travel History: {{ $member->name }}</h2>
 
-    <h3 style="margin-top: 30px;">📋 Local Travel Forms</h3>
-    @if($localForms->count())
-        <table id="local-forms-table" class="display" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Departure</th>
-                    <th>Return</th>
-                    <th>View</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($localForms as $form)
-                    <tr>
-                        <td>{{ $form->created_at->format('Y-m-d') }}</td>
-                        <td>{{ ucfirst($form->status) }}</td>
-                        <td>{{ $form->request->intended_departure_date ?? '—' }}</td>
-                        <td>{{ $form->request->intended_return_date ?? '—' }}</td>
-                        <td><a href="{{ route('local-forms.show', $form->id) }}">🔍</a></td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <p><i>No local travel forms.</i></p>
-    @endif
+    
+    <div class="card">
+        <div class="card-header">Travel Requests</div>
+        <div class="card-body">
+            @if($travelRequests->count())
+                <table id="requests-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>View</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($travelRequests as $request)
+                            <tr>
+                                <td>{{ $request->created_at->format('Y-m-d') }}</td>
+                                <td>{{ ucfirst($request->type) }}</td>
+                                <td>{{ ucfirst($request->status) }}</td>
+                                <td><a href="{{ route('travel-requests.show', $request->id) }}">🔍</a></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <p><i>No travel requests.</i></p>
+            @endif
+        </div>
+    </div>
 
-    <h3 style="margin-top: 30px;">🌐 Overseas Travel Forms</h3>
-    @if($OverseasForms->count())
-        <table id="Overseas-forms-table" class="display" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Departure</th>
-                    <th>Return</th>
-                    <th>View</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($OverseasForms as $form)
-                    <tr>
-                        <td>{{ $form->created_at->format('Y-m-d') }}</td>
-                        <td>{{ ucfirst($form->status) }}</td>
-                        <td>{{ $form->request->intended_departure_date ?? '—' }}</td>
-                        <td>{{ $form->request->intended_return_date ?? '—' }}</td>
-                        <td><a href="{{ route('Overseas-forms.show', $form->id) }}">🔍</a></td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <p><i>No Overseas travel forms.</i></p>
-    @endif
+
+    <div class="card">
+        <div class="card-header">Local Travel Forms</div>
+        <div class="card-body">
+            @if($localForms->count())
+                <table id="local-forms-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Departure</th>
+                            <th>Return</th>
+                            <th>View</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($localForms as $form)
+                            <tr>
+                                <td>{{ $form->created_at->format('Y-m-d') }}</td>
+                                <td>{{ ucfirst($form->status) }}</td>
+                                <td>{{ $form->request->intended_departure_date ?? '—' }}</td>
+                                <td>{{ $form->request->intended_return_date ?? '—' }}</td>
+                                <td><a href="{{ route('local-forms.show', $form->id) }}">🔍</a></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <p><i>No local travel forms.</i></p>
+            @endif
+        </div>
+    </div>
+
+ 
+    <div class="card">
+        <div class="card-header">Overseas Travel Forms</div>
+        <div class="card-body">
+            @if($OverseasForms->count())
+                <table id="Overseas-forms-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Departure</th>
+                            <th>Return</th>
+                            <th>View</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($OverseasForms as $form)
+                            <tr>
+                                <td>{{ $form->created_at->format('Y-m-d') }}</td>
+                                <td>{{ ucfirst($form->status) }}</td>
+                                <td>{{ $form->request->intended_departure_date ?? '—' }}</td>
+                                <td>{{ $form->request->intended_return_date ?? '—' }}</td>
+                                <td><a href="{{ route('Overseas-forms.show', $form->id) }}">🔍</a></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <p><i>No Overseas travel forms.</i></p>
+            @endif
+        </div>
+    </div>
 
     <br>
-    <a href="{{ route('admin.members.show', $member->id) }}">⬅ Back to Profile</a>
+    <a href="{{ route('admin.members.show', $member->id) }}" class="back-btn">⬅ Back to Profile</a>
 
-
-
-    <!-- DataTables CDN -->
+  
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script>
         $(document).ready(function () {
-            if ($('#requests-table').length) {
-                $('#requests-table').DataTable({ order: [[0, 'desc']] });
-            }
-            if ($('#local-forms-table').length) {
-                $('#local-forms-table').DataTable({ order: [[0, 'desc']] });
-            }
-            if ($('#Overseas-forms-table').length) {
-                $('#Overseas-forms-table').DataTable({ order: [[0, 'desc']] });
-            }
+            $('#requests-table').DataTable({ order: [[0, 'desc']] });
+            $('#local-forms-table').DataTable({ order: [[0, 'desc']] });
+            $('#Overseas-forms-table').DataTable({ order: [[0, 'desc']] });
         });
     </script>
+</div>
+
 @endsection

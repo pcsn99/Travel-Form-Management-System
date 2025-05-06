@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\member;
+namespace App\Http\Controllers\Member;
 
 use Carbon\Carbon;
 use App\Models\TravelRequest;

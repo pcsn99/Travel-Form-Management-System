@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'All Local Travel Forms')
+@section('title', 'All Overseas Travel Forms')
 
 @section('styles')
 <style>
@@ -23,11 +23,12 @@
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
         border-radius: 8px;
     }
+
+
     .container-custom {
         max-width: 900px;
         margin: auto;
     }
-
 
     .card {
         border-radius: 12px;
@@ -73,6 +74,15 @@
         border-radius: 6px;
     }
 
+    .btn-warning {
+        background-color: #f39c12;
+        border: none;
+        padding: 8px 12px;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 6px;
+    }
+
     .btn-secondary {
         background-color: #6c757d;
         border: none;
@@ -88,41 +98,52 @@
 @section('content')
 
 <div class="container-custom">
-    <div class="dashboard-header">All Local Travel Forms</div>
+    
+    <div class="dashboard-header">All Overseas Travel Forms</div>
+
+
     <div class="card">
         <div class="card-body">
-            <table class="table mt-3">
-                <thead>
-                    <tr>
-                        <th>Travel Dates</th>
-                        <th>Event</th>
-                        <th>Purpose</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($forms as $form)
+            @if($forms->count())
+                <table class="table mt-3">
+                    <thead>
                         <tr>
-                            <td>{{ $form->request->intended_departure_date }} to {{ $form->request->intended_return_date }}</td>
-                            <td>{{ $form->request->event }}</td>
-                            <td>{{ $form->request->purpose }}</td>
-                            <td><span class="badge bg-info text-dark">{{ ucfirst($form->status) }}</span></td>
-                            <td>
-                                <a href="{{ route('member.local-forms.show', $form->id) }}" class="btn btn-primary">View</a>
-                            </td>
+                            <th>Departure</th>
+                            <th>Return</th>
+                            <th>Event</th>
+                            <th>Purpose</th>
+                            <th>Status</th>
+                            <th>Admin Comment</th>
+                            <th>Action</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center">No local travel forms found.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach($forms as $form)
+                            <tr>
+                                <td>{{ $form->request->intended_departure_date }}</td>
+                                <td>{{ $form->request->intended_return_date }}</td>
+                                <td>{{ $form->request->event }}</td>
+                                <td>{{ $form->request->purpose }}</td>
+                                <td><span class="badge bg-info text-dark">{{ ucfirst($form->status) }}</span></td>
+                                <td>{{ $form->admin_comment ?: '-' }}</td>
+                                <td>
+                                    @if($form->status === 'submitted')
+                                        <a href="{{ route('member.Overseas-forms.edit', $form->id) }}" class="btn btn-warning">Edit</a>
+                                    @endif
+                                    <a href="{{ route('member.Overseas-forms.show', $form->id) }}" class="btn btn-primary">View</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <p class="text-center">No overseas travel forms found.</p>
+            @endif
         </div>
     </div>
 
 {{-- <a href="{{ route('dashboard') }}" class="btn btn-secondary">⬅ Back to Dashboard</a> --}}
+
 </div>
 
 @endsection

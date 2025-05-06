@@ -1,17 +1,116 @@
 @extends('layouts.app')
 
-@section('content')
-    <h2>Add Travel Request Question</h2>
+@section('title', 'Add Travel Request Question')
 
-    <form method="POST" action="{{ route('travel-request-questions.store') }}">
-        @csrf
-        <div>
-            <label>Question:</label>
-            <input type="text" name="question" required>
-        </div>
-        <br>
-        <button type="submit">💾 Save</button>
-        <a href="{{ route('travel-request-questions.index') }}">🔙 Back</a>
-    </form>
+@section('styles')
+<style>
+    
+    body {
+        background-color: #f0f2f5;
+        color: #17224D;
+        font-family: 'Inter', sans-serif;
+        padding: 40px;
+    }
+
+ 
+    .container-custom {
+        max-width: 800px;
+        margin: auto;
+        padding-top: 20px;
+    }
+
+    .card {
+        border-radius: 12px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        margin-bottom: 50px;
+    }
+
+    .card-header {
+        background-color: #17224D;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 6px 6px 0 0;
+        padding: 15px;
+        text-align: center;
+    }
+
+   
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #17224D;
+        border-radius: 6px;
+        background: #f8f9fa;
+        font-size: 16px;
+    }
+
+    button {
+        background-color: #17224D;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 12px;
+        border-radius: 6px;
+        width: 100%;
+        border: none;
+        margin-top: 15px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #1f2f5f;
+    }
+
+
+    .back-btn {
+        background-color: #6c757d;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 12px;
+        border-radius: 6px;
+        display: block;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        margin-top: 20px;
+    }
+
+    .back-btn:hover {
+        background-color: #5a6268;
+    }
+</style>
 @endsection
 
+@section('content')
+
+<div class="container-custom">
+    <!-- ✅ Add Travel Request Question -->
+    <div class="card">
+        <div class="card-header">+ Add Travel Request Question</div>
+        <div class="card-body">
+            
+            <form method="POST" action="{{ route('travel-request-questions.store') }}">
+                @csrf
+
+                <div class="form-group">
+                    <label><strong>Enter Question:</strong></label>
+                    <input type="text" name="question" required>
+                </div>
+
+                <button type="submit">Save Question</button>
+            </form>
+
+            <a href="{{ route('travel-request-questions.index') }}" class="back-btn">Back</a>
+        </div>
+    </div>
+</div>
+
+@endsection

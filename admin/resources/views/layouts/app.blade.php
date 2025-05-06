@@ -1,74 +1,131 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Admin Panel - @yield('title', 'Dashboard')</title>
+    <meta charset="UTF-8">
+    <title>@yield('title', 'Admin Panel')</title>
 
-    <!-- Bootstrap CSS -->
+    <!-- ✅ CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- ✅ Bootstrap & Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f6f8fa;
+            background-color: #f0f2f5;
+            padding-top: 60px;
             display: flex;
-            flex-direction: column;
-            height: 100vh;
         }
 
+       
         .topbar {
-            background-color: #2c3e50;
+            background-color: #17224D;
             padding: 10px 20px;
             color: white;
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 50px;
+            z-index: 1000;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notif-container {
+            display: flex;
+            align-items: center;
+            position: relative;
         }
 
         .notif-bell {
-            font-size: 24px;
-            margin-right: 20px;
+            width: 25px;
+            height: 25px;
             cursor: pointer;
         }
 
-        .logout-form button {
-            background-color: #e74c3c;
+     
+        .notif-badge {
+            position: absolute;
+            top: -3px;
+            right: -6px;
+            background-color: red;
             color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 3px 6px;
+            border-radius: 50%;
+        }
+
+        .logout-btn {
+            background: none;
             border: none;
-            padding: 6px 12px;
-            font-size: 14px;
-            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
             cursor: pointer;
+            padding: 5px 10px;
+            transition: color 0.3s ease;
         }
 
-        .main {
-            flex: 1;
-            display: flex;
-            height: 100%;
+        .logout-btn:hover {
+            color: #f8f9fa;
         }
 
+        
         .sidebar {
-            width: 220px;
-            background-color: #34495e;
+            width: 300px;
+            background-color: #17224D;
             color: white;
             padding: 20px 10px;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            height: calc(100vh - 60px);
+            transition: width 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            width: 60px;
+        }
+
+        .sidebar a {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            padding: 12px;
             gap: 10px;
-        }
-
-        .sidebar a button {
-            width: 100%;
-            background-color: #3498db;
-            border: none;
-            padding: 10px;
+            text-decoration: none;
             color: white;
-            font-size: 14px;
             border-radius: 4px;
-            text-align: left;
+            white-space: nowrap;
+            transition: all 0.3s ease;
         }
 
-        .sidebar a button:hover {
+        .sidebar.collapsed a {
+            justify-content: center;
+        }
+
+        .sidebar a img {
+            width: 35px;
+            height: 35px;
+            transition: all 0.3s ease;
+        }
+
+    
+        .sidebar.collapsed a span {
+            display: none;
+        }
+
+        .sidebar a:hover {
             background-color: #2980b9;
         }
 
@@ -76,101 +133,121 @@
             flex: 1;
             padding: 30px;
             background-color: white;
-            overflow-y: auto;
+            margin-left: 240px;
+            transition: margin-left 0.3s ease;
         }
 
-        table {
-            width: 100%;
-            background: #fff;
-            border-collapse: collapse;
+        .content.full {
+            margin-left: 80px;
         }
 
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
+        .toggle-btn {
+            cursor: pointer;
+            font-size: 20px;
+            background: none;
+            border: none;
+            color: white;
+            padding: 5px 10px;
         }
     </style>
+
+    @yield('styles')
 </head>
 <body>
 
-    <!-- 🔝 Topbar -->
-    <div class="topbar d-flex justify-content-end align-items-center gap-3">
-        <!-- 🔔 Notification Bell -->
-        <div class="dropdown position-relative">
-            @php
-                $notifications = Auth::user()->unreadNotifications;
-            @endphp
+    <div class="topbar">
+        
+        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
-            <button class="btn btn-light dropdown-toggle position-relative" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                🔔
-                @if($notifications->count())
-                    <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">
-                        {{ $notifications->count() }}
-                    </span>
-                @endif
-            </button>
+        <div class="topbar-right">
+            
+            <div class="notif-container">
+                <img src="{{ asset('icons/Bell2.png') }}" alt="Notifications" class="notif-bell" onerror="this.style.display='none'">
+                <span class="notif-badge">3</span>
+            </div>
 
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="max-height: 300px; overflow-y: auto;">
-                @forelse($notifications as $notif)
-                    <li class="dropdown-item d-flex justify-content-between align-items-center">
-                        <a href="{{ $notif->data['url'] ?? '#' }}" class="text-decoration-none">
-                            {{ $notif->data['message'] ?? 'New notification' }}
-                        </a>
-                        <form action="{{ route('notifications.read', $notif->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-sm btn-link p-0">✔</button>
-                        </form>
-                    </li>
-                @empty
-                    <li class="dropdown-item text-muted">No new notifications</li>
-                @endforelse
-            </ul>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
         </div>
-
-        <!-- 🚪 Logout -->
-        <form action="{{ route('logout') }}" method="POST" class="logout-form">
-            @csrf
-            <button type="submit" class="btn btn-sm btn-danger">🚪 Logout</button>
-        </form>
     </div>
 
-    <!-- ⚙️ Main layout -->
-    <div class="main">
+    <div class="sidebar" id="sidebar">
+        <a href="{{ route('admin.dashboard') }}">
+            <img src="{{ asset('icons/Dashboard.png') }}" alt="Dashboard">
+            <span>Dashboard</span>
+        </a>
 
-        <!-- 📁 Sidebar -->
-        <div class="sidebar">
-            <a href="{{ route('admin.dashboard') }}"><button>🏠 Dashboard</button></a>
-            <a href="{{ route('admin.upload.signature.form') }}"><button>🖋️ Signature</button></a>
-            <a href="{{ route('travel-requests.index', ['status' => 'pending']) }}"><button>📋 Travel Requests</button></a>
-            <a href="{{ route('local-forms.index') }}"><button>📄 Local Travel Forms</button></a>
-            <a href="{{ route('Overseas-forms.index') }}"><button>🌍 Overseas Travel Forms</button></a>
-            <a href="{{ route('admin.members.index') }}"><button>👥 Community Members</button></a>
+        <a href="{{ route('admin.upload.signature.form') }}">
+            <img src="{{ asset('icons/Upload.png') }}" alt="Uploads">
+            <span>Uploads</span>
+        </a>
 
-            <!-- ⚙️ Settings collapsible section -->
-            <button onclick="toggleSettings()" style="background-color: #1abc9c;">⚙️ Settings ▾</button>
-            <div id="settingsMenu" style="display: none; margin-left: 10px;">
-                <a href="{{ route('travel-request-questions.index') }}"><button style="background-color:#16a085;">📝 Travel Request Qs</button></a>
-                <a href="{{ route('local-form-questions.index') }}"><button style="background-color:#16a085;">📄 Local Form Qs</button></a>
-                <a href="{{ route('Overseas-form-questions.index') }}"><button style="background-color:#16a085;">🌐 Overseas Form Qs</button></a>
-            </div>
+        <a href="{{ route('travel-requests.index', ['status' => 'pending']) }}">
+            <img src="{{ asset('icons/TR.png') }}" alt="Travel Requests">
+            <span>Travel Requests</span>
+        </a>
+
+        <a href="{{ route('local-forms.index') }}">
+            <img src="{{ asset('icons/LTF.png') }}" alt="Local Travel Forms">
+            <span>Local Travel Forms</span>
+        </a>
+
+        <a href="{{ route('Overseas-forms.index') }}">
+            <img src="{{ asset('icons/OTF.png') }}" alt="Overseas Travel Forms">
+            <span>Overseas Travel Forms</span>
+        </a>
+
+        <a href="{{ route('admin.members.index') }}">
+            <img src="{{ asset('icons/Profile.png') }}" alt="Community Members">
+            <span>Community Members</span>
+        </a>
+
+        <a href="#" onclick="toggleSettings()">
+            <img src="{{ asset('icons/Settings.png') }}" alt="Settings">
+            <span>Settings ▾</span>
+        </a>
+
+        <div id="settingsMenu" style="display: none; margin-left: 10px;">
+            <a href="{{ route('travel-request-questions.index') }}">
+                <img src="{{ asset('icons/Settings.png') }}" alt="Travel Request Qs">
+                <span>Travel Request Qs</span>
+            </a>
+            <a href="{{ route('local-form-questions.index') }}">
+                <img src="{{ asset('icons/Settings.png') }}" alt="Local Form Qs">
+                <span>Local Form Qs</span>
+            </a>
+            <a href="{{ route('Overseas-form-questions.index') }}">
+                <img src="{{ asset('icons/Settings.png') }}" alt="Overseas Form Qs">
+                <span>Overseas Form Qs</span>
+            </a>
         </div>
+    </div>
 
-        <!-- 📄 Main Content -->
-        <div class="content">
+    <div class="content" id="content">
+        <div class="container mt-4">
             @yield('content')
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+   
     <script>
         function toggleSettings() {
             const menu = document.getElementById('settingsMenu');
             menu.style.display = (menu.style.display === 'none') ? 'block' : 'none';
         }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            const content = document.getElementById("content");
+
+            sidebar.classList.toggle("collapsed");
+            content.classList.toggle("full");
+        }
     </script>
+
+    @yield('scripts')
 
 </body>
 </html>
