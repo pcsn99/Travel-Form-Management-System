@@ -151,11 +151,11 @@
                 <li>
                     {{ ucfirst($req->type) }} - {{ $req->intended_departure_date }} to {{ $req->intended_return_date }}
                     ({{ ucfirst($req->status) }})
-                    | <a href="{{ route('travel-requests.edit', $req->id) }}">✏️ Edit</a>
+                    | <a href="{{ route('travel-requests.edit', $req->id) }}">Edit</a>
                     | <form method="POST" action="{{ route('travel-requests.destroy', $req->id) }}" style="display:inline;" onsubmit="return confirm('Delete this travel request?');">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" style="background: none; border: none; color: #c0392b; cursor: pointer;">🗑️ Delete</button>
+                        <button type="submit" style="background: none; border: none; color: #c0392b; cursor: pointer;">Delete</button>
                     </form>
                 </li>
             @empty
@@ -174,7 +174,7 @@
                     {{ $form->request->intended_departure_date }} to {{ $form->request->intended_return_date }}
                     | <a href="{{ $form->request->type === 'local'
                         ? route('member.local-forms.edit', $form->id)
-                        : route('member.Overseas-forms.edit', $form->id) }}">✏️ Fill Out</a>
+                        : route('member.Overseas-forms.edit', $form->id) }}">Fill Out</a>
                 </li>
             @empty
                 <li>No pending travel forms to complete.</li>
