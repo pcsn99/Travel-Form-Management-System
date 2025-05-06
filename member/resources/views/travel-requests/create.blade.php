@@ -88,11 +88,6 @@
                     <option value="Overseas">Overseas</option>
                 </select>
 
-                <label>Event:</label>
-                <input type="text" name="event" required>
-
-                <label>Purpose:</label>
-                <textarea name="purpose" rows="2" required></textarea>
 
                 <label>Departure Date:</label>
                 <input type="date" name="intended_departure_date" id="departureDate" required>

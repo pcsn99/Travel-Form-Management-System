@@ -162,9 +162,33 @@
 
         <div class="topbar-right">
             <!-- 🔔 Notification Bell -->
-            <div class="notif-container">
-                <img src="{{ asset('icons/Bell2.png') }}" alt="Notifications" class="notif-bell">
-                <span class="notif-badge">3</span>
+            <div class="dropdown me-3">
+                @php
+                    $notifications = Auth::user()->unreadNotifications;
+                @endphp
+
+                <button class="btn btn-light dropdown-toggle position-relative" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    🔔
+                    @if($notifications->count())
+                        <span class="badge bg-danger position-absolute top-0 start-100 translate-middle notif-badge">
+                            {{ $notifications->count() }}
+                        </span>
+                    @endif
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="max-height: 300px; overflow-y: auto;">
+                    @forelse($notifications as $notif)
+                        <li class="dropdown-item d-flex justify-content-between align-items-center">
+                            <span>{{ $notif->data['message'] ?? 'New notification' }}</span>
+                            <form action="{{ route('notifications.read', $notif->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-link p-0 ms-2">✔</button>
+                            </form>
+                        </li>
+                    @empty
+                        <li class="dropdown-item text-muted">No new notifications</li>
+                    @endforelse
+                </ul>
             </div>
 
             <!-- 🚪 Logout Button -->

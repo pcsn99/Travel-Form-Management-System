@@ -77,7 +77,8 @@
     <div class="dashboard-header">My Account</div>
 
     <div class="profile-account-section">
-        <img src="{{ $photo ? asset('storage/'.$photo->photo_path) : asset('default-avatar.png') }}" alt="Profile Photo" width="120" class="rounded-circle">
+
+        <img src="{{ $photo ? asset('/shared/' . $user->profilePhoto->photo_path) : asset('default-avatar.png') }}" alt="Profile Photo" width="120" class="rounded-circle">
         <p><strong>Name:</strong> {{ $user->name }}</p>
         <p><strong>Email:</strong> {{ $user->email }}</p>
 
@@ -91,43 +92,80 @@
     </div>
 
     <!-- ✅ CV -->
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-header">Curriculum Vitae (CV)</div>
         <div class="card-body file-upload-group">
+            @if(isset($files['cv']))
+                @foreach ($files['cv'] as $file)
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <a href="{{ asset('shared/' . $file->file_path) }}" target="_blank">{{ $file->original_name }}</a>
+                        <form action="{{ route('user-file.destroy', $file->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                @endforeach
+            @endif
             <form action="{{ route('user-file.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="type" value="cv">
                 <input type="file" name="file" accept="application/pdf" required>
-                <button class="btn btn-sm btn-primary upload-button">Upload CV</button>
+                <button class="btn btn-sm btn-primary upload-button mt-2">Upload CV</button>
             </form>
         </div>
     </div>
 
     <!-- ✅ Medical Records -->
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-header">Medical Records</div>
         <div class="card-body file-upload-group">
+            @if(isset($files['medical']))
+                @foreach ($files['medical'] as $file)
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <a href="{{ asset('shared/' . $file->file_path) }}" target="_blank">{{ $file->original_name }}</a>
+                        <form action="{{ route('user-file.destroy', $file->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                @endforeach
+            @endif
             <form action="{{ route('user-file.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="type" value="medical">
                 <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png" required>
-                <button class="btn btn-sm btn-primary upload-button">Upload Medical Record</button>
+                <button class="btn btn-sm btn-primary upload-button mt-2">Upload Medical Record</button>
             </form>
         </div>
     </div>
 
     <!-- ✅ Other Files -->
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-header">Other Files</div>
         <div class="card-body file-upload-group">
+            @if(isset($files['other']))
+                @foreach ($files['other'] as $file)
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <a href="{{ asset('shared/' . $file->file_path) }}" target="_blank">{{ $file->original_name }}</a>
+                        <form action="{{ route('user-file.destroy', $file->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                @endforeach
+            @endif
             <form action="{{ route('user-file.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="type" value="other">
                 <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png" required>
-                <button class="btn btn-sm btn-primary upload-button">Upload Other File</button>
+                <button class="btn btn-sm btn-primary upload-button mt-2">Upload Other File</button>
             </form>
         </div>
     </div>
+
 
     <!-- ✅ Edit Modal -->
     <div class="modal fade" id="editAccountModal" tabindex="-1" aria-labelledby="editAccountModalLabel" aria-hidden="true">
