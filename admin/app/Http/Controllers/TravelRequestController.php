@@ -7,6 +7,7 @@ use App\Models\TravelRequest;
 use App\Models\TravelRequestAnswer;
 use App\Models\LocalTravelForm;
 use App\Models\OverseasTravelForm;
+use App\Notifications\TravelRequestApproved;
 
 class TravelRequestController extends Controller
 {
@@ -41,6 +42,7 @@ class TravelRequestController extends Controller
         $travelRequest->admin_comment = $request->admin_comment;
         $travelRequest->save();
 
+        $travelRequest->user->notify(new TravelRequestApproved($request));
         // Create corresponding travel form
         if ($travelRequest->type === 'local') {
             LocalTravelForm::create([
@@ -52,7 +54,7 @@ class TravelRequestController extends Controller
             ]);
         }
 
-        $request->user->notify(new TravelRequestApproved($request));
+        
 
         return redirect()->route('travel-requests.index')->with('success', 'Request approved.');
     }

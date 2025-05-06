@@ -12,8 +12,11 @@
     }
 
     .dashboard-header {
-        background-color: #17224D;
-        padding: 20px;
+        background: 
+            linear-gradient(to right, rgba(23, 34, 77, 0.85), rgba(23, 34, 77, 0.85)),
+            url('/images/bg.jpeg') no-repeat center center;
+        background-size: cover;
+        padding: 40px 20px;
         font-size: 26px;
         font-weight: bold;
         text-align: center;
@@ -23,11 +26,11 @@
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
         border-radius: 8px;
     }
+
     .container-custom {
         max-width: 900px;
         margin: auto;
     }
-
 
     .card {
         border-radius: 12px;
@@ -71,6 +74,7 @@
         font-size: 14px;
         font-weight: bold;
         border-radius: 6px;
+        margin-right: 5px;
     }
 
     .btn-secondary {
@@ -86,7 +90,7 @@
 @endsection
 
 @section('content')
-
+@php use Carbon\Carbon; @endphp
 <div class="container-custom">
     <div class="dashboard-header">All Local Travel Forms</div>
     <div class="card">
@@ -95,21 +99,26 @@
                 <thead>
                     <tr>
                         <th>Travel Dates</th>
-                        <th>Event</th>
-                        <th>Purpose</th>
                         <th>Status</th>
+                        <th>Form Comment</th>
+                        <th>Request Comment</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($forms as $form)
                         <tr>
-                            <td>{{ $form->request->intended_departure_date }} to {{ $form->request->intended_return_date }}</td>
-                            <td>{{ $form->request->event }}</td>
-                            <td>{{ $form->request->purpose }}</td>
+                            <td>{{ Carbon::parse($form->request->intended_departure_date)->format('F j, Y') }} to {{ Carbon::parse($form->request->intended_return_date)->format('F j, Y') }}</td>
                             <td><span class="badge bg-info text-dark">{{ ucfirst($form->status) }}</span></td>
+                            <td>{{ $form->admin_comment ?: '-' }}</td>
+                            <td>{{ $form->request->admin_comment ?: '-' }}</td>
                             <td>
                                 <a href="{{ route('member.local-forms.show', $form->id) }}" class="btn btn-primary">View</a>
+                                @if(is_null($form->submitted_at))
+                                    <a href="{{ route('member.local-forms.edit', $form->id) }}" class="btn btn-primary">Fill Out</a>
+                                @elseif($form->status === 'pending' || $form->status === 'submitted')
+                                    <a href="{{ route('member.local-forms.edit', $form->id) }}" class="btn btn-primary">Edit</a>
+                                @endif
                             </td>
                         </tr>
                     @empty
@@ -121,8 +130,5 @@
             </table>
         </div>
     </div>
-
-{{-- <a href="{{ route('dashboard') }}" class="btn btn-secondary">⬅ Back to Dashboard</a> --}}
 </div>
-
 @endsection

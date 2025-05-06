@@ -171,7 +171,9 @@
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="max-height: 300px; overflow-y: auto;">
                     @forelse($notifications as $notif)
                         <li class="dropdown-item d-flex justify-content-between align-items-center">
-                            <span>{{ $notif->data['message'] ?? 'New notification' }}</span>
+                            <a href="{{ $notif->data['url'] ?? '#' }}" style="text-decoration: none; color: inherit; flex: 1;">
+                                {{ $notif->data['message'] ?? 'New notification' }}
+                            </a>
                             <form action="{{ route('notifications.read', $notif->id) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="btn btn-sm btn-link p-0 ms-2">✔</button>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User Login</title>
+    <title>Member Login</title>
     <style>
         html, body {
             margin: 0;
@@ -21,9 +21,17 @@
             align-items: center;
         }
 
+        .login-container {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+
         .login-form {
-            width: 320px;
-            color: white;
+            color: #17224D;
             text-align: left;
         }
 
@@ -51,41 +59,43 @@
             width: 100%;
             padding: 12px;
             margin-bottom: 15px;
-            border: none;
-            border-radius: 4px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
             font-size: 16px;
             box-sizing: border-box;
+            background-color: #f9f9f9;
         }
 
         .button-wrapper {
             display: flex;
             justify-content: center;
-            margin-top: 5px;
+            margin-top: 15px;
         }
 
         button {
             padding: 10px 30px;
-            background-color: white;
-            color: #17224D;
+            background-color: #17224D;
+            color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
             font-size: 16px;
         }
 
         button:hover {
-            background-color: #f0f0f0;
+            background-color: #1f2f5f;
         }
 
         .error {
             color: red;
             font-size: 14px;
             margin-bottom: 10px;
+            text-align: center;
         }
 
         a {
-            color: #ffffff;
+            color: #17224D;
             text-decoration: underline;
             font-size: 14px;
         }
@@ -96,30 +106,41 @@
     </style>
 </head>
 <body>
-    <div class="login-form">
-        <h2>Login</h2>
+    <div class="login-container">
+        <div class="login-form">
+            <h2>Login</h2>
 
-        @if ($errors->any())
-            <div class="error">
-                @foreach ($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-        @endif
+            @if ($errors->any())
+                <div class="error">
+                    @foreach ($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                    @endforeach
+                </div>
+            @endif
 
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-            <input type="email" name="email" placeholder="Email" required value="{{ old('email') }}">
-            <input type="password" name="password" placeholder="Password" required>
+            @if (session('error'))
+                <div class="error">
+                    <p>{{ session('error') }}</p>
+                </div>
+            @endif
 
-            <div class="button-wrapper">
-                <button type="submit">Login</button>
-            </div>
-        </form>
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+                <label for="email">EMAIL</label>
+                <input type="email" name="email" id="email" required value="{{ old('email') }}">
 
-        <p>
-            DO NOT HAVE AN ACCOUNT? <a href="{{ route('register') }}">REGISTER HERE</a>
-        </p>
+                <label for="password">PASSWORD</label>
+                <input type="password" name="password" id="password" required>
+
+                <div class="button-wrapper">
+                    <button type="submit">Login</button>
+                </div>
+            </form>
+
+            <p>
+                DON'T HAVE AN ACCOUNT? <a href="{{ route('register') }}">REGISTER HERE</a>
+            </p>
+        </div>
     </div>
 </body>
 </html>

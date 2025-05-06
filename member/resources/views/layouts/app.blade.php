@@ -167,7 +167,9 @@
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="max-height: 300px; overflow-y: auto;">
                     @forelse($notifications as $notif)
                         <li class="dropdown-item d-flex justify-content-between align-items-center">
-                            <span>{{ $notif->data['message'] ?? 'New notification' }}</span>
+                            <a href="{{ $notif->data['url'] ?? '#' }}" style="text-decoration: none; color: inherit; flex: 1;">
+                                {{ $notif->data['message'] ?? 'New notification' }}
+                            </a>
                             <form action="{{ route('notifications.read', $notif->id) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="btn btn-sm btn-link p-0 ms-2">✔</button>
@@ -207,9 +209,7 @@
             <i class="bi bi-globe"></i><span class="nav-text">Overseas Forms</span>
         </a>
 
-        <a href="#">
-            <i class="bi bi-gear"></i><span class="nav-text">Settings</span>
-        </a>
+
     </div>
 
     <div class="content" id="content">
@@ -234,7 +234,12 @@
                     span.classList.remove("hide-text");
                 }
             });
+
         }
+
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.setAttribute('title', link.innerText.trim());
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
