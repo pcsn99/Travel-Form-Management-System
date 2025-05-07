@@ -4,13 +4,20 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Support\Str;
 
 class TravelFormRejected extends Notification
 {
     use Queueable;
+
+    protected $form;
+
+    public function __construct($form)
+    {
+        $this->form = $form;
+    }
 
     public function via($notifiable)
     {
@@ -19,27 +26,31 @@ class TravelFormRejected extends Notification
 
     public function toMail($notifiable)
     {
+        $type = Str::lower($this->form->request->type);
         return (new MailMessage)
-                    ->subject('Form Rejected')
-                    ->line('A notification regarding TravelFormRejected.')
-                    ->action('View Details', url('/dashboard'));
+            ->subject('❌ Travel Form Rejected')
+            ->line('Your ' . ucfirst($type) . ' travel form has been rejected.')
+            ->action('View Details', url("/{$type}-forms/{$this->form->id}/view"))
+            ->line('Please review the form and make necessary corrections if applicable.');
     }
 
     public function toDatabase($notifiable)
     {
+        $type = Str::lower($this->form->request->type);
         return [
-            'title' => 'Form Rejected',
-            'message' => 'A notification about TravelFormRejected.',
-            'url' => '/dashboard'
+            'title' => 'Travel Form Rejected',
+            'message' => '❌ Your ' . ucfirst($type) . ' travel form was rejected.',
+            'url' => url("/{$type}-forms/{$this->form->id}/view")
         ];
     }
 
     public function toBroadcast($notifiable)
     {
+        $type = Str::lower($this->form->request->type);
         return new BroadcastMessage([
-            'title' => 'Form Rejected',
-            'message' => 'A notification about TravelFormRejected.',
-            'url' => '/dashboard'
+            'title' => 'Travel Form Rejected',
+            'message' => '❌ Your ' . ucfirst($type) . ' travel form was rejected.',
+            'url' => url("/{$type}-forms/{$this->form->id}/view")
         ]);
     }
 }

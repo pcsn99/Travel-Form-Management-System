@@ -4,13 +4,20 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Support\Str;
 
 class TravelFormApproved extends Notification
 {
     use Queueable;
+
+    protected $form;
+
+    public function __construct($form)
+    {
+        $this->form = $form;
+    }
 
     public function via($notifiable)
     {
@@ -19,27 +26,30 @@ class TravelFormApproved extends Notification
 
     public function toMail($notifiable)
     {
+        $type = Str::lower($this->form->request->type);
         return (new MailMessage)
-                    ->subject('Form Approved')
-                    ->line('A notification regarding TravelFormApproved.')
-                    ->action('View Details', url('/dashboard'));
+            ->subject('✅ Travel Form Approved')
+            ->line('Your ' . ucfirst($type) . ' travel form has been approved.')
+            ->action('View Form', url("/{$type}-forms/{$this->form->id}/view"));
     }
-
+    
     public function toDatabase($notifiable)
     {
+        $type = Str::lower($this->form->request->type);
         return [
-            'title' => 'Form Approved',
-            'message' => 'A notification about TravelFormApproved.',
-            'url' => '/dashboard'
+            'title' => 'Travel Form Approved',
+            'message' => '✅ Your ' . ucfirst($type) . ' travel form has been approved.',
+            'url' => url("/{$type}-forms/{$this->form->id}/view")
         ];
     }
-
+    
     public function toBroadcast($notifiable)
     {
+        $type = Str::lower($this->form->request->type);
         return new BroadcastMessage([
-            'title' => 'Form Approved',
-            'message' => 'A notification about TravelFormApproved.',
-            'url' => '/dashboard'
+            'title' => 'Travel Form Approved',
+            'message' => '✅ Your ' . ucfirst($type) . ' travel form has been approved.',
+            'url' => url("/{$type}-forms/{$this->form->id}/view")
         ]);
     }
 }

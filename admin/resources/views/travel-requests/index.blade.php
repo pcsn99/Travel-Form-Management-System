@@ -4,7 +4,6 @@
 
 @section('styles')
 <style>
-
     body {
         background-color: #f0f2f5;
         color: #17224D;
@@ -12,14 +11,62 @@
         padding: 40px;
     }
 
-  
     .container-custom {
         max-width: 1000px;
         margin: auto;
         padding-top: 20px;
     }
 
-   
+    .header-banner {
+        position: relative;
+        background-image: url('/images/bg.jpeg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        text-align: center;
+        color: white;
+    }
+
+    .header-banner::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        border-radius: 12px;
+        z-index: 0;
+    }
+
+    .header-banner h2,
+    .header-banner .create-btn {
+        position: relative;
+        z-index: 1;
+    }
+
+    .create-btn {
+        background-color: #2d6a4f;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 6px;
+        display: inline-block;
+        text-align: center;
+        text-decoration: none;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    .create-btn:hover {
+        background-color: #22543d;
+    }
+
     .card {
         border-radius: 12px;
         box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
@@ -38,25 +85,6 @@
         text-align: center;
     }
 
-    .create-btn {
-        background-color: #17224D;
-        color: white;
-        font-size: 16px;
-        font-weight: bold;
-        padding: 12px;
-        border-radius: 6px;
-        display: block;
-        width: 100%;
-        text-align: center;
-        text-decoration: none;
-        margin-bottom: 20px;
-    }
-
-    .create-btn:hover {
-        background-color: #1f2f5f;
-    }
-
-    
     .status-links {
         text-align: center;
         margin-bottom: 20px;
@@ -66,36 +94,28 @@
         font-size: 16px;
         font-weight: bold;
         text-decoration: none;
-        color: #17224D;
+        color: white;
         margin: 0 10px;
-        padding: 8px 12px;
+        padding: 8px 14px;
         border-radius: 6px;
-        background: rgba(255, 255, 255, 0.95);
-        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease;
+    }
+
+    .status-links a[href*="pending"] {
+        background-color: #ffc107;
+    }
+
+    .status-links a[href*="approved"] {
+        background-color: #28a745;
+    }
+
+    .status-links a[href*="rejected"] {
+        background-color: #dc3545;
     }
 
     .status-links a:hover {
-        background-color: #2980b9;
-        color: white;
+        filter: brightness(90%);
     }
-
-    .table {
-        width: 100%;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.95);
-    }
-
-    .table thead {
-        background-color: #17224D;
-        color: white;
-        font-size: 16px;
-    }
-
-    .table th, .table td {
-        padding: 12px;
-        border: 1px solid #17224D;
-    }
-
 
     .view-btn {
         background-color: #17224D;
@@ -111,57 +131,66 @@
         background-color: #1f2f5f;
     }
 </style>
+<link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
 @endsection
 
 @section('content')
-
 <div class="container-custom">
-    <!-- ✅ Create Travel Request Button -->
-    <a href="{{ route('admin-travel-requests.search') }}" class="create-btn">
-        + Create Travel Request for Member
-    </a>
+    <div class="header-banner">
+        <h2>Manage Travel Requests</h2>
+        <a href="{{ route('admin-travel-requests.search') }}" class="create-btn">+ Create Travel Request for Member</a>
+    </div>
 
-    <!-- ✅ Travel Requests Section -->
     <div class="card">
         <div class="card-header">Travel Requests ({{ ucfirst($status) }})</div>
         <div class="card-body">
-            
-            <!-- ✅ Status Filters -->
             <div class="status-links">
                 <a href="?status=pending">Pending</a>
                 <a href="?status=approved">Approved</a>
                 <a href="?status=rejected">Rejected</a>
             </div>
 
-            <!-- ✅ Requests Table -->
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Departure</th>
-                        <th>Return</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($requests as $req)
+            @if($requests->count())
+                <table id="requests-table" class="display" style="width:100%">
+                    <thead>
                         <tr>
-                            <td>{{ $req->user->name }}</td>
-                            <td>{{ ucfirst($req->type) }}</td>
-                            <td>{{ $req->intended_departure_date }}</td>
-                            <td>{{ $req->intended_return_date }}</td>
-                            <td>
-                                <a href="{{ route('travel-requests.show', $req->id) }}" class="view-btn">View</a>
-                            </td>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Departure</th>
+                            <th>Return</th>
+                            <th>Submitted</th>
+                            <th>Action</th>
                         </tr>
-                    @empty
-                        <tr><td colspan="5">No travel requests found.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach($requests as $req)
+                            <tr>
+                                <td>{{ $req->user->name }}</td>
+                                <td>{{ ucfirst($req->type) }}</td>
+                                <td>{{ \Carbon\Carbon::parse($req->intended_departure_date)->format('F d, Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($req->intended_return_date)->format('F d, Y') }}</td>
+                                <td>{{ $req->created_at->format('F d, Y') }}</td>
+                                <td>
+                                    <a href="{{ route('travel-requests.show', $req->id) }}" class="view-btn">View</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <p class="text-center m-4">No travel requests found.</p>
+            @endif
         </div>
     </div>
 </div>
+@endsection
 
+@section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#requests-table').DataTable();
+    });
+</script>
 @endsection

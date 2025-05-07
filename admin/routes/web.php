@@ -15,10 +15,15 @@ use App\Http\Controllers\FormAttachmentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SignatureController;
 use App\Http\Controllers\LocalFormQuestionController;
+use App\Http\Controllers\Admin\AdminAccountController;
 use App\Http\Controllers\AdminTravelRequestController;
 use App\Http\Controllers\OverseasFormQuestionController;
 use App\Http\Controllers\Admin\CommunityMemberController;
 use App\Http\Controllers\TravelRequestQuestionController;
+use App\Http\Controllers\Admin\TravelFormExportController;
+
+//test
+Route::get('/test-image-export', [\App\Http\Controllers\TestImageExportController::class, 'export']);
 
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/', [LoginController::class, 'login']);
@@ -72,6 +77,8 @@ Route::middleware('auth.admin')->group(function () {
     Route::post('/attachments/upload', [FormAttachmentController::class, 'store'])->name('attachments.upload');
     Route::get('/attachments/download/{id}', [FormAttachmentController::class, 'download'])->name('attachments.download');
 
+    Route::get('/user-files/{id}/download', [UserFileController::class, 'download'])->name('user-file.download');
+
     Route::get('/admin/upload-signature', [SignatureController::class, 'showForm'])->name('admin.upload.signature.form');
     Route::post('/admin/upload-signature', [SignatureController::class, 'upload'])->name('admin.upload.signature');
 
@@ -82,9 +89,21 @@ Route::middleware('auth.admin')->group(function () {
     Route::get('/admin/community-members/{id}/history', [CommunityMemberController::class, 'history'])->name('admin.members.history');
 
     
+    Route::get('/local-forms/{id}/export', [TravelFormExportController::class, 'exportLocal'])->name('admin.local-forms.export');
+    Route::get('/overseas-forms/{id}/export', [TravelFormExportController::class, 'exportOverseas'])->name('admin.overseas-forms.export');
+
+    Route::get('/admin-accounts', [AdminAccountController::class, 'index'])->name('admin-accounts.index');
+    Route::get('/admin-accounts/create', [AdminAccountController::class, 'create'])->name('admin-accounts.create');
+    Route::post('/admin-accounts', [AdminAccountController::class, 'store'])->name('admin-accounts.store');
+    Route::get('/admin-accounts/{id}/edit', [AdminAccountController::class, 'edit'])->name('admin-accounts.edit');
+    Route::put('/admin-accounts/{id}', [AdminAccountController::class, 'update'])->name('admin-accounts.update');
+    Route::delete('/admin-accounts/{id}', [AdminAccountController::class, 'destroy'])->name('admin-accounts.destroy');
+
+
+
 
     
-
+    //old export routes (UNUSED)
     Route::get('/local-forms/{id}/export', function ($id) {
         $form = \App\Models\LocalTravelForm::findOrFail($id);
         return Excel::download(new LocalTravelFormExport($form), 'local-travel-form.xlsx');

@@ -27,14 +27,15 @@ class OverseasFormController extends Controller
         $form->status = 'approved';
         $form->approved_at = now();
         $form->admin_comment = $request->admin_comment;
-        $form->local_supervisor = auth()->id(); 
+        $form->overseas_supervisor = auth()->id(); 
         $form->save();
-
-        $form->request->user->notify(new TravelFormApproved());
+    
+       
+        $form->request->user->notify(new TravelFormApproved($form));
         
         return redirect()->route('Overseas-forms.index')->with('success', 'Form approved.');
     }
-
+    
     public function reject(Request $request, $id)
     {
         $form = OverseasTravelForm::findOrFail($id);
@@ -42,11 +43,13 @@ class OverseasFormController extends Controller
         $form->admin_comment = $request->admin_comment;
         $form->rejected_at = now();
         $form->save();
-
-        $form->request->user->notify(new TravelFormRejected());
-
+    
+        
+        $form->request->user->notify(new TravelFormRejected($form));
+    
         return redirect()->route('Overseas-forms.index')->with('success', 'Form rejected.');
     }
+    
 
     public function edit($id)
     {

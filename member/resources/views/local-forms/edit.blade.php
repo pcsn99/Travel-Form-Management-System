@@ -80,12 +80,28 @@
     .file-list form {
         display: inline;
     }
+
+    .request-info {
+        background-color: #f8f9fa;
+        border-left: 4px solid #17224D;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 30px;
+    }
 </style>
 @endsection
 
 @section('content')
 <div class="container-custom">
     <div class="dashboard-header">Edit Local Travel Form</div>
+
+    <div class="request-info">
+        <h5>📋 Travel Request Summary</h5>
+        <p><strong>Type:</strong> {{ ucfirst($form->request->type) }}</p>
+        <p><strong>Departure:</strong> {{ $form->request->intended_departure_date }}</p>
+        <p><strong>Return:</strong> {{ $form->request->intended_return_date }}</p>
+        <p><strong>Status:</strong> {{ ucfirst($form->request->status) }}</p>
+    </div>
 
     @if(session('success'))
         <p style="color: green">{{ session('success') }}</p>

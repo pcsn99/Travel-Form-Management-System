@@ -1,2 +1,3 @@
-/shared-laravel-storage/public/*
+/shared-laravel-storage/*
 !/shared-laravel-storage/public/.gitignore
+/member/public/shared/*

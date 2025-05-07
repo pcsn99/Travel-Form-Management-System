@@ -11,16 +11,20 @@ class FormAttachmentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:jpg,jpeg,png,pdf|max:2048',
+            'file' => 'required|mimes:jpg,jpeg,png,pdf|max:10240', 
             'form_type' => 'required|in:local,Overseas',
             'form_id' => 'required|integer'
         ]);
 
-        $path = $request->file('file')->store('attachments', 'public');
+        $file = $request->file('file');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = 'form_attachments/' . $filename;
+
+        Storage::disk('shared')->put($path, file_get_contents($file));
 
         FormAttachment::create([
             'file_path' => $path,
-            'original_name' => $request->file('file')->getClientOriginalName(),
+            'original_name' => $file->getClientOriginalName(),
             'local_travel_form_id' => $request->form_type === 'local' ? $request->form_id : null,
             'Overseas_travel_form_id' => $request->form_type === 'Overseas' ? $request->form_id : null,
         ]);
@@ -31,20 +35,21 @@ class FormAttachmentController extends Controller
     public function download($id)
     {
         $file = FormAttachment::findOrFail($id);
-        return Storage::disk('public')->download($file->file_path, $file->original_name);
+
+        if (!Storage::disk('shared')->exists($file->file_path)) {
+            abort(404);
+        }
+
+        return Storage::disk('shared')->download($file->file_path, $file->original_name);
     }
 
     public function destroy($id)
     {
-        $attachment = \App\Models\FormAttachment::findOrFail($id);
-    
-        // Delete file from storage
-        \Storage::disk('public')->delete($attachment->file_path);
-    
-        // Delete from DB
+        $attachment = FormAttachment::findOrFail($id);
+
+        Storage::disk('shared')->delete($attachment->file_path);
         $attachment->delete();
-    
+
         return back()->with('success', 'File deleted.');
     }
 }
-

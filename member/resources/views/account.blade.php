@@ -115,6 +115,18 @@
                 <input type="file" name="photo" accept="image/*" required>
                 <button class="btn btn-sm btn-outline-primary upload-button">Upload</button>
             </form>
+
+            @if($user->signature)
+                <p class="mt-4"><strong>Current Signature:</strong></p>
+                <img src="{{ asset('shared/' . $user->signature) }}" alt="Signature" class="img-thumbnail" style="max-width: 160px;">
+            @endif
+
+            <form action="{{ route('member.signature.upload') }}" method="POST" enctype="multipart/form-data" class="file-upload-group mt-3">
+                @csrf
+                <label for="signature"><strong>Upload Signature (PNG, JPG):</strong></label>
+                <input type="file" name="signature" accept=".png,.jpg,.jpeg" required>
+                <button class="btn btn-sm btn-outline-primary upload-button mt-2">Upload Signature</button>
+            </form>
         </div>
         <div class="profile-right">
             <p><strong>Name:</strong> {{ $user->name }}</p>

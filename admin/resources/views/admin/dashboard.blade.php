@@ -4,7 +4,6 @@
 
 @section('styles')
 <style>
-    
     body {
         background-color: #f0f2f5;
         color: #17224D;
@@ -12,9 +11,13 @@
         padding: 40px;
     }
 
-    
     .dashboard-header {
-        background-color: #17224D;
+        background-image: url('/images/bg.jpeg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: rgba(23, 34, 77, 0.85);
+        background-blend-mode: overlay;
         padding: 20px;
         font-size: 26px;
         font-weight: bold;
@@ -26,7 +29,6 @@
         border-radius: 8px;
     }
 
-   
     .container-custom {
         max-width: 1000px;
         margin: auto;
@@ -41,7 +43,12 @@
     }
 
     .card-header {
-        background-color: #17224D;
+        background-image: url('/images/bg.jpeg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: rgba(23, 34, 77, 0.85);
+        background-blend-mode: overlay;
         color: white;
         font-size: 18px;
         font-weight: bold;
@@ -50,7 +57,6 @@
         text-align: center;
     }
 
-    
     .table {
         width: 100%;
         border-radius: 8px;
@@ -68,34 +74,33 @@
         border: 1px solid #17224D;
     }
 
- 
-   #travel-calendar {
-    max-width: 1000px;
-    margin: auto;
-    border: 1px solid #17224D; 
-    padding: 15px;
-    background-color: rgba(255, 255, 255, 0.95); 
-    border-radius: 8px; 
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
-}
+    #travel-calendar {
+        max-width: 1000px;
+        margin: auto;
+        border: 1px solid #17224D;
+        padding: 15px;
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+
+    }
+
+    .fc-event-title {
+        display: none;
+    }
 </style>
 @endsection
 
 @section('content')
-
 <div class="container-custom">
-
     <div class="dashboard-header">Dashboard</div>
 
-    <!-- ✅ Travel Calendar -->
     <div class="card">
-        <!--div class="card-header">📅 Travel Calendar</div-->
         <div class="card-body">
             <div id="travel-calendar"></div>
         </div>
     </div>
 
-    <!-- ✅ Pending Travel Requests -->
     <div class="card">
         <div class="card-header">Pending Travel Requests</div>
         <div class="card-body">
@@ -114,8 +119,10 @@
                         <tr>
                             <td>{{ $req->user->name }}</td>
                             <td>{{ ucfirst($req->type) }}</td>
-                            <td>{{ $req->intended_departure_date }}</td>
-                            <td>{{ $req->intended_return_date }}</td>
+                            <td>{{ \Carbon\Carbon::parse($req->intended_departure_date)->format('F d, Y') }}</td>
+
+                            <td>{{ \Carbon\Carbon::parse($req->intended_return_date)->format('F d, Y') }}</td>
+
                             <td><a href="{{ route('travel-requests.show', $req->id) }}" class="btn btn-primary">View</a></td>
                         </tr>
                     @empty
@@ -126,7 +133,6 @@
         </div>
     </div>
 
-    <!-- ✅ Upcoming Local Forms -->
     <div class="card">
         <div class="card-header">Upcoming Local Travel Forms (Next 3 Weeks)</div>
         <div class="card-body">
@@ -144,8 +150,10 @@
                     @forelse($pendingLocalForms as $form)
                         <tr>
                             <td>{{ $form->request->user->name }}</td>
-                            <td>{{ $form->request->intended_departure_date }}</td>
-                            <td>{{ $form->request->intended_return_date }}</td>
+                            <td>{{ \Carbon\Carbon::parse($form->request->intended_departure_date)->format('F d, Y') }}</td>
+
+                            <td>{{ \Carbon\Carbon::parse($form->request->intended_return_date)->format('F d, Y') }}</td>
+
                             <td>{{ ucfirst($form->status) }}</td>
                             <td><a href="{{ route('local-forms.show', $form->id) }}" class="btn btn-primary">View</a></td>
                         </tr>
@@ -157,7 +165,6 @@
         </div>
     </div>
 
-    <!-- ✅ Upcoming Overseas Forms -->
     <div class="card">
         <div class="card-header">Upcoming Overseas Travel Forms (Next 3 Months)</div>
         <div class="card-body">
@@ -175,9 +182,9 @@
                     @forelse($pendingOverseasForms as $form)
                         <tr>
                             <td>{{ $form->request->user->name }}</td>
-                            <td>{{ $form->request->intended_departure_date }}</td>
-                            <td>{{ $form->request->intended_return_date }}</td>
-                            <td>{{ $form->submitted_at ? 'Submitted' : 'Not Submitted' }}</td>
+                            <td>{{ \Carbon\Carbon::parse($form->request->intended_departure_date)->format('F d, Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($form->request->intended_return_date)->format('F d, Y') }}</td>
+                            <td>{{ ucfirst($form->status) }}</td>
                             <td><a href="{{ route('Overseas-forms.show', $form->id) }}" class="btn btn-primary">View</a></td>
                         </tr>
                     @empty
@@ -188,34 +195,64 @@
         </div>
     </div>
 
-    {{-- FullCalendar & Bootstrap --}}
+    {{-- Travel Modal for FullCalendar Pop-up --}}
+    <div class="modal fade" id="travelModal" tabindex="-1" aria-labelledby="travelModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="travelModalLabel">Travel Info</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="travelModalBody">
+                    Loading...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet' />
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('travel-calendar');
+            const calendarEl = document.getElementById('travel-calendar');
 
-            var calendar = new FullCalendar.Calendar(calendarEl, {
+            const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 height: 600,
                 nowIndicator: true,
+                selectable: true,
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth'
+                },
                 dateClick: function (info) {
                     const date = info.dateStr;
-                    $('#travelModal').modal('show');
-                    $('#travelModalLabel').text(`Travel Status for ${date}`);
-                    $('#travelModalBody').html('Loading...');
+                    const modalLabel = document.getElementById('travelModalLabel');
+                    const modalBody = document.getElementById('travelModalBody');
+
+                    modalLabel.textContent = `Travel Status for ${date}`;
+                    modalBody.innerHTML = 'Loading...';
+                    const modal = new bootstrap.Modal(document.getElementById('travelModal'));
+                    modal.show();
 
                     fetch(`/admin/travel-calendar/details/${date}`)
-                        .then(res => res.json())
+                        .then(res => res.ok ? res.json() : Promise.reject(res.status))
                         .then(data => {
                             let html = `<h5>🧳 Traveling Members (${data.traveling.length})</h5>`;
                             html += data.traveling.length ? '<ul>' + data.traveling.map(n => `<li>${n}</li>`).join('') + '</ul>' : '<p>None</p>';
 
-                            html += `<h5 class="mt-3"> Available Members (${data.available.length})</h5>`;
+                            html += `<h5 class="mt-3">✅ Available Members (${data.available.length})</h5>`;
                             html += data.available.length ? '<ul>' + data.available.map(n => `<li>${n}</li>`).join('') + '</ul>' : '<p>None</p>';
 
-                            $('#travelModalBody').html(html);
+                            modalBody.innerHTML = html;
+                        })
+                        .catch(error => {
+                            modalBody.innerHTML = `<p class='text-danger'>Error loading data. (${error})</p>`;
                         });
                 },
                 events: @json($calendarEvents)
@@ -224,7 +261,5 @@
             calendar.render();
         });
     </script>
-
 </div>
-
 @endsection

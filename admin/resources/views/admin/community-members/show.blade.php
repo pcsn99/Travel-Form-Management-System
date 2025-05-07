@@ -1,10 +1,9 @@
 @extends('layouts.app')
 
-@section('title', '{{ $member->name }}\'s Profile')
+@section('title', $member->name . "'s Profile")
 
 @section('styles')
 <style>
-   
     body {
         background-color: #f0f2f5;
         color: #17224D;
@@ -12,172 +11,165 @@
         padding: 40px;
     }
 
-    h2 {
-        text-align: center
-    }
-
-   
     .container-custom {
         max-width: 800px;
         margin: auto;
-        padding-top: 20px;
     }
 
-    
+    .profile-header {
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
     .card {
         border-radius: 12px;
-        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
-        background: rgba(255, 255, 255, 0.95);
-        padding: 30px;
-        margin-bottom: 50px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        background: white;
+        padding: 20px;
+        margin-bottom: 30px;
     }
 
-    .card-header {
-        background-color: #17224D;
-        color: white;
+    .card h5 {
         font-size: 18px;
-        font-weight: bold;
-        border-radius: 6px 6px 0 0;
-        padding: 15px;
+        margin-bottom: 15px;
+        color: #17224D;
+    }
+
+    .btn-section {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .btn-section a {
+        background-color: #2d6a4f;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        min-width: 220px;
         text-align: center;
     }
 
- 
-    .form-group {
-        display: flex;
-        align-items: center; 
-        justify-content: space-between;
-        width: 100%;
-        gap: 15px; 
+    .btn-section a:nth-child(2) {
+        background-color: #0077b6;
     }
 
-    input[type="file"] {
-        flex-grow: 1; 
-        padding: 12px;
-        border: 1px solid #17224D;
-        border-radius: 6px;
-        background: #f8f9fa;
+    .btn-section a:nth-child(3) {
+        background-color: #6a4c93;
     }
 
-    button {
-        background-color: #17224D;
-        color: white;
-        font-size: 16px;
-        font-weight: bold;
-        padding: 12px;
-        border-radius: 6px;
-        border: none;
-        cursor: pointer;
-        flex-shrink: 0; 
-    }
-
-    button:hover {
-        background-color: #1f2f5f;
-
+    .btn-section a:hover {
+        filter: brightness(90%);
     }
 
     .back-btn {
         background-color: #6c757d;
-        color: white;
-        font-size: 16px;
-        font-weight: bold;
-        padding: 12px;
-        border-radius: 6px;
-        display: block;
-        width: 100%;
         text-align: center;
+        display: block;
+        max-width: 300px;
+        margin: 30px auto 0;
+        padding: 12px;
+        font-weight: bold;
+        color: white;
         text-decoration: none;
-        margin-top: 20px;
+        border-radius: 6px;
     }
 
     .back-btn:hover {
         background-color: #5a6268;
     }
 
+    .profile-photo {
+        border-radius: 6px;
+        margin-top: 10px;
+    }
 
+    .file-entry {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border-bottom: 1px solid #ccc;
+    }
 </style>
 @endsection
 
 @section('content')
-
 <div class="container-custom">
-    <h2>{{ $member->name }}'s Profile</h2>
-    
-    <div class="profile-wrapper">
-        <div class="column-left">
-            <div class="card">
-                <div class="card-header">Member Details</div>
-                <div class="card-body">
-                    <p><strong>Email:</strong> {{ $member->email }}</p>
-                    <p><strong>Joined:</strong> {{ $member->created_at->format('Y-m-d') }}</p>
-                    <p><strong>Status:</strong> 
-                        @if($isInTravel)
-                            <span style="color: orange;">Currently Traveling</span>
-                        @else
-                            <span style="color: green;">Available</span>
-                        @endif
-                    </p>
-                </div>
-            </div>
+    <div class="profile-header">{{ $member->name }}'s Profile</div>
 
-            <div class="card">
-                <div class="card-header">Uploaded Files</div>
-                <div class="card-body">
-                    <p><strong>Profile Photo:</strong><br>
-                        @if($member->profilePhoto)
-                            <img src="{{ asset('storage/' . $member->profilePhoto->photo_path) }}" class="rounded" width="100">
-                        @else
-                            <span class="text-muted">No photo uploaded.</span>
-                        @endif
-                    </p>
-
-                    <p><strong>CV:</strong><br>
-                        @if(isset($files['cv'][0]))
-                            <a href="{{ route('user-file.download', $files['cv'][0]->id) }}" target="_blank">
-                                {{ $files['cv'][0]->original_name }}
-                            </a>
-                        @else
-                            <span class="text-muted">No CV uploaded.</span>
-                        @endif
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="column-right">
-            <div class="card">
-                <div class="card-header">Recent Travel Request</div>
-                <div class="card-body">
-                    @if($member->travelRequests->count())
-                        <p><a href="{{ route('travel-requests.show', $member->travelRequests->first()->id) }}">View Latest Request</a></p>
-                    @else
-                        <p>No travel requests yet.</p>
-                    @endif
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">Recent Travel Form</div>
-                <div class="card-body">
-                    @if($member->localForms->count())
-                        <p><a href="{{ route('local-forms.show', $member->localForms->first()->id) }}">View Latest Local Form</a></p>
-                    @elseif($member->OverseasForms->count())
-                        <p><a href="{{ route('Overseas-forms.show', $member->OverseasForms->first()->id) }}">View Latest Overseas Form</a></p>
-                    @else
-                        <p>No travel forms yet.</p>
-                    @endif
-                </div>
-            </div>
-
-            <a href="{{ route('admin.members.history', $member->id) }}">
-                <button>View Full Travel History</button>
-            </a>
-        </div>
+    <div class="card">
+        <h5>Member Details</h5>
+        <p><strong>Email:</strong> {{ $member->email }}</p>
+        <p><strong>Joined:</strong> {{ $member->created_at->format('F d, Y') }}</p>
+        <p><strong>Status:</strong> 
+            @if($isInTravel)
+                <span style="color: orange; font-weight: bold;">Currently Traveling</span>
+            @else
+                <span style="color: green; font-weight: bold;">Available</span>
+            @endif
+        </p>
     </div>
 
-    <br>
+    <div class="card">
+        <h5>Uploaded Files</h5>
+        <p><strong>Profile Photo:</strong><br>
+            @if($member->profilePhoto && Storage::disk('shared')->exists($member->profilePhoto->photo_path))
+                <img src="{{ asset('shared/' . $member->profilePhoto->photo_path) }}" class="profile-photo" width="120">
+            @else
+                <span class="text-muted">No photo uploaded.</span>
+            @endif
+        </p>
+
+        @foreach ([
+            'cv' => 'Curriculum Vitae (CV)',
+            'medical' => 'Medical Records',
+            'other' => 'Other Files'
+        ] as $type => $label)
+            <p><strong>{{ $label }}:</strong><br>
+                @if(isset($files[$type]) && count($files[$type]))
+                    <ul>
+                        @foreach ($files[$type] as $file)
+                            @if(Storage::disk('shared')->exists($file->file_path))
+                                <li class="file-entry">
+                                    <a href="{{ url('/user-files/' . $file->id . '/download') }}" target="_blank">
+                                        {{ $file->original_name }}
+                                    </a>
+                                    
+                                </li>
+                            @endif
+                        @endforeach
+                    </ul>
+                @else
+                    <span class="text-muted">No {{ strtolower($label) }} uploaded.</span>
+                @endif
+            </p>
+        @endforeach
+    </div>
+
+    <div class="btn-section">
+        @if($member->travelRequests->count())
+            <a href="{{ route('travel-requests.show', $member->travelRequests->first()->id) }}">View Latest Travel Request</a>
+        @endif
+
+        @if($member->localForms->count())
+            <a href="{{ route('local-forms.show', $member->localForms->first()->id) }}">View Latest Local Form</a>
+        @endif
+
+        @if($member->OverseasForms->count())
+            <a href="{{ route('Overseas-forms.show', $member->OverseasForms->first()->id) }}">View Latest Overseas Form</a>
+        @endif
+
+        <a href="{{ route('admin.members.history', $member->id) }}">View Full Travel History</a>
+    </div>
+
     <a href="{{ route('admin.members.index') }}" class="back-btn">⬅ Back to Member List</a>
-
 </div>
-
 @endsection
