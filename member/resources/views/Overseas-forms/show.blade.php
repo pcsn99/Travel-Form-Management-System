@@ -109,7 +109,13 @@
             <p class="form-control-plaintext">{{ $answer ?: '-' }}</p>
         </div>
     @endforeach
+
+    <a href="{{ route('admin.overseas-forms.export', $form->id) }}">
+        <button>📥 Export to Excel</button>
+    </a>
+    
 </div>
+
 
 @if($form->attachments->count())
 <div class="card">

@@ -13,6 +13,7 @@ use App\Http\Controllers\Member\LocalFormController;
 use App\Http\Controllers\Member\SignatureController;
 use App\Http\Controllers\UserProfilePhotoController;
 use App\Http\Controllers\Member\OverseasFormController;
+use App\Http\Controllers\Member\TravelFormExportController;
 
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/', [LoginController::class, 'login']);
@@ -70,6 +71,9 @@ Route::middleware('auth.member')->group(function () {
 
     Route::get('/account/signature', [SignatureController::class, 'showForm'])->name('member.signature.form');
     Route::post('/account/signature', [SignatureController::class, 'upload'])->name('member.signature.upload');
+
+    Route::get('/local-forms/{id}/export', [TravelFormExportController::class, 'exportLocal'])->name('admin.local-forms.export');
+    Route::get('/overseas-forms/{id}/export', [TravelFormExportController::class, 'exportOverseas'])->name('admin.overseas-forms.export');
 
 
     Route::post('/notifications/{id}/read', function ($id) {

@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([AdminUserSeeder::class,]);
         $this->call([CommunityMembersSeeder::class,]);
+        $this->call([TravelFormQuestionsSeeder::class,]);
 
     }
 }
