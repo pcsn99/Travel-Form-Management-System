@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OverseasFormAnswer extends Model
 {
-    protected $fillable = ['Overseas_travel_form_id', 'question_id', 'answer'];
+    protected $fillable = ['overseas_travel_form_id', 'question_id', 'answer'];
 
     public function question()
     {
@@ -15,7 +15,7 @@ class OverseasFormAnswer extends Model
 
     public function form()
     {
-        return $this->belongsTo(\App\Models\OverseasTravelForm::class, 'Overseas_travel_form_id');
+        return $this->belongsTo(\App\Models\OverseasTravelForm::class, 'overseas_travel_form_id');
     }
 }
 

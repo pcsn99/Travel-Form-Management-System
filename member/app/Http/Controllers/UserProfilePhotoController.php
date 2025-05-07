@@ -11,18 +11,20 @@ class UserProfilePhotoController extends Controller
 {
     public function update(Request $request)
     {
+        
         $request->validate([
             'photo' => 'required|image|max:2048',
         ]);
 
         $existing = UserProfilePhoto::where('user_id', Auth::id())->first();
+        //dd($existing);
         if ($existing) {
-            Storage::delete($existing->photo_path);
+            Storage::disk('shared')->delete($existing->photo_path);
             $existing->delete();
         }
-
-        $path = $request->file('photo')->store('profile_photos');
-
+        
+        $path = $request->file('photo')->store('profile_photos', 'shared');
+        //dd($path);
         UserProfilePhoto::create([
             'user_id' => Auth::id(),
             'photo_path' => $path,

@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('title', 'View Local Travel Form')
+
 @section('styles')
 <style>
-   
     body {
         background-color: #f0f2f5;
         color: #17224D;
@@ -11,147 +11,122 @@
         padding: 40px;
     }
 
-    h2 {
-        text-align: center
+    .dashboard-header {
+        background: 
+            linear-gradient(to right, rgba(23, 34, 77, 0.85), rgba(23, 34, 77, 0.85)),
+            url('/images/bg.jpeg') no-repeat center center;
+        background-size: cover;
+        padding: 40px 20px;
+        font-size: 26px;
+        font-weight: bold;
+        text-align: center;
+        color: white;
+        border-bottom: 3px solid #17224D;
+        margin-bottom: 40px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
     }
 
-   
-    .container-custom {
-        max-width: 800px;
-        margin: auto;
-        padding-top: 20px;
-    }
-
-    
     .card {
         border-radius: 12px;
         box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
         background: rgba(255, 255, 255, 0.95);
         padding: 30px;
-        margin-bottom: 50px;
+        margin-bottom: 30px;
     }
 
-    .card-header {
-        background-color: #17224D;
-        color: white;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 6px 6px 0 0;
-        padding: 15px;
-        text-align: center;
-    }
-
- 
     .form-group {
-        display: flex;
-        align-items: center; 
-        justify-content: space-between;
-        width: 100%;
-        gap: 15px; 
+        margin-bottom: 20px;
     }
 
-    input[type="file"] {
-        flex-grow: 1; 
-        padding: 12px;
-        border: 1px solid #17224D;
-        border-radius: 6px;
-        background: #f8f9fa;
-    }
-
-    button {
-        background-color: #17224D;
-        color: white;
-        font-size: 16px;
+    .form-group label {
         font-weight: bold;
-        padding: 12px;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-control-plaintext {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border: 1px solid #dee2e6;
         border-radius: 6px;
-        border: none;
-        cursor: pointer;
-        flex-shrink: 0; 
     }
 
-    button:hover {
-        background-color: #1f2f5f;
-
+    h4 {
+        margin-top: 30px;
     }
 
-    .back-btn {
+    .btn-secondary {
         background-color: #6c757d;
         color: white;
-        font-size: 16px;
         font-weight: bold;
         padding: 12px;
         border-radius: 6px;
-        display: block;
-        width: 100%;
+        display: inline-block;
         text-align: center;
         text-decoration: none;
         margin-top: 20px;
     }
 
-    .back-btn:hover {
+    .btn-secondary:hover {
         background-color: #5a6268;
     }
-
-
 </style>
 @endsection
 
-
 @section('content')
-    <h2 class="mb-4">View Local Travel Form</h2>
-
+<div class="dashboard-header">📄 View Local Travel Form</div>
+<div class="card">
     {{-- 📄 Travel Request + Form Status --}}
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">Travel Details</div>
-        <div class="card-body">
-            <p><strong>Type of Travel:</strong> {{ ucfirst($form->request->type) }}</p>
-            <p><strong>Departure:</strong> {{ $form->request->intended_departure_date }}</p>
-            <p><strong>Return:</strong> {{ $form->request->intended_return_date }}</p>
+    <h4>Travel Details</h4>
+    <p><strong>Type of Travel:</strong> {{ ucfirst($form->request->type) }}</p>
+    <p><strong>Departure:</strong> {{ $form->request->intended_departure_date }}</p>
+    <p><strong>Return:</strong> {{ $form->request->intended_return_date }}</p>
+    <hr>
+    <p><strong>Form Status:</strong> <span class="badge bg-info text-dark">{{ ucfirst($form->status) }}</span></p>
+    @if($form->admin_comment)
+        <p><strong>Remarks:</strong> {{ $form->admin_comment }}</p>
+    @endif
+</div>
 
-
-
-            <hr>
-
-            <p><strong>Form Status:</strong> <span class="badge bg-info text-dark">{{ ucfirst($form->status) }}</span></p>
-            @if($form->admin_comment)
-                <p><strong>Remarks:</strong> {{ $form->admin_comment }}</p>
-            @endif
-        </div>
-    </div>
-
-    {{-- 📋 Travel Request Answers --}}
-
+{{-- 📋 Travel Request Answers --}}
+<div class="card">
+    <h4>Travel Request Questions</h4>
     @foreach($form->request->questionAnswers as $answer)
-        <div class="mb-3">
-            <label class="fw-bold">{{ $answer->question->question }}</label>
+        <div class="form-group">
+            <label>{{ $answer->question->question }}</label>
             <p class="form-control-plaintext">{{ $answer->answer ?: '-' }}</p>
         </div>
     @endforeach
+</div>
 
-    {{-- 📝 Travel Form Answers --}}
-
+{{-- 📝 Travel Form Answers --}}
+<div class="card">
+    <h4>Travel Form Answers</h4>
     @foreach($questions as $q)
         @php
             $answer = $form->answers->where('question_id', $q->id)->first()?->answer ?? '';
         @endphp
-        <div class="mb-3">
-            <label class="fw-bold">{{ $q->question }}</label>
+        <div class="form-group">
+            <label>{{ $q->question }}</label>
             <p class="form-control-plaintext">{{ $answer ?: '-' }}</p>
         </div>
     @endforeach
+</div>
 
-    {{-- 📎 Uploaded Files --}}
-    @if($form->attachments->count())
-        <h4 class="mt-4">Uploaded Files</h4>
-        <ul class="list-group mb-4">
-            @foreach($form->attachments as $file)
-                <li class="list-group-item">
-                    <a href="{{ route('attachments.download', $file->id) }}" target="_blank">{{ $file->original_name }}</a>
-                </li>
-            @endforeach
-        </ul>
-    @endif
+{{-- 📎 Uploaded Files --}}
+@if($form->attachments->count())
+<div class="card">
+    <h4>📎 Uploaded Files</h4>
+    <ul class="list-group">
+        @foreach($form->attachments as $file)
+            <li class="list-group-item">
+                <a href="{{ route('attachments.download', $file->id) }}" target="_blank">{{ $file->original_name }}</a>
+            </li>
+        @endforeach
+    </ul>
+</div>
+@endif
 
-    <a href="{{ route('dashboard') }}" class="btn btn-secondary">⬅ Back to Dashboard</a>
+<a href="{{ route('dashboard') }}" class="btn btn-secondary">⬅ Back to Dashboard</a>
 @endsection

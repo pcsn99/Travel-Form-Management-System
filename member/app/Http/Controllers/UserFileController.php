@@ -11,15 +11,23 @@ class UserFileController extends Controller
 {
     public function store(Request $request)
     {
+        $request->validate([
+            'file' => 'required|file|max:10240', 
+        ]);
+
         $file = $request->file('file');
 
         if ($file) {
-            $path = 'public/user_uploads/' . time() . '_' . $file->getClientOriginalName();
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = 'user_uploads/' . $filename;
+
+          
             Storage::disk('shared')->put($path, file_get_contents($file));
 
+          
             UserFile::create([
                 'user_id' => auth()->id(),
-                'file_path' => $path,
+                'file_path' => $path, 
                 'original_name' => $file->getClientOriginalName(),
                 'type' => $request->type,
             ]);
@@ -27,6 +35,7 @@ class UserFileController extends Controller
 
         return back()->with('success', 'File uploaded!');
     }
+
 
     public function destroy($id)
     {
@@ -42,14 +51,16 @@ class UserFileController extends Controller
         return back()->with('success', 'File deleted.');
     }
 
+
     public function download($id)
     {
         $file = UserFile::where('user_id', auth()->id())->findOrFail($id);
-
+    
         if (!Storage::disk('shared')->exists($file->file_path)) {
             abort(404);
         }
-
+    
         return Storage::disk('shared')->download($file->file_path, $file->original_name);
     }
+    
 }

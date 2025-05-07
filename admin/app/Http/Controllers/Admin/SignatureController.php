@@ -11,7 +11,7 @@ class SignatureController extends Controller
 {
     public function showForm()
     {
-        $user = Auth::user(); // assume using default auth or admin guard
+        $user = Auth::user();
         return view('admin.signature-upload', compact('user'));
     }
 
@@ -25,14 +25,15 @@ class SignatureController extends Controller
 
         // Delete old signature if exists
         if ($user->signature) {
-            Storage::disk('public')->delete($user->signature);
+            Storage::disk('shared')->delete($user->signature);
         }
 
-        $path = $request->file('signature')->store('signatures', 'public');
+        // Store new signature in shared disk
+        $path = $request->file('signature')->store('signatures', 'shared');
 
+        // Update user's signature path
         $user->update(['signature' => $path]);
 
         return back()->with('success', 'Signature uploaded successfully!');
     }
 }
-

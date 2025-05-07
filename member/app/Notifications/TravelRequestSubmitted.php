@@ -27,27 +27,39 @@ class TravelRequestSubmitted extends Notification
 
     public function toMail($notifiable)
     {
+        $user = $this->travelRequest->user;
         return (new MailMessage)
-            ->subject('New Travel Request Submitted')
-            ->line('A community member has submitted a travel request.')
-            ->action('View Request', route('travel-requests.show', $this->travelRequest->id));
+            ->subject('New Travel Request Submitted by ' . $user->name)
+            ->greeting('Hello Admin,')
+            ->line($user->name . ' submitted a ' . ucfirst($this->travelRequest->type) . ' travel request.')
+            ->line('Travel Dates: ' . $this->travelRequest->intended_departure_date . ' to ' . $this->travelRequest->intended_return_date)
+            ->action('View Request', route('travel-requests.show', $this->travelRequest->id))
+            ->line('Thank you for managing the travel system!');
     }
 
     public function toDatabase($notifiable)
     {
+        $user = $this->travelRequest->user;
+
         return [
-            'title' => 'New Travel Request Submitted',
-            'message' => 'A community member submitted a new travel request.',
+            'title' => '🧳 Travel Request by ' . $user->name,
+            'message' => $user->name . ' submitted a ' . ucfirst($this->travelRequest->type) . ' travel request.',
             'url' => route('travel-requests.show', $this->travelRequest->id),
+            'icon' => '🧳',
+            'type' => 'travel-request',
         ];
     }
 
     public function toBroadcast($notifiable)
     {
+        $user = $this->travelRequest->user;
+
         return new BroadcastMessage([
-            'title' => 'New Travel Request Submitted',
-            'message' => 'A community member submitted a new travel request.',
+            'title' => '🧳 Travel Request by ' . $user->name,
+            'message' => $user->name . ' submitted a ' . ucfirst($this->travelRequest->type) . ' travel request.',
             'url' => route('travel-requests.show', $this->travelRequest->id),
+            'icon' => '🧳',
+            'type' => 'travel-request',
         ]);
     }
 }

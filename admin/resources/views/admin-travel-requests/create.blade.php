@@ -4,7 +4,6 @@
 
 @section('styles')
 <style>
-   
     body {
         background-color: #f0f2f5;
         color: #17224D;
@@ -12,7 +11,6 @@
         padding: 40px;
     }
 
-   
     .container-custom {
         max-width: 800px;
         margin: auto;
@@ -21,66 +19,68 @@
 
     .card {
         border-radius: 12px;
-        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
-        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        background: #ffffff;
         padding: 30px;
-        margin-bottom: 50px;
+        margin-bottom: 40px;
     }
 
     .card-header {
         background-color: #17224D;
         color: white;
-        font-size: 18px;
+        font-size: 20px;
         font-weight: bold;
         border-radius: 6px 6px 0 0;
         padding: 15px;
         text-align: center;
     }
 
-   
     .form-group {
-        margin-bottom: 15px;
+        margin-bottom: 20px;
     }
 
-    select, input[type="date"], input[type="text"], textarea {
+    label {
+        font-weight: 600;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    select, input[type="date"], textarea {
         width: 100%;
-        padding: 12px;
-        border: 1px solid #17224D;
+        padding: 10px;
+        border: 1px solid #ccc;
         border-radius: 6px;
-        background: #f8f9fa;
         font-size: 16px;
+        background: #f9f9f9;
     }
 
-    button {
+    button[type="submit"] {
         background-color: #17224D;
         color: white;
-        font-size: 16px;
         font-weight: bold;
-        padding: 12px;
+        font-size: 16px;
+        padding: 12px 24px;
         border-radius: 6px;
-        width: 100%;
         border: none;
-        margin-top: 15px;
+        width: 100%;
         cursor: pointer;
+        transition: background-color 0.3s ease;
     }
 
-    button:hover {
+    button[type="submit"]:hover {
         background-color: #1f2f5f;
     }
 
-
     .back-btn {
+        margin-top: 20px;
+        display: block;
+        text-align: center;
         background-color: #6c757d;
         color: white;
-        font-size: 16px;
         font-weight: bold;
         padding: 12px;
         border-radius: 6px;
-        display: block;
-        width: 100%;
-        text-align: center;
         text-decoration: none;
-        margin-top: 20px;
     }
 
     .back-btn:hover {
@@ -90,48 +90,36 @@
 @endsection
 
 @section('content')
-
 <div class="container-custom">
-    <!-- ✅ Create Travel Request -->
     <div class="card">
         <div class="card-header">Create Travel Request for {{ $user->name }}</div>
         <div class="card-body">
-            
             <form method="POST" action="{{ route('admin-travel-requests.store', $user->id) }}">
                 @csrf
 
                 <div class="form-group">
-                    <label><strong>Travel Type:</strong></label>
+                    <label>Travel Type</label>
                     <select name="type" required>
                         <option value="local">Local</option>
                         <option value="Overseas">Overseas</option>
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label><strong>Event:</strong></label>
-                    <input type="text" name="event" placeholder="Enter event name..." required>
-                </div>
-
-                <div class="form-group">
-                    <label><strong>Purpose:</strong></label>
-                    <input type="text" name="purpose" placeholder="Enter purpose of travel..." required>
-                </div>
-
-                <div class="form-group">
-                    <label><strong>Intended Departure Date:</strong></label>
-                    <input type="date" name="intended_departure_date" required>
-                </div>
-
-                <div class="form-group">
-                    <label><strong>Intended Return Date:</strong></label>
-                    <input type="date" name="intended_return_date" required>
+                <div style="display: flex; gap: 20px;" class="form-group">
+                    <div style="flex: 1;">
+                        <label>Departure Date:</label>
+                        <input type="date" name="intended_departure_date" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Return Date:</label>
+                        <input type="date" name="intended_return_date" required>
+                    </div>
                 </div>
 
                 @foreach($questions as $question)
                     <div class="form-group">
                         <label>{{ $question->question }}</label>
-                        <textarea name="answers[{{ $question->id }}]" rows="2" placeholder="Answer here..."></textarea>
+                        <textarea name="answers[{{ $question->id }}]" rows="2" placeholder="Answer here..." required></textarea>
                     </div>
                 @endforeach
 
@@ -142,5 +130,4 @@
         </div>
     </div>
 </div>
-
 @endsection

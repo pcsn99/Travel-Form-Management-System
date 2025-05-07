@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
+@section('title', 'Edit Travel Request')
+
 @section('styles')
 <style>
-   
     body {
         background-color: #f0f2f5;
         color: #17224D;
@@ -10,14 +11,43 @@
         padding: 40px;
     }
 
-   
+    .dashboard-header {
+        position: relative;
+        padding: 30px 20px;
+        font-size: 28px;
+        font-weight: bold;
+        text-align: center;
+        color: white;
+        margin-bottom: 40px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        text-shadow: 1px 1px 4px #000;
+    }
+
+    .dashboard-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('{{ asset('images/bg.jpeg') }}') center/cover no-repeat;
+        opacity: 0.25;
+        z-index: 0;
+    }
+
+    .dashboard-header span {
+        position: relative;
+        z-index: 1;
+    }
+
     .container-custom {
         max-width: 800px;
         margin: auto;
         padding-top: 20px;
     }
 
-    
     .card {
         border-radius: 12px;
         box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
@@ -36,21 +66,13 @@
         text-align: center;
     }
 
- 
-    .form-group {
-        display: flex;
-        align-items: center; 
-        justify-content: space-between;
+    select, input[type="date"], input[type="text"], textarea {
         width: 100%;
-        gap: 15px; 
-    }
-
-    input[type="file"] {
-        flex-grow: 1; 
         padding: 12px;
         border: 1px solid #17224D;
         border-radius: 6px;
         background: #f8f9fa;
+        margin-bottom: 15px;
     }
 
     button {
@@ -86,66 +108,51 @@
     .back-btn:hover {
         background-color: #5a6268;
     }
-
-
 </style>
 @endsection
 
 @section('content')
+<div class="container-custom">
+    <div class="dashboard-header"><span>Travel Request Form</span></div>
 
-<h2>Edit Travel Request</h2>
+    <div class="card">
+        <div class="card-header">Edit Travel Request</div>
+        <div class="card-body">
+            <form method="POST" action="{{ route('travel-requests.update', $request->id) }}" onsubmit="return validateDate();">
+                @csrf
 
-<form method="POST" action="{{ route('travel-requests.update', $request->id) }}" onsubmit="return validateDate();">
-    @csrf
+                <label>Type of Travel:</label>
+                <input type="text" value="{{ ucfirst($request->type) }}" disabled>
+                <input type="hidden" name="type" value="{{ $request->type }}">
 
-    <label>Type of Travel:</label>
-    <input type="text" value="{{ ucfirst($request->type) }}" Disabled>
-    <input type="hidden" name="type" value="{{ $request->type }}">
-    <br><br>
+                <label>Departure Date:</label>
+                <input type="date" name="intended_departure_date" id="departureDate" value="{{ $request->intended_departure_date }}" required>
 
-    <label>Departure Date:</label>
-    <input type="date" name="intended_departure_date" id="departureDate" value="{{ $request->intended_departure_date }}" required><br>
+                <label>Return Date:</label>
+                <input type="date" name="intended_return_date" id="returnDate" value="{{ $request->intended_return_date }}" required>
 
-    <label>Return Date:</label>
-    <input type="date" name="intended_return_date" id="returnDate" value="{{ $request->intended_return_date }}" required><br><br>
+                @foreach($questions as $q)
+                    @php
+                        $existingAnswer = $request->answers->firstWhere('question_id', $q->id)?->answer ?? '';
+                    @endphp
+                    <div style="margin-bottom: 15px;">
+                        <label><strong>{{ $q->question }}</strong></label>
+                        <textarea name="answers[{{ $q->id }}]" rows="2" required>{{ $existingAnswer }}</textarea>
+                    </div>
+                @endforeach
 
-    
-    @foreach($questions as $q)
-        @php
-            $existingAnswer = $request->answers->firstWhere('question_id', $q->id)?->answer ?? '';
-        @endphp
-        <div style="margin-bottom: 15px;">
-            <label><strong>{{ $q->question }}</strong></label><br>
-            <textarea name="answers[{{ $q->id }}]" rows="2" cols="60" required>{{ $existingAnswer }}</textarea>
+                <button type="submit">Save Changes</button>
+                <a href="{{ route('dashboard') }}" class="back-btn">Cancel</a>
+            </form>
         </div>
-    @endforeach
-
-    <button type="submit">Save Changes</button>
-    <a href="{{ route('dashboard') }}">Cancel</a>
-</form>
-
-
+    </div>
+</div>
 
 <script>
     function validateDate() {
-        const travelType = document.getElementById('travelType').value;
         const dep = new Date(document.getElementById('departureDate').value);
         const ret = new Date(document.getElementById('returnDate').value);
         const today = new Date();
-
-        let minDep = new Date(today);
-        if (travelType === 'local') {
-            minDep.setDate(minDep.getDate() + 7);
-        } else if (travelType === 'Overseas') {
-            minDep.setMonth(minDep.getMonth() + 2);
-        }
-
-        if (dep < minDep) {
-            const warn = (travelType === 'local')
-                ? "For local travel, please submit at least 1 week in advance. Proceed?"
-                : "For Overseas travel, please submit at least 2 months in advance. Proceed?";
-            if (!confirm(warn)) return false;
-        }
 
         if (ret < dep) {
             alert("Return date cannot be earlier than departure date.");
@@ -155,7 +162,4 @@
         return true;
     }
 </script>
-
-
 @endsection
-

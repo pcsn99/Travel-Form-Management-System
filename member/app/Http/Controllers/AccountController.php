@@ -10,6 +10,8 @@ class AccountController extends Controller
     public function show()
     {
         $user = Auth::user();
+
+       //dd($user); 
         return view('account', [
             'user' => $user,
             'files' => $user->files->groupBy('type'),
@@ -31,6 +33,7 @@ class AccountController extends Controller
             'email' => $request->email,
         ]);
 
+        
         return redirect()->back()->with('success', 'Account updated successfully!');
     }
 }

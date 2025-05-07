@@ -62,8 +62,8 @@ return [
 
         'shared' => [
             'driver' => 'local',
-            'root' => 'D:/Loyola/shared-laravel-storage', 
-            'url' => env('APP_URL') . '/storage',
+            'root' => '../../shared-laravel-storage', 
+            'url' => env('APP_URL') . '/shared-laravel-storage',
             'visibility' => 'public',
         ],
 
@@ -82,6 +82,8 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
+        public_path('shared') => base_path('../shared-laravel-storage'),
+        
     ],
 
 ];

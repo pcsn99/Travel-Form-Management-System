@@ -11,16 +11,32 @@
         padding: 40px;
     }
     .dashboard-header {
-        background-color: #17224D;
-        padding: 20px;
-        font-size: 26px;
+        position: relative;
+        padding: 30px 20px;
+        font-size: 28px;
         font-weight: bold;
         text-align: center;
         color: white;
-        border-bottom: 3px solid #17224D;
         margin-bottom: 40px;
+        border-radius: 12px;
+        overflow: hidden;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-        border-radius: 8px;
+        text-shadow: 1px 1px 4px #000;
+    }
+    .dashboard-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('{{ asset('images/bg.jpeg') }}') center/cover no-repeat;
+        opacity: 0.25;
+        z-index: 0;
+    }
+    .dashboard-header span {
+        position: relative;
+        z-index: 1;
     }
     .container-custom {
         max-width: 800px;
@@ -33,7 +49,6 @@
         padding: 30px;
         margin-bottom: 50px;
     }
-
     .card-header {
         background-color: #17224D;
         color: white;
@@ -43,7 +58,6 @@
         padding: 15px;
         text-align: center;
     }
-
     select, input[type="date"], input[type="text"], textarea {
         width: 100%;
         padding: 12px;
@@ -52,8 +66,13 @@
         background: #f8f9fa;
         margin-bottom: 15px;
     }
-
-
+    .date-row {
+        display: flex;
+        gap: 20px;
+    }
+    .date-row > div {
+        flex: 1;
+    }
     .btn-primary {
         background-color: #17224D;
         border: none;
@@ -64,7 +83,6 @@
         border-radius: 6px;
         margin-top: 20px;
     }
-
 </style>
 @endsection
 
@@ -72,11 +90,11 @@
 
 <div class="container-custom">
     <!-- ✅ Dashboard Header -->
-    <div class="dashboard-header">Create Travel Request</div>
+    <div class="dashboard-header"><span>Travel Request Form</span></div>
 
     <!-- ✅ Travel Request Form -->
     <div class="card">
-        <div class="card-header">Travel Request Form</div>
+        <div class="card-header">Create Travel Request</div>
         <div class="card-body">
             <form method="POST" action="{{ route('travel-requests.store') }}" onsubmit="return validateDate();">
                 @csrf
@@ -88,17 +106,16 @@
                     <option value="Overseas">Overseas</option>
                 </select>
 
-                <label>Event:</label>
-                <input type="text" name="event" required>
-
-                <label>Purpose:</label>
-                <textarea name="purpose" rows="2" required></textarea>
-
-                <label>Departure Date:</label>
-                <input type="date" name="intended_departure_date" id="departureDate" required>
-
-                <label>Return Date:</label>
-                <input type="date" name="intended_return_date" id="returnDate" required>
+                <div class="date-row">
+                    <div>
+                        <label>Departure Date:</label>
+                        <input type="date" name="intended_departure_date" id="departureDate" required>
+                    </div>
+                    <div>
+                        <label>Return Date:</label>
+                        <input type="date" name="intended_return_date" id="returnDate" required>
+                    </div>
+                </div>
 
                 <h4>Answer the following:</h4>
                 @foreach($questions as $q)

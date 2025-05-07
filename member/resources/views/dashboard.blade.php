@@ -2,15 +2,13 @@
 
 @section('styles')
 <style>
-    /* ✅ Page Styles */
     body {
-        background-color: #f0f2f5; 
+        background-color: #f0f2f5;
         color: #17224D;
         font-family: 'Inter', sans-serif;
         padding: 20px;
     }
 
-    /* ✅ Dashboard Header */
     .dashboard-header {
         background-color: #17224D;
         padding: 15px;
@@ -23,68 +21,43 @@
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
     }
 
-    /* ✅ Image Section */
-    .dashboard-image-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .dashboard-image {
-        width: 90%;
-        max-width: 800px;
+    .welcome-section {
+        background-image: url('{{ asset('images/bg.jpeg') }}');
+        background-size: cover;
+        background-position: center;
         border-radius: 12px;
-        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+        padding: 40px 20px;
+        text-align: center;
+        margin-bottom: 30px;
+        position: relative;
+        color: white;
+        overflow: hidden;
     }
 
-    /* ✅ Content Container */
+    .welcome-section::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 0;
+        border-radius: 12px;
+    }
+
+    .welcome-section h2,
+    .welcome-section .btn {
+        position: relative;
+        z-index: 1;
+    }
+
     .dashboard-container {
         max-width: 800px;
         margin: auto;
         padding: 30px;
-        background: rgba(255, 255, 255, 0.9); 
+        background: rgba(255, 255, 255, 0.95);
         border-radius: 12px;
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
     }
 
-    /* ✅ Sidebar - Adjust Vertical Space */
-    .sidebar {
-        width: 260px;
-        background-color: #17224D;
-        color: white;
-        padding: 20px 10px;
-        position: fixed;
-        left: 0;
-        top: 60px; /* ✅ Space between top bar and sidebar */
-        height: calc(100vh - 60px); /* ✅ Adjusted height */
-        transition: all 0.3s ease;
-    }
-
-    /* ✅ Ensure "Dashboard" button has space */
-    .sidebar a:first-child {
-        margin-top: 20px; /* ✅ Creates vertical spacing for adjustment */
-    }
-
-    .sidebar a {
-        display: flex;
-        align-items: center;
-        padding: 14px;
-        gap: 10px;
-        text-decoration: none;
-        color: white;
-        border-radius: 4px;
-        white-space: nowrap;
-        overflow: hidden;
-        transition: all 0.3s ease;
-    }
-
-    .sidebar a img {
-        width: 35px; /* ✅ Adjusted to prevent cut-off */
-        height: 35px;
-    }
-
-    /* ✅ Dashboard Sections */
     .dashboard-section {
         margin-top: 30px;
         padding: 20px;
@@ -101,7 +74,6 @@
         margin-bottom: 10px;
     }
 
-    /* ✅ Lists */
     .dashboard-section ul {
         list-style-type: none;
         padding: 0;
@@ -113,7 +85,6 @@
         border-bottom: 1px solid rgba(23, 34, 77, 0.2);
     }
 
-    /* ✅ Links */
     .dashboard-section a {
         color: #2980b9;
         font-size: 16px;
@@ -128,22 +99,26 @@
 @endsection
 
 @section('content')
-
-<!-- ✅ Dashboard Header -->
 <div class="dashboard-header">Dashboard</div>
 
-<!-- ✅ Image Section -->
-<div class="dashboard-image-container">
-    <img src="{{ asset('images/bg.jpeg') }}" alt="Dashboard Image" class="dashboard-image">
+<div class="welcome-section">
+    <h2>Welcome, {{ Auth::user()->name }}!</h2>
+    <a href="{{ route('travel-requests.create') }}" class="btn btn-light mt-3">
+        <i class="bi bi-plus-circle"></i> Create Travel Request
+    </a>
 </div>
 
-<!-- ✅ Content Section -->
 <div class="dashboard-container">
     @if(session('success'))
         <p style="color: #27ae60;">{{ session('success') }}</p>
     @endif
 
-    <!-- ✅ Pending Travel Requests -->
+    @if(count($pendingForms))
+    <div class="alert alert-warning">
+        <strong>Reminder:</strong> You have pending travel forms. Please scroll down and complete them.
+    </div>
+    @endif
+
     <div class="dashboard-section">
         <h3>Pending Travel Requests</h3>
         <ul>
@@ -164,7 +139,6 @@
         </ul>
     </div>
 
-    <!-- ✅ Pending Travel Forms -->
     <div class="dashboard-section">
         <h3>Pending Travel Forms</h3>
         <ul>
@@ -182,7 +156,6 @@
         </ul>
     </div>
 
-    <!-- ✅ Submitted Travel Forms -->
     <div class="dashboard-section">
         <h3>Submitted Travel Forms</h3>
         <ul>
@@ -201,5 +174,4 @@
         </ul>
     </div>
 </div>
-
 @endsection

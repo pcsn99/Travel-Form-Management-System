@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Member;
 
 use App\Models\User;
 use App\Notifications\TravelFormSubmitted;
-
 use Illuminate\Http\Request;
 use App\Models\OverseasFormAnswer;
 use App\Models\OverseasTravelForm;
-use App\Models\LocalTravelForm;
 use App\Models\OverseasFormQuestion;
 use App\Http\Controllers\Controller;
 
@@ -18,7 +16,6 @@ class OverseasFormController extends Controller
     {
         $form = OverseasTravelForm::with(['answers', 'request'])->findOrFail($id);
 
-        // ✅ Check ownership
         if ($form->request->user_id !== auth()->id()) {
             abort(403);
         }
@@ -34,18 +31,19 @@ class OverseasFormController extends Controller
     {
         $form = OverseasTravelForm::with('request')->findOrFail($id);
 
-        // ✅ Only allow if user owns it
         if ($form->request->user_id !== auth()->id()) {
             abort(403);
         }
 
         foreach ($request->answers as $questionId => $answerText) {
-            $answer = OverseasFormAnswer::updateOrCreate(
+            OverseasFormAnswer::updateOrCreate(
                 [
-                    'Overseas_travel_form_id' => $form->id,
+                    'overseas_travel_form_id' => $form->id,
                     'question_id' => $questionId,
                 ],
                 [
+                    'overseas_travel_form_id' => $form->id,
+                    'question_id' => $questionId,
                     'answer' => $request->answers_other[$questionId] ?? $answerText,
                 ]
             );
@@ -57,12 +55,11 @@ class OverseasFormController extends Controller
 
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
-            $admin->notify(new TravelFormSubmitted());
+            $admin->notify(new TravelFormSubmitted($form, $form->request));
         }
 
         return redirect()->back()->with('success', 'Form submitted successfully!');
     }
-
 
     public function cancel($id)
     {
@@ -84,26 +81,26 @@ class OverseasFormController extends Controller
     {
         $form = OverseasTravelForm::with([
             'answers',
-            'request.questionAnswers.question' 
+            'request.questionAnswers.question'
         ])->findOrFail($id);
-    
+
         if ($form->request->user_id !== auth()->id()) {
             abort(403);
         }
-    
-       
-        $questions = \App\Models\OverseasFormQuestion::where('status', 'active')
+
+        $questions = OverseasFormQuestion::where('status', 'active')
             ->orWhereIn('id', $form->answers->pluck('question_id'))
             ->get();
-    
+
         return view('Overseas-forms.show', compact('form', 'questions'));
     }
 
     public function all()
     {
-        $forms = OverseasTravelForm::with('request')->whereHas('request', fn($q) => $q->where('user_id', auth()->id()))->latest()->get();
+        $forms = OverseasTravelForm::with('request')
+            ->whereHas('request', fn($q) => $q->where('user_id', auth()->id()))
+            ->latest()->get();
+
         return view('Overseas-forms.index', compact('forms'));
     }
-    
-
 }

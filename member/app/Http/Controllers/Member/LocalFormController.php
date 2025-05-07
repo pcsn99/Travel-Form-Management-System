@@ -17,7 +17,6 @@ class LocalFormController extends Controller
     {
         $form = LocalTravelForm::with(['answers', 'request'])->findOrFail($id);
 
-        // Make sure user owns this form
         if ($form->request->user_id !== auth()->id()) {
             abort(403);
         }
@@ -55,7 +54,7 @@ class LocalFormController extends Controller
 
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
-            $admin->notify(new TravelFormSubmitted());
+            $admin->notify(new TravelFormSubmitted($form, $form->request));
         }
 
         return redirect()->back()->with('success', 'Form submitted successfully!');
@@ -80,18 +79,18 @@ class LocalFormController extends Controller
     public function show($id)
     {
         $form = LocalTravelForm::with([
-            'answers', 
-            'request.questionAnswers.question' 
+            'answers',
+            'request.questionAnswers.question'
         ])->findOrFail($id);
-    
+
         if ($form->request->user_id !== auth()->id()) {
             abort(403);
         }
-    
+
         $questions = \App\Models\LocalFormQuestion::where('status', 'active')
             ->orWhereIn('id', $form->answers->pluck('question_id'))
             ->get();
-    
+
         return view('local-forms.show', compact('form', 'questions'));
     }
 
