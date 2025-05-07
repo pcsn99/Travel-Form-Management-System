@@ -183,6 +183,6 @@
         </div>
     @endif
 
-    <a href="{{ route('Overseas-forms.index') }}" class="btn-link">⬅️ Back</a>
+    <a href="{{ url()->previous() }}" class="btn btn-secondary">← Back</a>
 </div>
 @endsection
