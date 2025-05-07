@@ -63,7 +63,6 @@ class TravelRequestController extends Controller
     {
         $travelRequest = TravelRequest::findOrFail($id);
         $travelRequest->status = 'rejected';
-        $travelRequest->rejected_at = now();
         $travelRequest->admin_comment = $request->admin_comment;
         $travelRequest->save();
 
