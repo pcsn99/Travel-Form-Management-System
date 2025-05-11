@@ -130,5 +130,7 @@
 </div>
 @endif
 
-<a href="{{ route('dashboard') }}" class="btn btn-secondary">⬅ Back to Dashboard</a>
+<a href="{{ url()->previous() }}" class="btn btn-secondary">← Back</a>
+
+<!--a href="{{ route('dashboard') }}" class="btn btn-secondary">⬅ Back to Dashboard</a-->
 @endsection
