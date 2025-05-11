@@ -246,7 +246,7 @@
                             let html = `<h5>🧳 Traveling Members (${data.traveling.length})</h5>`;
                             html += data.traveling.length ? '<ul>' + data.traveling.map(n => `<li>${n}</li>`).join('') + '</ul>' : '<p>None</p>';
 
-                            html += `<h5 class="mt-3">✅ Available Members (${data.available.length})</h5>`;
+                            html += `<h5 class="mt-3">Available Members (${data.available.length})</h5>`;
                             html += data.available.length ? '<ul>' + data.available.map(n => `<li>${n}</li>`).join('') + '</ul>' : '<p>None</p>';
 
                             modalBody.innerHTML = html;

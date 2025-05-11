@@ -118,7 +118,7 @@
         @endif
 
         <a href="{{ route('admin.overseas-forms.export', $form->id) }}">
-            <button>📥 Export to Excel</button>
+            <button>Export to Excel</button>
         </a>
     </div>
 
@@ -129,7 +129,7 @@
     </div>
 
     <div class="card">
-        <h4>🧾 Answers</h4>
+        <h4>Answers</h4>
         <ul>
             @foreach($form->answers as $answer)
                 <li><strong>{{ $answer->question->question }}:</strong> {{ $answer->answer }}</li>
@@ -142,13 +142,13 @@
         <form method="POST" action="{{ route('Overseas-forms.approve', $form->id) }}" onsubmit="return confirm('Are you sure you want to approve this form?');">
             @csrf
             <textarea name="admin_comment" placeholder="Optional comment..."></textarea>
-            <button type="submit">✅ Approve</button>
+            <button type="submit">Approve</button>
         </form>
 
         <form method="POST" action="{{ route('Overseas-forms.reject', $form->id) }}" onsubmit="return confirm('Are you sure you want to reject this form?');">
             @csrf
             <textarea name="admin_comment" placeholder="Optional rejection reason..."></textarea>
-            <button type="submit" style="background-color: #dc3545;">❌ Reject</button>
+            <button type="submit" style="background-color: #dc3545;">Reject</button>
         </form>
     </div>
     @endif
@@ -157,20 +157,20 @@
     <div class="card">
         <form method="POST" action="{{ route('Overseas-forms.reset', $form->id) }}" onsubmit="return confirm('Reset this form back to pending status?');">
             @csrf
-            <button type="submit">🔁 Set Status to Pending</button>
+            <button type="submit">Set Status to Pending</button>
         </form>
     </div>
     @endif
 
     @if($form->admin_comment)
         <div class="card">
-            <p><strong>🗒 Admin Comment:</strong> {{ $form->admin_comment }}</p>
+            <p><strong>Admin Comment:</strong> {{ $form->admin_comment }}</p>
         </div>
     @endif
 
     @if($form->attachments->count())
         <div class="card">
-            <h4>📁 Additional Requirements</h4>
+            <h4>Additional Requirements</h4>
             <ul class="file-list">
                 @foreach($form->attachments as $file)
                     <li>

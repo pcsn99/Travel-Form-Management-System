@@ -100,7 +100,7 @@
                             <td>{{ $member->email }}</td>
                             <td>{{ $member->created_at->format('Y-m-d') }}</td>
                             <td>
-                                <a href="{{ route('admin.members.show', $member->id) }}" class="view-btn">👁 View Profile</a>
+                                <a href="{{ route('admin.members.show', $member->id) }}" class="view-btn">View Profile</a>
                             </td>
                         </tr>
                     @endforeach

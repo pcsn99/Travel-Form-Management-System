@@ -30,7 +30,7 @@
             <input type="password" name="password_confirmation" class="form-control">
         </div>
 
-        <button type="submit" class="btn btn-success">💾 Update</button>
+        <button type="submit" class="btn btn-success">Update</button>
         <a href="{{ route('admin-accounts.index') }}" class="btn btn-secondary">⬅ Cancel</a>
     </form>
 </div>

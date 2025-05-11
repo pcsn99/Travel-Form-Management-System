@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2>✏️ Edit Overseas Form Question</h2>
+    <h2>Edit Overseas Form Question</h2>
 
     <form method="POST" action="{{ route('Overseas-form-questions.update', $question->id) }}">
         @csrf
@@ -30,8 +30,8 @@
         </div>
 
         <br>
-        <button type="submit">✅ Update</button>
-        <a href="{{ route('Overseas-form-questions.index') }}">🔙 Back</a>
+        <button type="submit">Update</button>
+        <a href="{{ route('Overseas-form-questions.index') }}">Back</a>
     </form>
 
     <script>

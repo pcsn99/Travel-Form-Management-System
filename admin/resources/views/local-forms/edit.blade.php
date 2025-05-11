@@ -127,8 +127,8 @@
                     @endif
                 </div>
             @endforeach
-            <button type="submit">✅ Save Changes</button>
-            <a href="{{ route('local-forms.show', $form->id) }}" class="btn-link" style="margin-left: 10px;">🔙 Cancel</a>
+            <button type="submit">Save Changes</button>
+            <a href="{{ route('local-forms.show', $form->id) }}" class="btn-link" style="margin-left: 10px;">Cancel</a>
         </form>
     </div>
 
@@ -145,7 +145,7 @@
 
         @if($form->attachments->count())
             <div class="file-list">
-                <h4>📁 Uploaded Requirements</h4>
+                <h4>Uploaded Requirements</h4>
                 <ul>
                     @foreach($form->attachments as $file)
                         <li>

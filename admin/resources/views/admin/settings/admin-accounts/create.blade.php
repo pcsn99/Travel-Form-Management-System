@@ -29,7 +29,7 @@
             <input type="password" name="password_confirmation" class="form-control" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">✅ Create Admin</button>
+        <button type="submit" class="btn btn-primary">Create Admin</button>
         <a href="{{ route('admin-accounts.index') }}" class="btn btn-secondary">⬅ Back</a>
     </form>
 </div>
