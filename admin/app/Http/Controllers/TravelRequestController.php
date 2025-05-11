@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TravelRequest;
-use App\Models\TravelRequestAnswer;
 use App\Models\LocalTravelForm;
 use App\Models\OverseasTravelForm;
+use App\Models\TravelRequestAnswer;
 use App\Notifications\TravelRequestApproved;
+use App\Notifications\TravelRequestRejected;
 
 class TravelRequestController extends Controller
 {
@@ -66,6 +67,28 @@ class TravelRequestController extends Controller
         $travelRequest->admin_comment = $request->admin_comment;
         $travelRequest->save();
 
+        $travelRequest->user->notify(new TravelRequestRejected($travelRequest));
         return redirect()->route('travel-requests.index')->with('success', 'Request rejected.');
     }
+
+    public function resetStatus($id)
+    {
+        $request = TravelRequest::with(['localForm', 'OverseasForm'])->findOrFail($id);
+    
+        
+        if ($request->type === 'local' && $request->localForm) {
+            $request->localForm->delete();
+        } elseif ($request->type === 'overseas' && $request->OverseasForm) {
+            $request->OverseasForm->delete();
+        }
+    
+       
+        $request->status = 'pending';
+        $request->approved_at = null;
+        $request->admin_comment = null;
+        $request->save();
+    
+        return redirect()->route('travel-requests.show', $request->id)->with('success', 'Travel request reset to pending.');
+    }
+
 }

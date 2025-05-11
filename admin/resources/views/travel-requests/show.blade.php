@@ -194,6 +194,13 @@
     </div>
     @endif
 
+    @if($request->status !== 'pending')
+        <form method="POST" action="{{ route('travel-requests.reset', $request->id) }}" onsubmit="return confirm('Reset this request back to pending status? This will delete any travel forms related to this request');">
+            @csrf
+            <button type="submit" style="background-color: #ffc107; color: black;">🔁 Set Status to Pending</button>
+        </form>
+    @endif
+
     <a href="{{ route('travel-requests.index') }}" class="btn-link">⬅ Back to Travel Requests</a>
 </div>
 @endsection

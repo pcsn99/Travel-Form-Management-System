@@ -100,6 +100,7 @@
                             <th>Status</th>
                             <th>Departure</th>
                             <th>Return</th>
+                            <th>Submitted</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -110,6 +111,7 @@
                                 <td>{{ ucfirst($form->status) }}</td>
                                 <td>{{ \Carbon\Carbon::parse($form->request->intended_departure_date)->format('F d, Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($form->request->intended_return_date)->format('F d, Y') }}</td>
+                                <td>{{ $form->created_at->format('F d, Y') }}</td>
                                 <td><a href="{{ route('Overseas-forms.show', $form->id) }}" class="view-btn">View</a></td>
                             </tr>
                         @endforeach

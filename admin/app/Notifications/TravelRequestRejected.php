@@ -30,7 +30,7 @@ class TravelRequestRejected extends Notification
         ];
     }
 
-    // Optional: enable if you decide to use email
+    
     public function toMail($notifiable)
     {
         return (new MailMessage)

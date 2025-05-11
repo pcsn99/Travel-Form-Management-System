@@ -138,20 +138,64 @@
     </div>
 
     @if(in_array($form->status, ['submitted', 'pending']))
-    <div class="card">
-        <form method="POST" action="{{ route('Overseas-forms.approve', $form->id) }}" onsubmit="return confirm('Are you sure you want to approve this form?');">
-            @csrf
-            <textarea name="admin_comment" placeholder="Optional comment..."></textarea>
-            <button type="submit">✅ Approve</button>
-        </form>
-
-        <form method="POST" action="{{ route('Overseas-forms.reject', $form->id) }}" onsubmit="return confirm('Are you sure you want to reject this form?');">
-            @csrf
-            <textarea name="admin_comment" placeholder="Optional rejection reason..."></textarea>
-            <button type="submit" style="background-color: #dc3545;">❌ Reject</button>
-        </form>
+    <div class="card py-3 px-4">
+        <!-- Buttons aligned to left -->
+        <div class="d-flex flex-column align-items-start gap-2">
+            <button type="button" class="btn btn-dark px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#approveModal">
+                ✅ Approve
+            </button>
+            <button type="button" class="btn btn-danger px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#rejectModal">
+                ❌ Reject
+            </button>
+        </div>
     </div>
     @endif
+
+
+<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form method="POST" action="{{ route('Overseas-forms.approve', $form->id) }}">
+        @csrf
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="approveModalLabel">Confirm Approval</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Please leave an optional comment before approving this form:</p>
+            <textarea name="admin_comment" class="form-control" placeholder="Your comment..."></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success">✅ Approve</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+
+  <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form method="POST" action="{{ route('Overseas-forms.reject', $form->id) }}">
+        @csrf
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="rejectModalLabel">Confirm Rejection</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Please leave a reason for rejecting this form:</p>
+            <textarea name="admin_comment" class="form-control" placeholder="Reason for rejection..."></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-danger">❌ Reject</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 
     @if($form->status !== 'pending')
     <div class="card">

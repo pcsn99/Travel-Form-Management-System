@@ -41,6 +41,7 @@ Route::middleware('auth.admin')->group(function () {
     Route::get('/travel-requests/{id}', [TravelRequestController::class, 'show'])->name('travel-requests.show');
     Route::post('/travel-requests/{id}/approve', [TravelRequestController::class, 'approve'])->name('travel-requests.approve');
     Route::post('/travel-requests/{id}/reject', [TravelRequestController::class, 'reject'])->name('travel-requests.reject');
+    Route::post('/travel-requests/{id}/reset', [TravelRequestController::class, 'resetStatus'])->name('travel-requests.reset');
 
 
     Route::get('/local-forms', [LocalFormController::class, 'index'])->name('local-forms.index');
@@ -64,6 +65,7 @@ Route::middleware('auth.admin')->group(function () {
     Route::get('/admin-travel-requests/find', [AdminTravelRequestController::class, 'findUser'])->name('admin-travel-requests.find');
     Route::get('/admin-travel-requests/create/{userId}', [AdminTravelRequestController::class, 'createForm'])->name('admin-travel-requests.create');
     Route::post('/admin-travel-requests/store/{userId}', [AdminTravelRequestController::class, 'store'])->name('admin-travel-requests.store');
+ 
 
     Route::get('/local-forms/{id}/edit', [LocalFormController::class, 'edit'])->name('local-forms.edit');
     Route::post('/local-forms/{id}/update', [LocalFormController::class, 'update'])->name('local-forms.update');
@@ -98,6 +100,8 @@ Route::middleware('auth.admin')->group(function () {
     Route::get('/admin-accounts/{id}/edit', [AdminAccountController::class, 'edit'])->name('admin-accounts.edit');
     Route::put('/admin-accounts/{id}', [AdminAccountController::class, 'update'])->name('admin-accounts.update');
     Route::delete('/admin-accounts/{id}', [AdminAccountController::class, 'destroy'])->name('admin-accounts.destroy');
+
+    
 
 
 

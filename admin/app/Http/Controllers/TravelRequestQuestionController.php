@@ -9,7 +9,7 @@ class TravelRequestQuestionController extends Controller
 {
     public function index()
     {
-        $questions = TravelRequestQuestion::all();
+        $questions = TravelRequestQuestion::where('status', '!=', 'disabled')->get();
         return view('travel-requests.questions.index', compact('questions'));
     }
 
