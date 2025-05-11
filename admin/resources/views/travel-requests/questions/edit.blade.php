@@ -11,7 +11,7 @@
             <input type="text" name="question" value="{{ $question->question }}" required>
         </div>
         <br>
-        <button type="submit">✅ Update</button>
-        <a href="{{ route('travel-request-questions.index') }}">🔙 Back</a>
+        <button type="submit">Update</button>
+        <a href="{{ route('travel-request-questions.index') }}">Back</a>
     </form>
 @endsection
