@@ -75,7 +75,7 @@
 @endsection
 
 @section('content')
-<div class="dashboard-header">📄 View Overseas Travel Form</div>
+<div class="dashboard-header">View Overseas Travel Form</div>
 <div class="card">
     <h4>Travel Details</h4>
     <p><strong>Type of Travel:</strong> {{ ucfirst($form->request->type) }}</p>
@@ -111,7 +111,7 @@
     @endforeach
 
     <a href="{{ route('admin.overseas-forms.export', $form->id) }}">
-        <button>📥 Export to Excel</button>
+        <button>Export to Excel</button>
     </a>
     
 </div>
@@ -119,7 +119,7 @@
 
 @if($form->attachments->count())
 <div class="card">
-    <h4>📎 Uploaded Files</h4>
+    <h4>Uploaded Files</h4>
     <ul class="list-group">
         @foreach($form->attachments as $file)
             <li class="list-group-item">
