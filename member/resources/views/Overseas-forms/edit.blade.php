@@ -153,7 +153,7 @@
                 </div>
             @endforeach
 
-            <button type="submit">✅ Submit Form</button>
+            <button type="submit">Submit Form</button>
         </form>
     </div>
 
@@ -166,11 +166,11 @@
             <input type="hidden" name="form_id" value="{{ $form->id }}">
 
             <input type="file" name="file" accept=".jpg,.jpeg,.png,.pdf" required>
-            <button type="submit">📤 Upload</button>
+            <button type="submit">Upload</button>
         </form>
 
         @if($form->attachments->count())
-        <h4 style="margin-top: 20px;">📎 Uploaded Files</h4>
+        <h4 style="margin-top: 20px;">Uploaded Files</h4>
         <ul class="file-list">
             @foreach($form->attachments as $file)
                 <li>
@@ -186,14 +186,14 @@
         @endif
     </div>
     @else
-        <p style="margin-top: 30px; color: gray;">📁 File upload is available after form submission.</p>
+        <p style="margin-top: 30px; color: gray;">File upload is available after form submission.</p>
     @endif
 
     <form method="POST" action="{{ route('member.Overseas-forms.cancel', $form->id) }}"
         onsubmit="return confirm('Are you sure you want to cancel this travel form? This cannot be undone.');">
         @csrf
         @method('PATCH')
-        <button type="submit" class="btn-danger">❌ Cancel Form</button>
+        <button type="submit" class="btn-danger">Cancel Form</button>
     </form>
 
     <a href="{{ route('dashboard') }}">

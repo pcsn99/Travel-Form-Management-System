@@ -112,12 +112,12 @@
         <div class="button-group">
             @if(in_array($form->status, ['submitted', 'pending']))
                 <a href="{{ route('local-forms.edit', $form->id) }}">
-                    <button>✏️ Edit Form</button>
+                    <button>Edit Form</button>
                 </a>
             @endif
 
             <a href="{{ route('local-forms.export', $form->id) }}">
-                <button>📥 Export to Excel</button>
+                <button>Export to Excel</button>
             </a>
         </div>
 
@@ -150,6 +150,7 @@
             <div class="modal-dialog">
             <form method="POST" action="{{ route('local-forms.approve', $form->id) }}">
                 @csrf
+
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="approveModalLabel">Confirm Approval</h5>
@@ -164,6 +165,10 @@
                     <button type="submit" class="btn btn-success">✅ Approve</button>
                 </div>
                 </div>
+
+                <textarea name="admin_comment" placeholder="Optional comment..." rows="2"></textarea>
+                <button type="submit">Approve</button>
+
             </form>
             </div>
         </div>
@@ -173,6 +178,7 @@
             <div class="modal-dialog">
             <form method="POST" action="{{ route('local-forms.reject', $form->id) }}">
                 @csrf
+
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="rejectModalLabel">Confirm Rejection</h5>
@@ -187,23 +193,27 @@
                     <button type="submit" class="btn btn-danger">❌ Reject</button>
                 </div>
                 </div>
+
+                <textarea name="admin_comment" placeholder="Optional rejection reason..." rows="2"></textarea>
+                <button type="submit" style="background-color: #dc3545;">Reject</button>
+
             </form>
             </div>
         </div>
         @if($form->status !== 'pending')
             <form method="POST" action="{{ route('local-forms.reset', $form->id) }}" onsubmit="return confirm('Reset this form back to pending status?');">
                 @csrf
-                <button type="submit" style="background-color: #ffc107; color: black;">🔁 Set Status to Pending</button>
+                <button type="submit" style="background-color: #ffc107; color: black;">Set Status to Pending</button>
             </form>
         @endif
 
         @if($form->admin_comment)
-            <p><strong>🗒 Admin Comment:</strong> {{ $form->admin_comment }}</p>
+            <p><strong>Admin Comment:</strong> {{ $form->admin_comment }}</p>
         @endif
 
         @if($form->attachments->count())
             <hr>
-            <h4>📁 Additional Requirements</h4>
+            <h4>Additional Requirements</h4>
             <ul>
                 @foreach($form->attachments as $file)
                     <li>
@@ -216,7 +226,7 @@
         @endif
 
         <hr>
-        <a href="{{ route('local-forms.index') }}" class="btn-link">⬅️ Back to Local Forms</a>
+        <a href="{{ route('local-forms.index') }}" class="btn-link">⬅Back to Local Forms</a>
     </div>
 </div>
 @endsection

@@ -11,7 +11,7 @@ class AccountController extends Controller
     {
         $user = Auth::user();
 
-       //dd($user); 
+        //dd($user->profilePhoto->photo_path); 
         return view('account', [
             'user' => $user,
             'files' => $user->files->groupBy('type'),

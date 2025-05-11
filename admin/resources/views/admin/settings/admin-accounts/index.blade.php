@@ -27,11 +27,11 @@
                 <td>{{ $admin->email }}</td>
                 <td>{{ $admin->created_at }}</td>
                 <td>
-                    <a href="{{ route('admin-accounts.edit', $admin->id) }}" class="btn btn-sm btn-warning">✏️ Edit</a>
+                    <a href="{{ route('admin-accounts.edit', $admin->id) }}" class="btn btn-sm btn-warning">Edit</a>
                     @if(auth()->id() !== $admin->id)
                     <form action="{{ route('admin-accounts.destroy', $admin->id) }}" method="POST" style="display:inline;">
                         @csrf @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this admin?')">🗑️ Delete</button>
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this admin?')">Delete</button>
                     </form>
                     @endif
                 </td>

@@ -75,7 +75,7 @@
 @endsection
 
 @section('content')
-<div class="dashboard-header">📄 View Local Travel Form</div>
+<div class="dashboard-header">View Local Travel Form</div>
 <div class="card">
     {{-- 📄 Travel Request + Form Status --}}
     <h4>Travel Details</h4>
@@ -117,7 +117,7 @@
 {{-- 📎 Uploaded Files --}}
 @if($form->attachments->count())
 <div class="card">
-    <h4>📎 Uploaded Files</h4>
+    <h4>Uploaded Files</h4>
     <ul class="list-group">
         @foreach($form->attachments as $file)
             <li class="list-group-item">
@@ -128,5 +128,6 @@
 </div>
 @endif
 
-<a href="{{ route('dashboard') }}" class="btn btn-secondary">⬅ Back to Dashboard</a>
+<a href="{{ url()->previous() }}" class="btn btn-secondary">← Back</a>
+<!--a href="{{ route('dashboard') }}" class="btn btn-secondary">⬅ Back to Dashboard</a-->
 @endsection
