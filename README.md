@@ -38,10 +38,17 @@ git clone https://github.com/pcsn99/Travel-Form-Management-System.git
 ```
 
 ### 2. Create Symlinks 
-
+For LINUX
 ```bash
 ln -s ../../shared admin/public
 ln -s ../../shared member/public
+
+```
+
+For Windows
+```bash
+mklink /D admin\public\ ..\shared
+mklink /D member\public\ ..\shared
 
 ```
 
