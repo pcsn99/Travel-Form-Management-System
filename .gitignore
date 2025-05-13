@@ -1,4 +1,4 @@
-/shared-laravel-storage/*
-!/shared-laravel-storage/public/.gitignore
+/shared/*
+!/shared/public/.gitignore
 /member/public/shared/*
 /admin/public/shared/*
