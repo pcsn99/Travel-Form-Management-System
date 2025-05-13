@@ -75,16 +75,24 @@
 @endsection
 
 @section('content')
+
 <div class="dashboard-header">📄 View Overseas Travel Form</div>
 <div class="card">
+    <a href="{{ route('admin.overseas-forms.export', $form->id) }}">
+        <button>📥 Export as Excel File</button>
+    </a>
     <h4>Travel Details</h4>
     <p><strong>Type of Travel:</strong> {{ ucfirst($form->request->type) }}</p>
     <p><strong>Departure:</strong> {{ $form->request->intended_departure_date }}</p>
     <p><strong>Return:</strong> {{ $form->request->intended_return_date }}</p>
     <hr>
     <p><strong>Form Status:</strong> <span class="badge bg-info text-dark">{{ ucfirst($form->status) }}</span></p>
+    @if($form->request->admin_comment)
+        <p><strong>Request Remarks:</strong> {{ $form->admin_comment }}</p>
+    @endif
+
     @if($form->admin_comment)
-        <p><strong>Remarks:</strong> {{ $form->admin_comment }}</p>
+        <p><strong>Form Remarks:</strong> {{ $form->admin_comment }}</p>
     @endif
 </div>
 
@@ -110,10 +118,15 @@
         </div>
     @endforeach
 
-    <a href="{{ route('admin.overseas-forms.export', $form->id) }}">
-        <button>📥 Export to Excel</button>
-    </a>
+
     
+    @if(in_array(strtolower($form->status), ['pending', 'submitted', 'rejected']))
+        <div class="text-end mt-3">
+            <a href="{{ route('member.local-forms.edit', $form->id) }}" class="btn btn-primary">
+                Edit
+            </a>
+        </div>
+    @endif
 </div>
 
 

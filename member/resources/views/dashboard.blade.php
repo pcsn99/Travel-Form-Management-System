@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Member Dashboard')
+
 @section('styles')
 <style>
     body {
@@ -50,55 +52,77 @@
     }
 
     .dashboard-container {
-        max-width: 800px;
+        max-width: 100%;
         margin: auto;
-        padding: 30px;
+        padding: 10px;
+    }
+
+    .card {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 12px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    }
-
-    .dashboard-section {
-        margin-top: 30px;
         padding: 20px;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.8);
+        margin-bottom: 30px;
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-        color: #17224D;
     }
 
-    .dashboard-section h3 {
+    .card h3 {
         font-size: 20px;
         font-weight: bold;
-        color: #17224D;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
     }
 
-    .dashboard-section ul {
-        list-style-type: none;
-        padding: 0;
+    .table-responsive-custom {
+        overflow-x: auto;
     }
 
-    .dashboard-section ul li {
-        padding: 10px;
-        font-size: 16px;
-        border-bottom: 1px solid rgba(23, 34, 77, 0.2);
+
+
+    .table th, .table td {
+        padding: 12px;
+        border: 1px solid #ddd;
     }
 
-    .dashboard-section a {
-        color: #2980b9;
-        font-size: 16px;
-        text-decoration: none;
+    .table thead {
+        background-color: #17224D;
+        color: white;
     }
 
-    .dashboard-section a:hover {
-        color: #17224D;
-        text-decoration: underline;
+    .status-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        font-size: 13px;
+        font-weight: bold;
+        border-radius: 12px;
+        text-transform: capitalize;
+    }
+
+    .badge-approved {
+        background-color: #198754;
+        color: white;
+    }
+
+    .badge-pending {
+        background-color: #ffc107;
+        color: black;
+    }
+
+    .badge-submitted {
+        background-color: #0d6efd;
+        color: white;
+    }
+
+    .badge-rejected {
+        background-color: #dc3545;
+        color: white;
     }
 </style>
 @endsection
 
 @section('content')
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+@php use Illuminate\Support\Str; @endphp
+
 <div class="dashboard-header">Dashboard</div>
 
 <div class="welcome-section">
@@ -110,68 +134,158 @@
 
 <div class="dashboard-container">
     @if(session('success'))
-        <p style="color: #27ae60;">{{ session('success') }}</p>
+        <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    @if(count($pendingForms))
-    <div class="alert alert-warning">
-        <strong>Reminder:</strong> You have pending travel forms. Please scroll down and complete them.
-    </div>
-    @endif
-
-    <div class="dashboard-section">
+    {{-- Section 1: Pending Travel Requests --}}
+    @if($pendingRequests->count())
+    <div class="card">
         <h3>Pending Travel Requests</h3>
-        <ul>
-            @forelse($pendingRequests as $req)
-                <li>
-                    {{ ucfirst($req->type) }} - {{ $req->intended_departure_date }} to {{ $req->intended_return_date }}
-                    ({{ ucfirst($req->status) }})
-                    | <a href="{{ route('travel-requests.edit', $req->id) }}">Edit</a>
-                    | <form method="POST" action="{{ route('travel-requests.destroy', $req->id) }}" style="display:inline;" onsubmit="return confirm('Delete this travel request?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" style="background: none; border: none; color: #c0392b; cursor: pointer;">Delete</button>
-                    </form>
-                </li>
-            @empty
-                <li>No pending travel requests yet.</li>
-            @endforelse
-        </ul>
+        <div class="table-responsive-custom">
+            <table id="datatable" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Departure</th>
+                        <th>Return</th>
+                        @foreach($questions as $q)
+                            <th>{{ Str::limit($q->question, 20) }}</th>
+                        @endforeach
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($pendingRequests as $req)
+                        <tr>
+                            <td>{{ ucfirst($req->type) }}</td>
+                            <td>{{ \Carbon\Carbon::parse($req->intended_departure_date)->format('F d, Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($req->intended_return_date)->format('F d, Y') }}</td>
+                            @foreach($questions as $q)
+                                @php $answer = $req->answers->firstWhere('question_id', $q->id); @endphp
+                                <td>{{ Str::limit($answer?->answer ?? '-', 30) }}</td>
+                            @endforeach
+                            <td>
+                                <a href="{{ route('travel-requests.edit', $req->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                                <form method="POST" action="{{ route('travel-requests.destroy', $req->id) }}" style="display:inline;" onsubmit="return confirm('Delete this travel request?');">
+                                    @csrf @method('DELETE')
+                                    <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="{{ 4 + $questions->count() }}">No pending travel requests.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
+    @endif
 
-    <div class="dashboard-section">
+    {{-- Section 2: Pending Forms --}}
+    @if($pendingForms->count())
+    <div class="card">
         <h3>Pending Travel Forms</h3>
-        <ul>
-            @forelse($pendingForms as $form)
-                <li>
-                    {{ ucfirst($form->request->type) }} Travel Form -
-                    {{ $form->request->intended_departure_date }} to {{ $form->request->intended_return_date }}
-                    | <a href="{{ $form->request->type === 'local'
-                        ? route('member.local-forms.edit', $form->id)
-                        : route('member.Overseas-forms.edit', $form->id) }}">Fill Out</a>
-                </li>
-            @empty
-                <li>No pending travel forms to complete.</li>
-            @endforelse
-        </ul>
+        <div class="table-responsive-custom">
+            <table id="datatable1" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Departure</th>
+                        <th>Return</th>
+                        @foreach($questions as $q)
+                            <th>{{ Str::limit($q->question, 20) }}</th>
+                        @endforeach
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($pendingForms as $form)
+                        <tr>
+                            <td>{{ ucfirst($form->request->type) }}</td>
+                            <td>{{ \Carbon\Carbon::parse($form->request->intended_departure_date)->format('F d, Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($form->request->intended_return_date)->format('F d, Y') }}</td>
+                            @foreach($questions as $q)
+                                @php $answer = $form->request->answers->firstWhere('question_id', $q->id); @endphp
+                                <td>{{ Str::limit($answer?->answer ?? '-', 30) }}</td>
+                            @endforeach
+                            <td>
+                                <a href="{{ $form->request->type === 'local' 
+                                    ? route('member.local-forms.edit', $form->id) 
+                                    : route('member.Overseas-forms.edit', $form->id) }}" 
+                                    class="btn btn-warning btn-sm">Fill Out</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="{{ 4 + $questions->count() }}">No pending travel forms.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
+    @endif
 
-    <div class="dashboard-section">
-        <h3>Submitted Travel Forms</h3>
-        <ul>
-            @forelse($submittedForms as $form)
-                <li>
-                    {{ ucfirst($form->request->type) }} Travel Form - 
-                    <strong>{{ ucfirst($form->status) }}</strong>
-                    ({{ $form->request->intended_departure_date }} to {{ $form->request->intended_return_date }})
-                    | <a href="{{ $form->request->type === 'local' 
-                        ? route('member.local-forms.show', $form->id) 
-                        : route('member.Overseas-forms.show', $form->id) }}">View</a>
-                </li>
-            @empty
-                <li>No submitted or approved upcoming forms yet.</li>
-            @endforelse
-        </ul>
+    {{-- Section 3: Submitted or Approved Forms --}}
+    @if($submittedForms->count())
+    <div class="card">
+        <h3>Submitted or Approved Travel Forms</h3>
+        <div class="table-responsive-custom">
+            <table id="datatable2" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Departure</th>
+                        <th>Return</th>
+                        <th>Status</th>
+                        @foreach($questions as $q)
+                            <th>{{ Str::limit($q->question, 20) }}</th>
+                        @endforeach
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($submittedForms as $form)
+                        <tr>
+                            <td>{{ ucfirst($form->request->type) }}</td>
+                            <td>{{ \Carbon\Carbon::parse($form->request->intended_departure_date)->format('F d, Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($form->request->intended_return_date)->format('F d, Y') }}</td>
+                            @php
+                                $badgeClass = match(strtolower($form->status)) {
+                                    'submitted' => 'badge-submitted',
+                                    'approved' => 'badge-approved',
+                                    'rejected' => 'badge-rejected',
+                                    default => 'badge-pending'
+                                };
+                            @endphp
+                            <td><span class="status-badge {{ $badgeClass }}">{{ ucfirst($form->status) }}</span></td>
+                            @foreach($questions as $q)
+                                @php $answer = $form->request->answers->firstWhere('question_id', $q->id); @endphp
+                                <td>{{ Str::limit($answer?->answer ?? '-', 30) }}</td>
+                            @endforeach
+                            <td>
+                                <a href="{{ $form->request->type === 'local' 
+                                    ? route('member.local-forms.show', $form->id) 
+                                    : route('member.Overseas-forms.show', $form->id) }}" 
+                                    class="btn btn-info btn-sm">View</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="{{ 5 + $questions->count() }}">No submitted or approved travel forms.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
+    @endif
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#datatable').DataTable();
+        $('#datatable1').DataTable();
+        $('#datatable2').DataTable();
+    });
+</script>
+
+
 @endsection

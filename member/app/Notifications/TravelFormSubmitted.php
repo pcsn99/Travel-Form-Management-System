@@ -30,33 +30,46 @@ class TravelFormSubmitted extends Notification
 
     public function toMail($notifiable)
     {
+        $user = $this->form->request->user;
+
         return (new MailMessage)
-            ->subject('New ' . ucfirst($this->type) . ' Travel Form Submitted')
-            ->line("A {$this->type} travel form has been submitted by a community member.")
-            ->action('View Form', $this->formUrl());
+            ->subject('📄 New ' . ucfirst($this->type) . ' Travel Form Submitted by ' . $user->name)
+            ->greeting('Hello Admin,')
+            ->line($user->name . ' has submitted a ' . ucfirst($this->type) . ' travel form.')
+            ->line('Submitted for: ' . $this->form->request->destination)
+            ->line('Travel Dates: ' . $this->form->request->intended_departure_date . ' to ' . $this->form->request->intended_return_date)
+            ->action('Review Travel Form', $this->formUrl())
+            ->line('Thank you for reviewing travel forms promptly.');
     }
 
     public function toDatabase($notifiable)
     {
+        $user = $this->form->request->user;
+
         return [
-            'title' => 'Travel Form Submitted',
-            'message' => "A {$this->type} travel form has been submitted.",
+            'title' => '📄 Travel Form by ' . $user->name,
+            'message' => $user->name . ' submitted a ' . ucfirst($this->type) . ' travel form.',
             'url' => $this->formUrl(),
+            'icon' => '📄',
+            'type' => 'travel-form',
         ];
     }
 
     public function toBroadcast($notifiable)
     {
+        $user = $this->form->request->user;
+
         return new BroadcastMessage([
-            'title' => 'Travel Form Submitted',
-            'message' => "A {$this->type} travel form has been submitted.",
+            'title' => '📄 Travel Form by ' . $user->name,
+            'message' => $user->name . ' submitted a ' . ucfirst($this->type) . ' travel form.',
             'url' => $this->formUrl(),
+            'icon' => '📄',
+            'type' => 'travel-form',
         ]);
     }
 
     protected function formUrl()
     {
-        
         return url('/' . ($this->type === 'local' ? 'local-forms' : 'Overseas-forms') . '/' . $this->form->id);
     }
 }

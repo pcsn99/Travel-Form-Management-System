@@ -167,7 +167,11 @@
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="max-height: 300px; overflow-y: auto;">
                     @forelse($notifications as $notif)
                         <li class="dropdown-item d-flex justify-content-between align-items-center">
-                            <a href="{{ $notif->data['url'] ?? '#' }}" style="text-decoration: none; color: inherit; flex: 1;">
+                            <a href="{{ route('notifications.read', $notif->id) }}" 
+                                onclick="event.preventDefault(); markAsReadAndRedirect(this);" 
+                                data-url="{{ $notif->data['url'] ?? '#' }}" 
+                                class="mark-as-read" 
+                                style="text-decoration: none; color: inherit; flex: 1;">
                                 {{ $notif->data['message'] ?? 'New notification' }}
                             </a>
                             <form action="{{ route('notifications.read', $notif->id) }}" method="POST">
@@ -240,6 +244,23 @@
         document.querySelectorAll('.sidebar a').forEach(link => {
             link.setAttribute('title', link.innerText.trim());
         });
+    </script>
+
+    <script>
+        function markAsReadAndRedirect(element) {
+            const notifUrl = element.getAttribute('href');
+            const redirectUrl = element.getAttribute('data-url');
+        
+            fetch(notifUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                }
+            }).then(() => {
+                window.location.href = redirectUrl;
+            });
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

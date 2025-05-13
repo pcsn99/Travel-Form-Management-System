@@ -80,6 +80,50 @@
     .view-btn:hover {
         background-color: #563d7c;
     }
+
+
+    .status-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        font-size: 13px;
+        font-weight: bold;
+        border-radius: 12px;
+        text-transform: capitalize;
+    }
+
+    .badge-approved {
+        background-color: #198754;
+        color: white;
+    }
+
+    .badge-pending {
+        background-color: #7c7c7c;
+        color: black;
+    }
+
+    .badge-rejected {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .badge-default {
+        background-color: #ddd12c;
+        color: white;
+    }
+
+    .table-responsive-custom {
+        width: 100%;
+        overflow-x: auto;
+        margin-top: 20px;
+    }
+
+
+
+    .container-custom {
+        max-width: 100%;
+        margin: auto;
+        padding: 20px 40px;
+    }
 </style>
 <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
 @endsection
@@ -93,30 +137,58 @@
     <div class="card">
         <div class="card-body">
             @if($forms->count())
+                @php
+                $questions = \App\Models\TravelRequestQuestion::where('status', 'active')->get();
+            @endphp
+            
+            <div class="table-responsive-custom">
                 <table id="local-forms-table" class="display" style="width:100%">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Name</th>
                             <th>Status</th>
                             <th>Departure</th>
                             <th>Return</th>
                             <th>Submitted</th>
+                            @foreach($questions as $q)
+                                <th>{{ \Illuminate\Support\Str::limit($q->question, 20) }}</th>
+                            @endforeach
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($forms as $form)
                             <tr>
+                                <td>{{ $form->request->id }}</td>
                                 <td>{{ $form->request->user->name }}</td>
-                                <td>{{ ucfirst($form->status) }}</td>
+                                <td>
+                                    @php
+                                        $status = strtolower($form->status);
+                                        $badgeClass = match($status) {
+                                            'approved' => 'badge-approved',
+                                            'pending' => 'badge-pending',
+                                            'rejected' => 'badge-rejected',
+                                            default => 'badge-default'
+                                        };
+                                    @endphp
+                                    <span class="status-badge {{ $badgeClass }}">{{ ucfirst($form->status) }}</span>
+                                </td>
                                 <td>{{ \Carbon\Carbon::parse($form->request->intended_departure_date)->format('F d, Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($form->request->intended_return_date)->format('F d, Y') }}</td>
                                 <td>{{ $form->created_at->format('F d, Y') }}</td>
+                                @foreach($questions as $q)
+                                    @php
+                                        $answer = $form->request->answers->firstWhere('question_id', $q->id);
+                                    @endphp
+                                    <td>{{ \Illuminate\Support\Str::limit($answer ? $answer->answer : '-', 30) }}</td>
+                                @endforeach
                                 <td><a href="{{ route('local-forms.show', $form->id) }}" class="view-btn">View</a></td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+            </div>
             @else
                 <p class="text-center m-4">No local travel forms available.</p>
             @endif

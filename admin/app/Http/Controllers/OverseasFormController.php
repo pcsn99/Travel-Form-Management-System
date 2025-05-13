@@ -11,7 +11,10 @@ class OverseasFormController extends Controller
 {
     public function index()
     {
-        $forms = OverseasTravelForm::with('request.user')->orderByDesc('created_at')->get();
+        $forms = OverseasTravelForm::with([
+            'request.user',
+            'request.answers.question'
+        ])->orderByDesc('created_at')->get();
         return view('Overseas-forms.index', compact('forms'));
     }
 

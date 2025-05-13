@@ -84,8 +84,12 @@
     <p><strong>Return:</strong> {{ $form->request->intended_return_date }}</p>
     <hr>
     <p><strong>Form Status:</strong> <span class="badge bg-info text-dark">{{ ucfirst($form->status) }}</span></p>
+    @if($form->request->admin_comment)
+        <p><strong>Request Remarks:</strong> {{ $form->admin_comment }}</p>
+    @endif
+
     @if($form->admin_comment)
-        <p><strong>Remarks:</strong> {{ $form->admin_comment }}</p>
+        <p><strong>Form Remarks:</strong> {{ $form->admin_comment }}</p>
     @endif
 </div>
 
@@ -112,7 +116,17 @@
             <p class="form-control-plaintext">{{ $answer ?: '-' }}</p>
         </div>
     @endforeach
+
+    @if(in_array(strtolower($form->status), ['pending', 'submitted', 'rejected']))
+        <div class="text-end mt-3">
+            <a href="{{ route('member.local-forms.edit', $form->id) }}" class="btn btn-primary">
+                Edit
+            </a>
+        </div>
+    @endif
 </div>
+
+
 
 {{-- 📎 Uploaded Files --}}
 @if($form->attachments->count())

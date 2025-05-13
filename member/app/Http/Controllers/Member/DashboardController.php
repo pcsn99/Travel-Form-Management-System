@@ -16,33 +16,37 @@ class DashboardController extends Controller
         $userId = Auth::id();
         $today = Carbon::today();
     
-        // Pending travel requests
-        $pendingRequests = TravelRequest::where('user_id', $userId)
+        
+        $questions = \App\Models\TravelRequestQuestion::where('status', 'active')->get();
+    
+        
+        $pendingRequests = TravelRequest::with(['answers.question'])
+            ->where('user_id', $userId)
             ->where('status', 'pending')
             ->latest()
             ->get();
     
-        // Pending travel forms (not yet submitted)
+        
         $pendingForms = collect()
-            ->merge(LocalTravelForm::with('request')
+            ->merge(LocalTravelForm::with(['request.answers.question', 'request.user'])
                 ->where('status', 'pending')
                 ->whereHas('request', fn($q) => $q->where('user_id', $userId))
                 ->get())
-            ->merge(OverseasTravelForm::with('request')
+            ->merge(OverseasTravelForm::with(['request.answers.question', 'request.user'])
                 ->where('status', 'pending')
                 ->whereHas('request', fn($q) => $q->where('user_id', $userId))
                 ->get());
     
-        // Submitted or approved travel forms that are upcoming
+     
         $submittedForms = collect()
-            ->merge(LocalTravelForm::with('request')
+            ->merge(LocalTravelForm::with(['request.answers.question', 'request.user'])
                 ->whereIn('status', ['submitted', 'approved'])
                 ->whereHas('request', fn($q) =>
                     $q->where('user_id', $userId)
                       ->whereDate('intended_return_date', '>=', $today)
                 )
                 ->get())
-            ->merge(OverseasTravelForm::with('request')
+            ->merge(OverseasTravelForm::with(['request.answers.question', 'request.user'])
                 ->whereIn('status', ['submitted', 'approved'])
                 ->whereHas('request', fn($q) =>
                     $q->where('user_id', $userId)
@@ -53,7 +57,9 @@ class DashboardController extends Controller
         return view('dashboard', compact(
             'pendingRequests',
             'pendingForms',
-            'submittedForms'
+            'submittedForms',
+            'questions'
         ));
     }
+    
 }

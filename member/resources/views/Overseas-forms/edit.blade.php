@@ -101,7 +101,13 @@
         <p><strong>Type:</strong> {{ ucfirst($form->request->type) }}</p>
         <p><strong>Departure:</strong> {{ $form->request->intended_departure_date }}</p>
         <p><strong>Return:</strong> {{ $form->request->intended_return_date }}</p>
-        <p><strong>Status:</strong> {{ ucfirst($form->request->status) }}</p>
+        @if($form->request->admin_comment)
+            <p><strong>Request Remarks:</strong> {{ $form->admin_comment }}</p>
+        @endif
+
+        @if($form->admin_comment)
+            <p><strong>Form Remarks:</strong> {{ $form->admin_comment }}</p>
+        @endif
     </div>
 
     <div class="card">
@@ -157,7 +163,7 @@
         </form>
     </div>
 
-    @if($form->status === 'submitted')
+    @if($form->status === 'submitted' || 'rejected')
     <div class="card">
         <h4>📤 Upload Additional Requirement</h4>
         <form action="{{ route('attachments.upload') }}" method="POST" enctype="multipart/form-data">

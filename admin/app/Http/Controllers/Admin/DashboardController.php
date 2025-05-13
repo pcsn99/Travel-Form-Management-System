@@ -12,16 +12,16 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        
-        $pendingRequests = TravelRequest::with('user')
+        $questions = \App\Models\TravelRequestQuestion::where('status', 'active')->get();
+    
+        $pendingRequests = TravelRequest::with(['user', 'answers.question'])
             ->where('status', 'pending')
             ->latest()
             ->take(10)
             ->get();
-
-       
+    
         $threeWeeksFromNow = Carbon::now()->addWeeks(3);
-        $pendingLocalForms = LocalTravelForm::with('request.user')
+        $pendingLocalForms = LocalTravelForm::with(['request.user', 'request.answers.question'])
             ->whereIn('status', ['submitted', 'approved'])
             ->whereNotNull('submitted_at')
             ->whereHas('request', function ($query) use ($threeWeeksFromNow) {
@@ -30,10 +30,9 @@ class DashboardController extends Controller
             ->latest()
             ->take(10)
             ->get();
-
- 
+    
         $threeMonthsFromNow = Carbon::now()->addMonths(3);
-        $pendingOverseasForms = OverseasTravelForm::with('request.user')
+        $pendingOverseasForms = OverseasTravelForm::with(['request.user', 'request.answers.question'])
             ->whereIn('status', ['submitted', 'approved'])
             ->whereNotNull('submitted_at')
             ->whereHas('request', function ($query) use ($threeMonthsFromNow) {
@@ -42,48 +41,49 @@ class DashboardController extends Controller
             ->latest()
             ->take(10)
             ->get();
-
-            $calendarEvents = [];
-
-            $localForms = LocalTravelForm::with('request.user')
-                ->where('status', 'approved')
-                ->whereHas('request', function ($query) {
-                    $query->where('status', 'approved');
-                })->get();
-            
-            foreach ($localForms as $form) {
-                $calendarEvents[] = [
-                    'title' => 'Local Travel',
-                    'start' => $form->request->intended_departure_date,
-                    'end' => Carbon::parse($form->request->intended_return_date)->addDay()->toDateString(),
-                    'color' => 'red',
-                    'display' => 'background'
-                ];
-            }
-            
-            $OverseasForms = OverseasTravelForm::with('request.user')
-                ->where('status', 'approved')
-                ->whereHas('request', function ($query) {
-                    $query->where('status', 'approved');
-                })->get();
-            
-            foreach ($OverseasForms as $form) {
-                $calendarEvents[] = [
-                    'title' => 'Overseas Travel',
-                    'start' => $form->request->intended_departure_date,
-                    'end' => Carbon::parse($form->request->intended_return_date)->addDay()->toDateString(),
-                    'color' => 'red',
-                    'display' => 'background'
-                ];
-            }
-
+    
+        // Calendar Events
+        $calendarEvents = [];
+    
+        $localForms = LocalTravelForm::with('request.user')
+            ->where('status', 'approved')
+            ->whereHas('request', fn($q) => $q->where('status', 'approved'))
+            ->get();
+    
+        foreach ($localForms as $form) {
+            $calendarEvents[] = [
+                'title' => 'Local Travel',
+                'start' => $form->request->intended_departure_date,
+                'end' => Carbon::parse($form->request->intended_return_date)->addDay()->toDateString(),
+                'color' => 'red',
+                'display' => 'background'
+            ];
+        }
+    
+        $overseasForms = OverseasTravelForm::with('request.user')
+            ->where('status', 'approved')
+            ->whereHas('request', fn($q) => $q->where('status', 'approved'))
+            ->get();
+    
+        foreach ($overseasForms as $form) {
+            $calendarEvents[] = [
+                'title' => 'Overseas Travel',
+                'start' => $form->request->intended_departure_date,
+                'end' => Carbon::parse($form->request->intended_return_date)->addDay()->toDateString(),
+                'color' => 'red',
+                'display' => 'background'
+            ];
+        }
+    
         return view('admin.dashboard', compact(
             'pendingRequests',
             'pendingLocalForms',
             'pendingOverseasForms',
-            'calendarEvents'
+            'calendarEvents',
+            'questions'
         ));
     }
+    
 
     public function calendarDetails($date)
     {

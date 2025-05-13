@@ -139,7 +139,7 @@
 
     @if(in_array($form->status, ['submitted', 'pending']))
     <div class="card py-3 px-4">
-        <!-- Buttons aligned to left -->
+        
         <div class="d-flex flex-column align-items-start gap-2">
             <button type="button" class="btn btn-dark px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#approveModal">
                 ✅ Approve

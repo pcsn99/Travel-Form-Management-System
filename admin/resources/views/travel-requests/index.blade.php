@@ -129,6 +129,22 @@
 
     .view-btn:hover {
         background-color: #1f2f5f;
+    
+    }
+
+    .table-responsive-custom {
+        overflow-x: auto;
+        width: 100%;
+    }
+
+    .table-responsive-custom table {
+        white-space: nowrap;
+    }
+    
+    .container-custom {
+        max-width: 100%;
+        margin: auto;
+        padding-top: 20px;
     }
 </style>
 <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -151,32 +167,49 @@
             </div>
 
             @if($requests->count())
-                <table id="requests-table" class="display" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Departure</th>
-                            <th>Return</th>
-                            <th>Submitted</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($requests as $req)
+                <div class="table-responsive-custom">    
+                    <table id="requests-table" class="display" style="width:100%">
+                
+                        @php
+                            $questions = \App\Models\TravelRequestQuestion::where('status', 'active')->get();
+                        @endphp
+                        
+                        <thead>
                             <tr>
-                                <td>{{ $req->user->name }}</td>
-                                <td>{{ ucfirst($req->type) }}</td>
-                                <td>{{ \Carbon\Carbon::parse($req->intended_departure_date)->format('F d, Y') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($req->intended_return_date)->format('F d, Y') }}</td>
-                                <td>{{ $req->created_at->format('F d, Y') }}</td>
-                                <td>
-                                    <a href="{{ route('travel-requests.show', $req->id) }}" class="view-btn">View</a>
-                                </td>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Departure</th>
+                                <th>Return</th>
+                                <th>Submitted</th>
+                                @foreach($questions as $q)
+                                    <th>{{ \Illuminate\Support\Str::limit($q->question, 20) }}</th>
+                                @endforeach
+                                <th>Action</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach($requests as $req)
+                                <tr>
+                                    <td>{{ $req->user->name }}</td>
+                                    <td>{{ ucfirst($req->type) }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($req->intended_departure_date)->format('F d, Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($req->intended_return_date)->format('F d, Y') }}</td>
+                                    <td>{{ $req->created_at->format('F d, Y') }}</td>
+                                    @foreach($questions as $q)
+                                        @php
+                                            $answer = $req->answers->firstWhere('question_id', $q->id);
+                                        @endphp
+                                        <td>{{ \Illuminate\Support\Str::limit($answer ? $answer->answer : '-', 30) }}</td>
+                                    @endforeach
+                                    <td>
+                                        <a href="{{ route('travel-requests.show', $req->id) }}" class="view-btn">View</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+
+                    </table>
+                </div>
             @else
                 <p class="text-center m-4">No travel requests found.</p>
             @endif

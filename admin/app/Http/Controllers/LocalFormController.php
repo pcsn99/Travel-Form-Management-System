@@ -11,7 +11,11 @@ class LocalFormController extends Controller
 {
     public function index()
     {
-        $forms = LocalTravelForm::with('request.user')->orderByDesc('created_at')->get();
+        $forms = LocalTravelForm::with([
+            'request.user',
+            'request.answers.question'
+        ])->orderByDesc('created_at')->get();
+        
         return view('local-forms.index', compact('forms'));
     }
 

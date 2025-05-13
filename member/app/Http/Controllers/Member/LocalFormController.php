@@ -96,7 +96,14 @@ class LocalFormController extends Controller
 
     public function all()
     {
-        $forms = LocalTravelForm::with('request')->whereHas('request', fn($q) => $q->where('user_id', auth()->id()))->latest()->get();
+        $forms = \App\Models\LocalTravelForm::with([
+            'request.user',
+            'request.answers.question'
+        ])
+        ->whereHas('request', fn($q) => $q->where('user_id', auth()->id()))
+        ->latest()
+        ->get();
+    
         return view('local-forms.index', compact('forms'));
     }
 }
