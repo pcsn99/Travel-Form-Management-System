@@ -30,19 +30,28 @@ There are two separate Laravel projects inside this repository:
 
 # 🚀 Getting Started (For Developers)
 
-### 1. Clone the Repository
+### 1. Clone the Repository 
 
 ```bash
 git clone https://github.com/pcsn99/Travel-Form-Management-System.git
 
 ```
+
+### 2. Create Symlinks 
+
+```bash
+ln -s ../../shared admin/public
+ln -s ../../shared member/public
+
+```
+
 - MAKE SURE YOU ARE IN YOUR OWN BRANCH. SCROLL DOWN AT THE BOTTOM FOR THE BRANCHING GUIDE
 ---
 > Make sure you are in the project folder, either Member or Admin, before running any further commands
 
 ---
 
-### 2. Set Up Each Project Individually
+### 3. Set Up Each Project Individually
 
 ```bash
 cd member     # or cd admin
@@ -58,7 +67,7 @@ php artisan key:generate
 
 ---
 
-### 3. Set Up Database
+### 4. Set Up Database
 
 1. Create a MySQL database, e.g. `loyola_travel`
 2. Update your `.env` file:
@@ -82,7 +91,7 @@ This creates:
 
 ---
 
-### 4. Serve Locally
+### 5. Serve Locally
 
 ```bash
 php artisan serve
