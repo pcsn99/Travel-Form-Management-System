@@ -162,7 +162,7 @@
 
             <div class="form-actions">
                 <button type="submit">✅ Save Changes</button>
-                <a href="{{ route('Overseas-forms.show', $form->id) }}" class="btn-cancel">🔙 Cancel</a>
+                <a href="{{ route('Overseas-forms.show', $form->id) }}" class="btn-cancel"> Cancel</a>
             </div>
         </div>
     </form>

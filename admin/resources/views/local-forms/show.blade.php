@@ -100,7 +100,7 @@
     </div>
 
     <div class="form-actions">
-        @if(in_array($form->status, ['submitted', 'pending']))
+        @if(in_array($form->status, ['submitted', 'pending','rejected']))
             <a href="{{ route('local-forms.edit', $form->id) }}">
                 <button class="btn btn-primary">
                     <i class="bi bi-pencil-square"></i> Edit Form
@@ -113,6 +113,17 @@
                 <i class="bi bi-download"></i> Export to Excel
             </button>
         </a>
+
+        @if($form->status !== 'pending')
+
+            <form method="POST" action="{{ route('local-forms.reset', $form->id) }}" onsubmit="return confirm('Reset this form back to pending status?');">
+                @csrf
+                <button type="submit" class="btn btn-warning text-dark">
+                    <i class="bi bi-arrow-clockwise"></i> Set Status to Pending
+                </button>
+            </form>
+
+        @endif
     </div>
 
     <div class="card">
@@ -195,16 +206,7 @@
         </div>
     </div>
 
-    @if($form->status !== 'pending')
-    <div class="card">
-        <form method="POST" action="{{ route('local-forms.reset', $form->id) }}" onsubmit="return confirm('Reset this form back to pending status?');">
-            @csrf
-            <button type="submit" class="btn btn-warning text-dark">
-                <i class="bi bi-arrow-clockwise"></i> Set Status to Pending
-            </button>
-        </form>
-    </div>
-    @endif
+
 
     @if($form->admin_comment)
         <div class="card">
