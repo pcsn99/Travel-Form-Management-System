@@ -14,10 +14,12 @@ use App\Http\Controllers\Member\SignatureController;
 use App\Http\Controllers\UserProfilePhotoController;
 use App\Http\Controllers\Member\OverseasFormController;
 use App\Http\Controllers\Member\TravelFormExportController;
+use App\Http\Controllers\Member\PasswordResetController;
 
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('/member/reset-password', [PasswordResetController::class, 'sendResetPin'])->name('member.password.reset');
 
 Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
