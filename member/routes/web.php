@@ -51,7 +51,7 @@ Route::middleware('auth.member')->group(function () {
     Route::delete('/attachments/{id}/delete', [FormAttachmentController::class, 'destroy'])->name('attachments.delete');
 
     Route::get('/local-forms/{id}/view', [LocalFormController::class, 'show'])->name('member.local-forms.show');
-    Route::get('/Overseas-forms/{id}/view', [OverseasFormController::class, 'show'])->name('member.Overseas-forms.show');
+    Route::get('/overseas-forms/{id}/view', [OverseasFormController::class, 'show'])->name('member.Overseas-forms.show');
 
 
     Route::get('/travel-requests/all', [TravelRequestController::class, 'index'])->name('member.travel-requests.index');
