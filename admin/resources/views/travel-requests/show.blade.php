@@ -139,54 +139,76 @@
 
 @section('content')
 <div class="container-custom">
-    <div class="header-banner">
-        <h2>Travel Request Details</h2>
-    </div>
 
-    <div class="card">
-        <p><strong>Name:</strong> {{ $request->user->name }}</p>
-        <p><strong>Type:</strong> {{ ucfirst($request->type) }}</p>
-        <p><strong>Departure:</strong> {{ \Carbon\Carbon::parse($request->intended_departure_date)->format('F d, Y') }}</p>
-        <p><strong>Return:</strong> {{ \Carbon\Carbon::parse($request->intended_return_date)->format('F d, Y') }}</p>
-        <p><strong>Status:</strong> {{ ucfirst($request->status) }}</p>
 
-        @if($request->status === 'approved')
-            @if(strtolower($request->type) === 'overseas' && $request->OverseasForm)
-                <a href="{{ route('Overseas-forms.show', $request->OverseasForm->id) }}" class="view-form-btn">View Overseas Travel Form</a>
-            @elseif(strtolower($request->type) === 'local' && $request->localForm)
-                <a href="{{ route('local-forms.show', $request->localForm->id) }}" class="view-form-btn">View Local Travel Form</a>
+
+    <!-- Header -->
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+            <h5 class="mb-0">Travel Request Details</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-2">
+                <div class="col-md-6"><strong>Name:</strong> {{ $request->user->name }}</div>
+                <div class="col-md-6"><strong>Type:</strong> {{ ucfirst($request->type) }}</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-6"><strong>Departure:</strong> {{ \Carbon\Carbon::parse($request->intended_departure_date)->format('F d, Y') }}</div>
+                <div class="col-md-6"><strong>Return:</strong> {{ \Carbon\Carbon::parse($request->intended_return_date)->format('F d, Y') }}</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <strong>Status:</strong>
+                    <span class="badge 
+                        {{ 
+                            $request->status === 'approved' ? 'bg-success' : 
+                            ($request->status === 'rejected' ? 'bg-danger' : 'bg-warning text-dark') 
+                        }}">
+                        {{ ucfirst($request->status) }}
+                    </span>
+                </div>
+            </div>
+
+            @if($request->status === 'approved')
+                @if(strtolower($request->type) === 'overseas' && $request->OverseasForm)
+                    <a href="{{ route('Overseas-forms.show', $request->OverseasForm->id) }}" class="btn btn-outline-primary mt-3">
+                        <i class="bi bi-globe2 me-1"></i> View Overseas Travel Form
+                    </a>
+                @elseif(strtolower($request->type) === 'local' && $request->localForm)
+                    <a href="{{ route('local-forms.show', $request->localForm->id) }}" class="btn btn-outline-primary mt-3">
+                        <i class="bi bi-house-door-fill me-1"></i> View Local Travel Form
+                    </a>
+                @endif
             @endif
-        @endif
+        </div>
     </div>
 
-    <div class="card">
-        <h4>Submitted Answers</h4>
-        <ul>
-            @foreach($request->answers as $answer)
-                <li><strong>{{ $answer->question->question }}:</strong> {{ $answer->answer }}</li>
-            @endforeach
-        </ul>
+    <!-- Answers -->
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-header bg-dark text-white d-flex align-items-center">
+            <i class="bi bi-chat-dots-fill me-2 fs-5"></i>
+            <h5 class="mb-0">Submitted Answers</h5>
+        </div>
+        <div class="card-body p-0">
+            <ul class="list-group list-group-flush">
+                @foreach($request->answers as $answer)
+                    <li class="list-group-item py-3 px-4">
+                        <strong>{{ $answer->question->question }}:</strong>
+                        <span class="text-muted">{{ $answer->answer }}</span>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
     </div>
+
 
     @if($request->status === 'pending')
     <div class="card">
-        <form method="POST" action="{{ route('travel-requests.approve', $request->id) }}">
-            @csrf
-            <label>Admin Comment (Optional):</label>
-            <textarea name="admin_comment" placeholder="Add comment..."></textarea>
-            <div class="form-actions">
-                <button type="submit" class="approve-btn">Approve</button>
-            </div>
-        </form>
-
-        <form method="POST" action="{{ route('travel-requests.reject', $request->id) }}">
-            @csrf
-            <label>Rejection Comment (Optional):</label>
-            <textarea name="admin_comment" placeholder="Add comment..."></textarea>
-            <div class="form-actions">
-                <button type="submit" class="reject-btn">Reject</button>
-            </div>
-        </form>
+        <div class="form-actions">
+            <button type="button" class="approve-btn" data-bs-toggle="modal" data-bs-target="#approveModal">Approve</button>
+            <button type="button" class="reject-btn" data-bs-toggle="modal" data-bs-target="#rejectModal">Reject</button>
+        </div>
     </div>
     @else
     <div class="card">
@@ -201,6 +223,55 @@
         </form>
     @endif
 
+
     <a href="{{ route('travel-requests.index') }}" class="btn-link">⬅ Back to Travel Requests</a>
+</div>
+
+
+
+<!-- Modal for Approve -->
+<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="{{ route('travel-requests.approve', $request->id) }}">
+        @csrf
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="approveModalLabel">Approve Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label>Admin Comment (Optional):</label>
+                <textarea name="admin_comment" class="form-control" placeholder="Add comment..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-success">Confirm Approve</button>
+            </div>
+        </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal for Reject -->
+<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="{{ route('travel-requests.reject', $request->id) }}">
+        @csrf
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rejectModalLabel">Reject Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label>Rejection Comment (Optional):</label>
+                <textarea name="admin_comment" class="form-control" placeholder="Add comment..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger">Confirm Reject</button>
+            </div>
+        </div>
+    </form>
+  </div>
 </div>
 @endsection

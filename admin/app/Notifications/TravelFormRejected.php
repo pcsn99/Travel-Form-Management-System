@@ -27,30 +27,36 @@ class TravelFormRejected extends Notification
     public function toMail($notifiable)
     {
         $type = Str::lower($this->form->request->type);
+        $url = rtrim(config('app.member_url'), '/') . "/{$type}-forms/{$this->form->id}/view";
+
         return (new MailMessage)
             ->subject('❌ Travel Form Rejected')
             ->line('Your ' . ucfirst($type) . ' travel form has been rejected.')
-            ->action('View Details', url("/{$type}-forms/{$this->form->id}/view"))
+            ->action('View Details', $url)
             ->line('Please review the form and make necessary corrections if applicable.');
     }
 
     public function toDatabase($notifiable)
     {
         $type = Str::lower($this->form->request->type);
+        $url = rtrim(config('app.member_url'), '/') . "/{$type}-forms/{$this->form->id}/view";
+
         return [
             'title' => 'Travel Form Rejected',
             'message' => '❌ Your ' . ucfirst($type) . ' travel form was rejected.',
-            'url' => url("/{$type}-forms/{$this->form->id}/view")
+            'url' => $url,
         ];
     }
 
     public function toBroadcast($notifiable)
     {
         $type = Str::lower($this->form->request->type);
+        $url = rtrim(config('app.member_url'), '/') . "/{$type}-forms/{$this->form->id}/view";
+
         return new BroadcastMessage([
             'title' => 'Travel Form Rejected',
             'message' => '❌ Your ' . ucfirst($type) . ' travel form was rejected.',
-            'url' => url("/{$type}-forms/{$this->form->id}/view")
+            'url' => $url,
         ]);
     }
 }

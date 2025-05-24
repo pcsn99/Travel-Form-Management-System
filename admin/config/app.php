@@ -58,6 +58,8 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'admin_url' => env('ADMIN_APP_URL', 'http://localhost:8001'),
+    'member_url' => env('MEMBER_APP_URL', 'http://localhost:8000'),
 
     /*
     |--------------------------------------------------------------------------

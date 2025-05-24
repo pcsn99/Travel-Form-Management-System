@@ -70,6 +70,9 @@ class TravelFormSubmitted extends Notification
 
     protected function formUrl()
     {
-        return url('/' . ($this->type === 'local' ? 'local-forms' : 'Overseas-forms') . '/' . $this->form->id);
+        $base = config('app.admin_url'); 
+        $path = $this->type === 'local' ? 'local-forms' : 'Overseas-forms';
+
+        return rtrim($base, '/') . '/' . $path . '/' . $this->form->id;
     }
 }

@@ -27,29 +27,35 @@ class TravelFormApproved extends Notification
     public function toMail($notifiable)
     {
         $type = Str::lower($this->form->request->type);
+        $url = rtrim(config('app.member_url'), '/') . "/{$type}-forms/{$this->form->id}/view";
+
         return (new MailMessage)
             ->subject('✅ Travel Form Approved')
             ->line('Your ' . ucfirst($type) . ' travel form has been approved.')
-            ->action('View Form', url("/{$type}-forms/{$this->form->id}/view"));
+            ->action('View Form', $url);
     }
     
     public function toDatabase($notifiable)
     {
         $type = Str::lower($this->form->request->type);
+        $url = rtrim(config('app.member_url'), '/') . "/{$type}-forms/{$this->form->id}/view";
+
         return [
             'title' => 'Travel Form Approved',
             'message' => '✅ Your ' . ucfirst($type) . ' travel form has been approved.',
-            'url' => url("/{$type}-forms/{$this->form->id}/view")
+            'url' => $url,
         ];
     }
     
     public function toBroadcast($notifiable)
     {
         $type = Str::lower($this->form->request->type);
+        $url = rtrim(config('app.member_url'), '/') . "/{$type}-forms/{$this->form->id}/view";
+
         return new BroadcastMessage([
             'title' => 'Travel Form Approved',
             'message' => '✅ Your ' . ucfirst($type) . ' travel form has been approved.',
-            'url' => url("/{$type}-forms/{$this->form->id}/view")
+            'url' => $url,
         ]);
     }
 }

@@ -148,7 +148,7 @@
         if (dep < minDep) {
             const warnMsg = (travelType === 'local')
                 ? 'For local travel, please submit at least 1 week in advance, or your request might automatically be rejected.\nDo you still want to proceed?'
-                : 'For Overseas travel, please submit at least 2 months in advance.\nDo you still want to proceed?';
+                : 'For Overseas travel, please submit at least 2 months in advance, or your request might automatically be rejected.\nDo you still want to proceed?';
 
             if (!confirm(warnMsg)) return false;
         }

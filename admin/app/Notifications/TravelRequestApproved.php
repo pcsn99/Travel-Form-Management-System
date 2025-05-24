@@ -19,23 +19,24 @@ class TravelRequestApproved extends Notification
 
     public function via($notifiable)
     {
-        return ['database']; 
+        return ['database', 'mail']; 
     }
 
     public function toArray($notifiable)
     {
         return [
             'message' => '✅ Your ' . ucfirst($this->request->type) . ' travel request has been approved.',
-            'url' => route('travel-requests.show', $this->request->id),
+            'url' => rtrim(config('app.member_url'), '/') . '/travel-requests/' . $this->request->id,
         ];
     }
 
-    
     public function toMail($notifiable)
     {
+        $url = rtrim(config('app.member_url'), '/') . '/travel-requests/' . $this->request->id;
+
         return (new MailMessage)
             ->subject('Your Travel Request was Approved')
             ->line('Your ' . ucfirst($this->request->type) . ' travel request has been approved.')
-            ->action('View Request', route('travel-requests.show', $this->request->id));
+            ->action('View Request', $url);
     }
 }

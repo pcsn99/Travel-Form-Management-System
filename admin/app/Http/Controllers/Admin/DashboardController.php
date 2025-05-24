@@ -55,7 +55,7 @@ class DashboardController extends Controller
                 'title' => 'Local Travel',
                 'start' => $form->request->intended_departure_date,
                 'end' => Carbon::parse($form->request->intended_return_date)->addDay()->toDateString(),
-                'color' => 'red',
+                'color' => 'green',
                 'display' => 'background'
             ];
         }
@@ -70,7 +70,7 @@ class DashboardController extends Controller
                 'title' => 'Overseas Travel',
                 'start' => $form->request->intended_departure_date,
                 'end' => Carbon::parse($form->request->intended_return_date)->addDay()->toDateString(),
-                'color' => 'red',
+                'color' => 'green',
                 'display' => 'background'
             ];
         }

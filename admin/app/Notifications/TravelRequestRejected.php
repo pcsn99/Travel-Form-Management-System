@@ -19,23 +19,26 @@ class TravelRequestRejected extends Notification
 
     public function via($notifiable)
     {
-        return ['database']; // You can add 'mail' if needed
+        return ['database', 'mail']; // Added 'mail' so emails can be sent too
     }
 
     public function toArray($notifiable)
     {
+        $url = rtrim(config('app.member_url'), '/') . '/travel-requests/' . $this->request->id;
+
         return [
             'message' => '❌ Your ' . ucfirst($this->request->type) . ' travel request was rejected.',
-            'url' => route('travel-requests.show', $this->request->id),
+            'url' => $url,
         ];
     }
 
-    
     public function toMail($notifiable)
     {
+        $url = rtrim(config('app.member_url'), '/') . '/travel-requests/' . $this->request->id;
+
         return (new MailMessage)
             ->subject('Travel Request Rejected')
             ->line('We regret to inform you that your ' . ucfirst($this->request->type) . ' travel request has been rejected.')
-            ->action('View Request', route('travel-requests.show', $this->request->id));
+            ->action('View Request', $url);
     }
 }

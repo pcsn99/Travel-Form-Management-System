@@ -93,6 +93,10 @@ Route::middleware('auth.admin')->group(function () {
     
     Route::get('/local-forms/{id}/export', [TravelFormExportController::class, 'exportLocal'])->name('admin.local-forms.export');
     Route::get('/overseas-forms/{id}/export', [TravelFormExportController::class, 'exportOverseas'])->name('admin.overseas-forms.export');
+    Route::post('/admin/overseas-forms/{id}/email-export', [TravelFormExportController::class, 'emailExport'])->name('admin.overseas-forms.email-export');
+
+
+
 
     Route::get('/admin-accounts', [AdminAccountController::class, 'index'])->name('admin-accounts.index');
     Route::get('/admin-accounts/create', [AdminAccountController::class, 'create'])->name('admin-accounts.create');

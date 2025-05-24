@@ -108,12 +108,6 @@
             </a>
         @endif
 
-        <a href="{{ route('local-forms.export', $form->id) }}">
-            <button class="btn btn-outline-secondary">
-                <i class="bi bi-download"></i> Export to Excel
-            </button>
-        </a>
-
         @if($form->status !== 'pending')
 
             <form method="POST" action="{{ route('local-forms.reset', $form->id) }}" onsubmit="return confirm('Reset this form back to pending status?');">
@@ -126,36 +120,58 @@
         @endif
     </div>
 
-    <div class="card">
-        <p><strong>User:</strong> {{ $form->request->user->name }}</p>
-        <p><strong>Status:</strong> {{ ucfirst($form->status) }}</p>
-        <p><strong>Submitted:</strong> {{ $form->submitted_at }}</p>
-        <p><strong>Departure Date:</strong> {{ \Carbon\Carbon::parse($form->request->intended_departure_date)->format('F d, Y') }}</p>
-        <p><strong>Return Date:</strong> {{ \Carbon\Carbon::parse($form->request->intended_return_date)->format('F d, Y') }}</p>
+    <!-- Form Metadata Card -->
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Travel Form Information</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6"><strong>User:</strong> {{ $form->request->user->name }}</div>
+                <div class="col-md-6"><strong>Status:</strong> <span class="badge bg-secondary">{{ ucfirst($form->status) }}</span></div>
+            </div>
+            <div class="row mb-3">
+                
+                <div class="col-md-6"><strong>Departure:</strong> {{ \Carbon\Carbon::parse($form->request->intended_departure_date)->format('F d, Y') }}</div>
+                <div class="col-md-6"><strong>Return:</strong> {{ \Carbon\Carbon::parse($form->request->intended_return_date)->format('F d, Y') }}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"><strong>Submitted:</strong> {{ $form->submitted_at }}</div>
+                
+            </div>
+        </div>
     </div>
 
-    <div class="card">
-        <h4>Form Answers</h4>
-        <ul>
-            @foreach($form->answers as $answer)
-                <li><strong>{{ $answer->question->question }}:</strong> {{ $answer->answer }}</li>
-            @endforeach
-        </ul>
+    <!-- Form Answers Card -->
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Form Answers</h5>
+        </div>
+        <div class="card-body">
+            <div class="list-group">
+                @foreach($form->answers as $answer)
+                    <div class="list-group-item">
+                        <strong>{{ $answer->question->question }}</strong><br>
+                        <span class="text-muted">{{ $answer->answer }}</span>
+                    </div>
+                @endforeach
+            </div>
+        </div>
     </div>
 
+    <!-- Approval Buttons -->
     @if(in_array($form->status, ['submitted', 'pending']))
-    <div class="card py-3 px-4">
-        <div class="d-flex flex-column align-items-start gap-2">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body d-flex gap-3 flex-wrap justify-content-start">
             <button type="button" class="btn btn-dark px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#approveModal">
-                <i class="bi bi-check-circle"></i> Approve
+                <i class="bi bi-check-circle-fill me-1"></i> Approve
             </button>
             <button type="button" class="btn btn-danger px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#rejectModal">
-                <i class="bi bi-x-circle"></i> Reject
+                <i class="bi bi-x-circle-fill me-1"></i> Reject
             </button>
         </div>
     </div>
     @endif
-
     <!-- Approve Modal -->
     <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
         <div class="modal-dialog">

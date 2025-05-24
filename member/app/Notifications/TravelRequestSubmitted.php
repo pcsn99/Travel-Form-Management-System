@@ -44,7 +44,7 @@ class TravelRequestSubmitted extends Notification
         return [
             'title' => '🧳 Travel Request by ' . $user->name,
             'message' => $user->name . ' submitted a ' . ucfirst($this->travelRequest->type) . ' travel request.',
-            'url' => route('travel-requests.show', $this->travelRequest->id),
+            'url' => config('app.admin_url') . '/travel-requests/' . $this->travelRequest->id,
             'icon' => '🧳',
             'type' => 'travel-request',
         ];
@@ -57,7 +57,7 @@ class TravelRequestSubmitted extends Notification
         return new BroadcastMessage([
             'title' => '🧳 Travel Request by ' . $user->name,
             'message' => $user->name . ' submitted a ' . ucfirst($this->travelRequest->type) . ' travel request.',
-            'url' => route('travel-requests.show', $this->travelRequest->id),
+            'url' => config('app.admin_url') . '/travel-requests/' . $this->travelRequest->id,
             'icon' => '🧳',
             'type' => 'travel-request',
         ]);

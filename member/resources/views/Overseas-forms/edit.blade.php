@@ -163,28 +163,44 @@
         </form>
     </div>
 
-    @if($form->status === 'submitted' || 'rejected')
-    <div class="card">
-        <h4>📤 Upload Additional Requirement</h4>
-        <form action="{{ route('attachments.upload') }}" method="POST" enctype="multipart/form-data">
+    @php
+        $showUpload = in_array($form->status, ['submitted', 'rejected']);
+    @endphp
+
+    @if($showUpload)
+    <div class="card mt-4">
+        <h4 class="mb-3">
+            <i class="bi bi-upload me-2"></i>Upload Additional Requirement
+        </h4>
+
+        <form action="{{ route('attachments.upload') }}" method="POST" enctype="multipart/form-data" class="mb-4">
             @csrf
             <input type="hidden" name="form_type" value="Overseas">
             <input type="hidden" name="form_id" value="{{ $form->id }}">
 
-            <input type="file" name="file" accept=".jpg,.jpeg,.png,.pdf" required>
-            <button type="submit">📤 Upload</button>
+            <div class="mb-3">
+                <input type="file" name="file" accept=".jpg,.jpeg,.png,.pdf" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-cloud-arrow-up me-1"></i>Upload
+            </button>
         </form>
 
         @if($form->attachments->count())
-        <h4 style="margin-top: 20px;">📎 Uploaded Files</h4>
-        <ul class="file-list">
+        <h4 class="mb-3"><i class="bi bi-paperclip me-2"></i>Uploaded Files</h4>
+        <ul class="list-group">
             @foreach($form->attachments as $file)
-                <li>
-                    <span><a href="{{ route('attachments.download', $file->id) }}" target="_blank">{{ $file->original_name }}</a></span>
-                    <form action="{{ route('attachments.delete', $file->id) }}" method="POST">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{{ route('attachments.download', $file->id) }}" target="_blank">
+                        {{ $file->original_name }}
+                    </a>
+                    <form action="{{ route('attachments.delete', $file->id) }}" method="POST" class="ms-2">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" style="background-color:red; color:white; padding: 5px 10px; border: none; border-radius: 4px;">🗑️</button>
+                        <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                            <i class="bi bi-trash"></i>
+                        </button>
                     </form>
                 </li>
             @endforeach
@@ -192,8 +208,11 @@
         @endif
     </div>
     @else
-        <p style="margin-top: 30px; color: gray;">📁 File upload is available after form submission.</p>
+        <p class="mt-4 text-muted">
+            <i class="bi bi-folder2-open me-2"></i>File upload is available after form submission.
+        </p>
     @endif
+
 
     <form method="POST" action="{{ route('member.Overseas-forms.cancel', $form->id) }}"
         onsubmit="return confirm('Are you sure you want to cancel this travel form? This cannot be undone.');">

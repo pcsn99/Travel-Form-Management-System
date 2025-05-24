@@ -18,7 +18,7 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class TravelFormExportController extends Controller
 {
-    public function exportLocal($id)
+    public function exportLocal(Request $request, $id)
     {
         $form = LocalTravelForm::with(['request.user', 'answers.question'])->findOrFail($id);
 
@@ -45,7 +45,7 @@ class TravelFormExportController extends Controller
     }
 
 
-    public function exportOverseas($id)
+    public function exportOverseas(Request $request, $id)
     {
         $form = OverseasTravelForm::with(['request.user', 'answers.question'])->findOrFail($id);
 
@@ -272,12 +272,21 @@ class TravelFormExportController extends Controller
 
         $sheet->mergeCells('E18:F20');
         // Signature
-        $signaturePath = public_path('shared/' . $form->request->user->signature);
-        if (file_exists($signaturePath)) {
+        $signature = $form->request->user->signature ?? null;
+
+        if (is_null($signature)) {
+            if (!$request->has('force')) {
+                return redirect()->back()->with('warning', 'The user has not submitted a signature. Do you still want to proceed with the export? 
+                    <a href="' . route('travel-forms.export', ['id' => $id, 'force' => 1]) . '" class="btn btn-sm btn-warning ms-2">Yes, proceed</a>');
+            }
+        }
+
+        // safe to use signature or not
+        if (!is_null($signature)) {
             $drawing = new Drawing();
             $drawing->setName('Signature');
             $drawing->setDescription('User Signature');
-            $drawing->setPath($signaturePath);
+            $drawing->setPath(public_path('shared/' . $signature));
             $drawing->setHeight(60);
             $drawing->setCoordinates('E18');
             $drawing->setWorksheet($sheet);
