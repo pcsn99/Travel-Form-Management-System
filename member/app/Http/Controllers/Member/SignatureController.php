@@ -15,26 +15,31 @@ class SignatureController extends Controller
         return view('admin.signature-upload', compact('user'));
     }
 
-    public function upload(Request $request)
-    {
-        $request->validate([
-            'signature' => 'required|image|mimes:png,jpg,jpeg|max:2048',
-        ]);
+public function upload(Request $request)
+{
+    $request->validate([
+        'signature' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+    ]);
 
-        $user = Auth::user();
+    $user = Auth::user();
 
-        // Delete old signature if exists
-        if ($user->signature) {
-            Storage::disk('shared')->delete($user->signature);
-        }
-
-        // Store new signature in shared disk
-        $path = $request->file('signature')->store('signatures', 'shared');
-
-        // Update user's signature path
-        $user->update(['signature' => $path]);
-
-        //return redirect()->route('account')->with('success', 'Signature uploaded successfully!');
-        return back()->with('success', 'Signature uploaded successfully!');
+   
+    if ($user->signature) {
+        Storage::disk('shared')->delete($user->signature);
     }
+
+    $path = $request->file('signature')->store('signatures', 'shared');
+
+    $user->update(['signature' => $path]);
+
+    if ($request->expectsJson()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Signature uploaded successfully!',
+            'signature_url' => asset('shared/' . $path)
+        ]);
+    }
+
+    return back()->with('success', 'Signature uploaded successfully!');
+}
 }

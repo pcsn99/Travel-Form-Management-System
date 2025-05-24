@@ -51,6 +51,7 @@ class TravelFormExportController extends Controller
     {
         $form = OverseasTravelForm::with(['request.user'])->findOrFail($id);
         $message = $request->input('message');
+        $subject = $request->input('subject') ?: 'Overseas Travel Form Submission';
 
         
         $spreadsheet = $this->generateSpreadsheet($form); 
@@ -71,7 +72,7 @@ class TravelFormExportController extends Controller
 
         Mail::to($directorEmail)
             ->cc($userEmail)
-            ->send(new OverseasFormExportMail($message, $filePath, $filename));
+            ->send(new OverseasFormExportMail($subject, $message, $filePath, $filename));
 
         
         unlink($filePath);
@@ -580,7 +581,7 @@ class TravelFormExportController extends Controller
         $sheet->setCellValue('A11', $form->request->intended_departure_date);
         $sheet->setCellValue('D11', $form->request->intended_return_date);
 
-        // Answers start from A6
+        
         $row = 12;
         foreach ($form->answers as $answer) {
             $sheet->setCellValue("C{$row}", $answer->answer);
@@ -604,7 +605,7 @@ class TravelFormExportController extends Controller
 
 
         if ($form->status === 'approved') {
-            // Admin who approved the form
+            
             $approver = \App\Models\User::find($form->overseas_supervisor);
 
             if ($approver && $approver->signature) {
@@ -620,7 +621,7 @@ class TravelFormExportController extends Controller
                     $adminDrawing->setWorksheet($sheet);
                 }
 
-                // Display admin's name under the signature
+               
                 $sheet->setCellValue('A34', $approver->name);
             }
         }

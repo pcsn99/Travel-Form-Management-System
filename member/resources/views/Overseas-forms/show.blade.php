@@ -110,7 +110,7 @@
 
 <!-- Request Questions -->
 <div class="card mb-4">
-    <h5 class="mb-3"><i class="bi bi-chat-dots-fill me-2"></i> Travel Request Answers/h5>
+    <h5 class="mb-3"><i class="bi bi-chat-dots-fill me-2"></i> Travel Request Answers</h5>
     <div class="row">
         @foreach($form->request->questionAnswers as $answer)
             <div class="col-md-6 mb-3">

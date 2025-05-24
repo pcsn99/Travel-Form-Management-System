@@ -115,8 +115,9 @@
             <p style="color: green">{{ session('success') }}</p>
         @endif
 
-        {{-- 🧾 Answer Questions --}}
-        <form method="POST" action="{{ route('member.Overseas-forms.update', $form->id) }}">
+        {{-- Answer Questions --}}
+        <form id="mainTravelForm" method="POST" action="{{ route('member.Overseas-forms.update', $form->id) }}">
+
             @csrf
 
             @foreach($questions as $q)
@@ -159,9 +160,25 @@
                 </div>
             @endforeach
 
-            <button type="submit">✅ Submit Form</button>
+            <button type="button" class="btn btn-success" onclick="handleFormSubmit()">✅ Submit Form</button>
+
+
         </form>
     </div>
+
+    <script>
+        function handleFormSubmit() {
+            const hasSignature = @json(Auth::user()->signature !== null);
+
+            if (!hasSignature) {
+                const modal = new bootstrap.Modal(document.getElementById('uploadSignatureModal'));
+                modal.show();
+                return;
+            }
+
+            document.getElementById('mainTravelForm').submit();
+        }
+    </script>
 
     @php
         $showUpload = in_array($form->status, ['submitted', 'rejected']);
@@ -225,6 +242,82 @@
         <button>⬅ Back to Dashboard</button>
     </a>
 </div>
+
+<!-- Upload Signature Modal -->
+<div class="modal fade" id="uploadSignatureModal" tabindex="-1" aria-labelledby="uploadSignatureModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadSignatureModalLabel">Upload Signature Required</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3">You must upload a signature before submitting this form. This will be used in your export file.</p>
+
+                @if(Auth::user()->signature)
+                    <p><strong>Current Signature:</strong></p>
+                    <img src="{{ asset('shared/' . Auth::user()->signature) }}" class="img-fluid mb-3" style="max-height: 120px;">
+                @endif
+
+                <form id="signatureUploadForm" enctype="multipart/form-data">
+                    @csrf
+                    <label for="signature"><strong>Select Signature File (PNG, JPG):</strong></label>
+                    <input type="file" name="signature" class="form-control mb-3" required accept=".jpg,.jpeg,.png">
+                    <button type="submit" class="btn btn-primary">Upload Signature</button>
+                </form>
+
+                <div id="signatureUploadMessage" class="mt-2 text-success" style="display:none;">
+                    ✅ Signature uploaded. Submitting form...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.getElementById('uploadSignatureModal').addEventListener('shown.bs.modal', function () {
+        document.querySelector('#uploadSignatureModal input[name="signature"]').focus();
+    });
+</script>
+
+<script>
+    document.getElementById('uploadSignatureModal').addEventListener('shown.bs.modal', function () {
+        document.querySelector('#uploadSignatureModal input[name="signature"]').focus();
+    });
+
+    document.getElementById('signatureUploadForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        fetch("{{ route('member.signature.upload') }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": csrfToken
+            },
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Upload failed');
+            return response.json(); 
+        })
+        .then(data => {
+            document.getElementById('signatureUploadMessage').style.display = 'block';
+            setTimeout(() => {
+                bootstrap.Modal.getInstance(document.getElementById('uploadSignatureModal')).hide();
+                document.getElementById('mainTravelForm').submit();
+            }, 1500);
+        })
+        .catch(error => {
+            alert("Failed to upload signature. Please try again.");
+            console.error(error);
+        });
+    });
+</script>
+
+
 
 <script>
     function toggleOther(selectEl, id) {

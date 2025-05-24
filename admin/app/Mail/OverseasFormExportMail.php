@@ -14,9 +14,11 @@ class OverseasFormExportMail extends Mailable
     public $messageBody;
     public $filePath;
     public $filename;
+    public $subjectText;
 
-    public function __construct($messageBody, $filePath, $filename)
+    public function __construct($subject, $messageBody, $filePath, $filename)
     {
+        $this->subjectText = $subject;
         $this->messageBody = $messageBody;
         $this->filePath = $filePath;
         $this->filename = $filename;
@@ -24,12 +26,14 @@ class OverseasFormExportMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Overseas Travel Form Export')
+        return $this->subject($this->subjectText)
                     ->view('emails.overseas-export')
-                    ->with(['messageBody' => $this->messageBody])
                     ->attach($this->filePath, [
                         'as' => $this->filename,
                         'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    ])
+                    ->with([
+                        'messageBody' => $this->messageBody,
                     ]);
     }
 }

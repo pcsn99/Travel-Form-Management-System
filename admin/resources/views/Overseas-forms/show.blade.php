@@ -56,34 +56,29 @@
         margin-bottom: 30px;
     }
 
-    textarea {
-        width: 100%;
-        padding: 10px;
+    .form-section label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-section .form-control-plaintext {
+        background-color: #f9f9f9;
+        padding: 10px 15px;
         border: 1px solid #ccc;
         border-radius: 6px;
-        margin-top: 10px;
-    }
-
-    button {
-        background-color: #17224D;
-        color: white;
-        font-weight: bold;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-
-    button:hover {
-        background-color: #1f2f5f;
+        margin-bottom: 15px;
     }
 
     .form-actions {
         display: flex;
         flex-wrap: wrap;
-        gap: 15px;
-        margin-bottom: 20px;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    textarea.form-control {
+        width: 100%;
+        resize: vertical;
     }
 
     .file-list li {
@@ -109,126 +104,26 @@
 @php
     $admin = Auth::user();
 @endphp
+
+@include('partials.modals') <!-- Assume modals code is moved to a partial to keep the view clean -->
+
 <div class="container-custom">
-
-    @if(session('success'))
-    <!-- Success Modal -->
-    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title" id="successModalLabel">
-                        <i class="bi bi-check-circle-fill me-2"></i>Success
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    {!! session('success') !!}
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                </div>
-
-            </div>
-        </div>
+    <div class="header-banner">
+        <h2><i class="bi bi-clipboard-check me-2"></i> Overseas Travel Form Details</h2>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var successModal = new bootstrap.Modal(document.getElementById('successModal'));
-            successModal.show();
-        });
-    </script>
-    @endif
-
-    @if(session('error'))
-    <!-- Error Modal -->
-    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="errorModalLabel">
-                        <i class="bi bi-x-circle-fill me-2"></i>Error
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body">
-                    {!! session('error') !!}
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-            errorModal.show();
-        });
-    </script>
-    @endif
-
-    @if(session('warning'))
-    <!-- Warning Modal -->
-    <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-
-                <div class="modal-header bg-warning">
-                    <h5 class="modal-title" id="warningModalLabel">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>Notice
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    {!! session('warning') !!}
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var warningModal = new bootstrap.Modal(document.getElementById('warningModal'));
-            warningModal.show();
-        });
-    </script>
-    @endif
-
-    <div class="header-banner text-center py-4 mb-4 rounded shadow" style="background-color:#17224D; color:white;">
-        <h2 class="mb-0"><i class="bi bi-clipboard-check me-2"></i> Overseas Travel Form Details</h2>
-    </div>
-
-    <div class="d-flex flex-wrap justify-content-start gap-3 mb-4">
+    <!-- Action Buttons -->
+    <div class="form-actions">
         @if(in_array($form->status, ['submitted', 'pending', 'rejected']))
-        <form action="{{ route('Overseas-forms.edit', $form->id) }}" method="GET" class="d-inline">
-            <button type="submit" class="btn btn-secondary">
-                Edit Form
-            </button>
-        </form>
+            <form action="{{ route('Overseas-forms.edit', $form->id) }}" method="GET">
+                <button type="submit" class="btn btn-secondary">Edit Form</button>
+            </form>
         @endif
 
         @if($admin->signature)
-        <form action="{{ route('admin.overseas-forms.export', $form->id) }}" method="GET" class="d-inline">
-            <button type="submit" class="btn btn-success">
-                Export to Excel
-            </button>
-        </form>
+            <form action="{{ route('admin.overseas-forms.export', $form->id) }}" method="GET">
+                <button type="submit" class="btn btn-success">Export to Excel</button>
+            </form>
         @else
             <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#uploadSignatureModal">
                 <i class="bi bi-exclamation-triangle-fill"></i> Upload Signature to Export
@@ -251,200 +146,164 @@
         @endif
     </div>
 
-    <!-- Form Metadata Card -->
-    <div class="card mb-4 shadow-sm border-0">
+    <!-- Travel Information -->
+    <div class="card form-section">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Travel Form Information</h5>
+            <h5>Travel Form Information</h5>
         </div>
         <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-6"><strong>User:</strong> {{ $form->request->user->name }}</div>
-                <div class="col-md-6"><strong>Status:</strong> <span class="badge bg-secondary">{{ ucfirst($form->status) }}</span></div>
-            </div>
-            <div class="row mb-3">
-                
-                <div class="col-md-6"><strong>Departure:</strong> {{ \Carbon\Carbon::parse($form->request->intended_departure_date)->format('F d, Y') }}</div>
-                <div class="col-md-6"><strong>Return:</strong> {{ \Carbon\Carbon::parse($form->request->intended_return_date)->format('F d, Y') }}</div>
-            </div>
-            <div class="row">
-                <div class="col-md-6"><strong>Submitted:</strong> {{ $form->submitted_at }}</div>
-                
-            </div>
+            <label>User:</label>
+            <div class="form-control-plaintext">{{ $form->request->user->name }}</div>
+
+            <label>Status:</label>
+            <div class="form-control-plaintext"><span class="badge bg-secondary">{{ ucfirst($form->status) }}</span></div>
+
+            <label>Departure:</label>
+            <div class="form-control-plaintext">{{ \Carbon\Carbon::parse($form->request->intended_departure_date)->format('F d, Y') }}</div>
+
+            <label>Return:</label>
+            <div class="form-control-plaintext">{{ \Carbon\Carbon::parse($form->request->intended_return_date)->format('F d, Y') }}</div>
+
+            <label>Submitted:</label>
+            <div class="form-control-plaintext">{{ $form->submitted_at }}</div>
         </div>
     </div>
 
-    <!-- Form Answers Card -->
-    <div class="card mb-4 shadow-sm border-0">
-        <div class="card-header bg-dark text-white d-flex align-items-center">
-            <i class="bi bi-card-text me-2 fs-5"></i>
-            <h5 class="mb-0">Form Answers</h5>
+    <!-- Answers Section -->
+    <div class="card form-section">
+        <div class="card-header bg-dark text-white">
+            <h5>Form Answers</h5>
         </div>
-        <div class="card-body p-0">
-            <ul class="list-group list-group-flush">
-                @foreach($form->answers as $answer)
-                    <li class="list-group-item py-3 px-4">
-                        <strong>{{ $answer->question->question }}:</strong> 
-                        <span class="text-muted">{{ $answer->answer }}</span>
-                    </li>
+        <div class="card-body">
+            @foreach($form->answers as $answer)
+                <label>{{ $answer->question->question }}</label>
+                <div class="form-control-plaintext">{{ $answer->answer }}</div>
+            @endforeach
+        </div>
+    </div>
+
+    <!-- Admin Comment -->
+    @if($form->admin_comment)
+        <div class="card form-section">
+            <label>🗒 Admin Comment:</label>
+            <div class="form-control-plaintext">{{ $form->admin_comment }}</div>
+        </div>
+    @endif
+
+    <!-- Attachments -->
+    @if($form->attachments->count())
+        <div class="card form-section">
+            <label>📁 Additional Requirements:</label>
+            <ul class="file-list">
+                @foreach($form->attachments as $file)
+                    <li><a href="{{ route('attachments.download', $file->id) }}" target="_blank">{{ $file->original_name }}</a></li>
                 @endforeach
             </ul>
         </div>
-    </div>
-
-
-    @if(in_array($form->status, ['submitted', 'pending']))
-    <div class="card mb-4 shadow-sm p-4">
-        <h5 class="mb-3"><i class="bi bi-shield-check me-2"></i> Admin Actions</h5>
-        <div class="d-flex flex-wrap gap-3">
-            @if($admin->signature)
-                <button type="button" class="btn btn-dark fw-bold" data-bs-toggle="modal" data-bs-target="#approveModal">
-                    <i class="bi bi-check-circle-fill"></i> Approve
-                </button>
-                <button type="button" class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#rejectModal">
-                    <i class="bi bi-x-circle-fill"></i> Reject
-                </button>
-            @else
-                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#uploadSignatureModal">
-                    <i class="bi bi-exclamation-triangle-fill"></i> Upload Signature to Proceed
-                </button>
-            @endif
-        </div>
-    </div>
     @endif
 
-<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <form method="POST" action="{{ route('Overseas-forms.approve', $form->id) }}">
-        @csrf
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="approveModalLabel">Confirm Approval</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <p>Please leave an optional comment before approving this form:</p>
-            <textarea name="admin_comment" class="form-control" placeholder="Your comment..."></textarea>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-success">✅ Approve</button>
-          </div>
+    <!-- Admin Approval Buttons -->
+    @if(in_array($form->status, ['submitted', 'pending']))
+        <div class="card form-section">
+            <h5><i class="bi bi-shield-check me-2"></i> Admin Actions</h5>
+            <div class="form-actions">
+                @if($admin->signature)
+                    <button type="button" class="btn btn-dark fw-bold" data-bs-toggle="modal" data-bs-target="#approveModal">
+                        <i class="bi bi-check-circle-fill"></i> Approve
+                    </button>
+                    <button type="button" class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#rejectModal">
+                        <i class="bi bi-x-circle-fill"></i> Reject
+                    </button>
+                @else
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#uploadSignatureModal">
+                        <i class="bi bi-exclamation-triangle-fill"></i> Upload Signature to Proceed
+                    </button>
+                @endif
+            </div>
         </div>
-      </form>
-    </div>
-  </div>
-  
+    @endif
+</div>
 
-  <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+<div class="modal fade" id="sendEmailModal" tabindex="-1" aria-labelledby="sendEmailModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <form method="POST" action="{{ route('Overseas-forms.reject', $form->id) }}">
-        @csrf
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="rejectModalLabel">Confirm Rejection</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <p>Please leave a reason for rejecting this form:</p>
-            <textarea name="admin_comment" class="form-control" placeholder="Reason for rejection..."></textarea>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-danger">❌ Reject</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Signature Upload Modal -->
-    <div class="modal fade" id="uploadSignatureModal" tabindex="-1" aria-labelledby="uploadSignatureModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <form method="POST" action="{{ route('admin.overseas-forms.email-export', $form->id) }}">
+            @csrf
             <div class="modal-content">
-
                 <div class="modal-header">
-                    <h5 class="modal-title" id="uploadSignatureModalLabel">Upload Your Signature</h5>
+                    <h5 class="modal-title" id="sendEmailModalLabel">Send Form via Email</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
-                    @if($admin->signature)
-                        <p><strong>Current Signature:</strong></p>
-                        <img src="{{ asset('shared/' . $admin->signature) }}" alt="Signature" class="img-fluid mb-3" style="max-height: 150px;">
-                    @endif
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">Subject:</label>
+                        <input type="text" name="subject" class="form-control" placeholder="Overseas Travel Form Submission">
+                    </div>
 
-                    <form method="POST" action="{{ route('admin.upload.signature') }}" enctype="multipart/form-data">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="signature" class="form-label">Choose a signature file (.jpg, .png):</label>
-                            <input type="file" class="form-control" name="signature" required accept=".jpg,.jpeg,.png">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Upload / Replace</button>
-                    </form>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message (you can edit this):</label>
+                        <textarea class="form-control" name="message" rows="5" required>
+Dear Director of Works,
+
+Please find attached the exported Overseas Travel Form for your review.
+
+Best regards,  
+{{ Auth::user()->name }}
+                        </textarea>
+                    </div>
                 </div>
 
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Send Email</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
+</div>
 
-
-
-    <!-- Modal -->
-    <div class="modal fade" id="sendEmailModal" tabindex="-1" aria-labelledby="sendEmailModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form method="POST" action="{{ route('admin.overseas-forms.email-export', $form->id) }}">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="sendEmailModalLabel">Send Form via Email</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="message" class="form-label">Message (you can edit this):</label>
-                            <textarea class="form-control" name="message" rows="5" required>
-    Dear Director of Works,
-
-    Please find attached the exported Overseas Travel Form for your review.
-
-    Best regards,
-    {{ Auth::user()->name }}
-                            </textarea>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Send Email</button>
-                    </div>
+<!-- Approve Modal -->
+<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" action="{{ route('Overseas-forms.approve', $form->id) }}">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="approveModalLabel">Confirm Approval</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-            </form>
-        </div>
+                <div class="modal-body">
+                    <label>Optional Comment:</label>
+                    <textarea name="admin_comment" class="form-control" placeholder="Your comment..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">✅ Approve</button>
+                </div>
+            </div>
+        </form>
     </div>
+</div>
 
-
-
-    @if($form->admin_comment)
-        <div class="card">
-            <p><strong>🗒 Admin Comment:</strong> {{ $form->admin_comment }}</p>
-        </div>
-    @endif
-
-    @if($form->attachments->count())
-        <div class="card">
-            <h4>📁 Additional Requirements</h4>
-            <ul class="file-list">
-                @foreach($form->attachments as $file)
-                    <li>
-                        <a href="{{ route('attachments.download', $file->id) }}" target="_blank">
-                            {{ $file->original_name }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-
+<!-- Reject Modal -->
+<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" action="{{ route('Overseas-forms.reject', $form->id) }}">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="rejectModalLabel">Confirm Rejection</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label>Reason for Rejection:</label>
+                    <textarea name="admin_comment" class="form-control" required placeholder="Reason for rejection..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">❌ Reject</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 @endsection
