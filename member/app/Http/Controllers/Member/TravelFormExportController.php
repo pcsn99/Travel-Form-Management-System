@@ -249,7 +249,7 @@ class TravelFormExportController extends Controller
         $sheet->mergeCells('A30:B32');
 
         $approved = $form->status === 'approved' ? '☑ APPROVED' : '☐ APPROVED';
-        $disapproved = $form->status === 'rejected' ? '☑ DISAPPROVED' : '☐ DISAPPROVED';
+        $disapproved = $form->status === 'declined' ? '☑ DISAPPROVED' : '☐ DISAPPROVED';
 
         $sheet->setCellValue('A33', $approved);
         $sheet->setCellValue('B33', $disapproved);
@@ -532,7 +532,7 @@ class TravelFormExportController extends Controller
         $sheet->mergeCells('A30:B32');
 
         $approved = $form->status === 'approved' ? '☑ APPROVED' : '☐ APPROVED';
-        $disapproved = $form->status === 'rejected' ? '☑ DISAPPROVED' : '☐ DISAPPROVED';
+        $disapproved = $form->status === 'declined' ? '☑ DISAPPROVED' : '☐ DISAPPROVED';
 
         $sheet->setCellValue('A33', $approved);
         $sheet->setCellValue('B33', $disapproved);

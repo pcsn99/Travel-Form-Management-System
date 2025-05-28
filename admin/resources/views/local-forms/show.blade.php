@@ -100,7 +100,7 @@
     </div>
 
     <div class="form-actions">
-        @if(in_array($form->status, ['submitted', 'pending','rejected']))
+        @if(in_array($form->status, ['submitted', 'pending','declined']))
             <a href="{{ route('local-forms.edit', $form->id) }}">
                 <button class="btn btn-primary">
                     <i class="bi bi-pencil-square"></i> Edit Form
@@ -166,8 +166,8 @@
             <button type="button" class="btn btn-dark px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#approveModal">
                 <i class="bi bi-check-circle-fill me-1"></i> Approve
             </button>
-            <button type="button" class="btn btn-danger px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#rejectModal">
-                <i class="bi bi-x-circle-fill me-1"></i> Reject
+            <button type="button" class="btn btn-danger px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#declineModal">
+                <i class="bi bi-x-circle-fill me-1"></i> Decline
             </button>
         </div>
     </div>
@@ -197,24 +197,24 @@
         </div>
     </div>
 
-    <!-- Reject Modal -->
-    <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <!-- Decline Modal -->
+    <div class="modal fade" id="declineModal" tabindex="-1" aria-labelledby="declineModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="{{ route('local-forms.reject', $form->id) }}">
+            <form method="POST" action="{{ route('local-forms.decline', $form->id) }}">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="rejectModalLabel">Confirm Rejection</h5>
+                        <h5 class="modal-title" id="declineModalLabel">Confirm Declineion</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Please provide a reason for rejection:</p>
+                        <p>Please provide a reason for declineion:</p>
                         <textarea name="admin_comment" class="form-control" placeholder="Reason..."></textarea>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-x-circle"></i> Reject
+                            <i class="bi bi-x-circle"></i> Decline
                         </button>
                     </div>
                 </div>

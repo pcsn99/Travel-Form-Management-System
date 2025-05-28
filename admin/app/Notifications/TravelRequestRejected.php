@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class TravelRequestRejected extends Notification
+class TravelRequestDeclined extends Notification
 {
     use Queueable;
 
@@ -27,7 +27,7 @@ class TravelRequestRejected extends Notification
         $url = rtrim(config('app.member_url'), '/') . '/travel-requests/' . $this->request->id;
 
         return [
-            'message' => '❌ Your ' . ucfirst($this->request->type) . ' travel request was rejected.',
+            'message' => '❌ Your ' . ucfirst($this->request->type) . ' travel request was declined.',
             'url' => $url,
         ];
     }
@@ -37,8 +37,8 @@ class TravelRequestRejected extends Notification
         $url = rtrim(config('app.member_url'), '/') . '/travel-requests/' . $this->request->id;
 
         return (new MailMessage)
-            ->subject('Travel Request Rejected')
-            ->line('We regret to inform you that your ' . ucfirst($this->request->type) . ' travel request has been rejected.')
+            ->subject('Travel Request Declined')
+            ->line('We regret to inform you that your ' . ucfirst($this->request->type) . ' travel request has been declined.')
             ->action('View Request', $url);
     }
 }

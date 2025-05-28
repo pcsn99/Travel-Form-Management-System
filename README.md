@@ -18,7 +18,7 @@ There are two separate Laravel projects inside this repository:
 - Notifications and account info
 
 ### Admin Portal
-- Approve or reject travel requests/forms
+- Approve or decline travel requests/forms
 - Manage questions
 - Upload attachments and sign forms
 - View calendar of upcoming travels

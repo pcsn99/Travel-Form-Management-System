@@ -8,7 +8,7 @@ class LocalTravelForm extends Model
 {
     protected $fillable = [
         'travel_request_id', 'status', 'admin_comment',
-        'submitted_at', 'approved_at', 'rejected_at'
+        'submitted_at', 'approved_at', 'declined_at'
     ];
 
     public function request()

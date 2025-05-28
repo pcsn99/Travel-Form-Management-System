@@ -103,12 +103,12 @@
         background-color: #157347;
     }
 
-    .reject-btn {
+    .decline-btn {
         background-color: #dc3545;
         color: white;
     }
 
-    .reject-btn:hover {
+    .decline-btn:hover {
         background-color: #bb2d3b;
     }
 
@@ -163,7 +163,7 @@
                     <span class="badge 
                         {{ 
                             $request->status === 'approved' ? 'bg-success' : 
-                            ($request->status === 'rejected' ? 'bg-danger' : 'bg-warning text-dark') 
+                            ($request->status === 'declined' ? 'bg-danger' : 'bg-warning text-dark') 
                         }}">
                         {{ ucfirst($request->status) }}
                     </span>
@@ -207,7 +207,7 @@
     <div class="card">
         <div class="form-actions">
             <button type="button" class="approve-btn" data-bs-toggle="modal" data-bs-target="#approveModal">Approve</button>
-            <button type="button" class="reject-btn" data-bs-toggle="modal" data-bs-target="#rejectModal">Reject</button>
+            <button type="button" class="decline-btn" data-bs-toggle="modal" data-bs-target="#declineModal">Decline</button>
         </div>
     </div>
     @else
@@ -252,23 +252,23 @@
   </div>
 </div>
 
-<!-- Modal for Reject -->
-<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+<!-- Modal for Decline -->
+<div class="modal fade" id="declineModal" tabindex="-1" aria-labelledby="declineModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form method="POST" action="{{ route('travel-requests.reject', $request->id) }}">
+    <form method="POST" action="{{ route('travel-requests.decline', $request->id) }}">
         @csrf
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="rejectModalLabel">Reject Request</h5>
+                <h5 class="modal-title" id="declineModalLabel">Decline Request</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <label>Rejection Comment (Optional):</label>
+                <label>Declineion Comment (Optional):</label>
                 <textarea name="admin_comment" class="form-control" placeholder="Add comment..."></textarea>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-danger">Confirm Reject</button>
+                <button type="submit" class="btn btn-danger">Confirm Decline</button>
             </div>
         </div>
     </form>

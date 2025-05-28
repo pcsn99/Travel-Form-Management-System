@@ -104,7 +104,7 @@
         color: white;
     }
 
-    .badge-rejected {
+    .badge-declined {
         background-color: #dc3545;
         color: white;
     }
@@ -150,7 +150,7 @@
                                     'approved' => 'badge-approved',
                                     'pending' => 'badge-pending',
                                     'submitted' => 'badge-submitted',
-                                    'rejected' => 'badge-rejected',
+                                    'declined' => 'badge-declined',
                                     default => 'badge-pending'
                                 };
                             @endphp
@@ -176,7 +176,7 @@
                                 <a href="{{ route('member.local-forms.show', $form->id) }}" class="btn btn-primary">View</a>
                                 @if(is_null($form->submitted_at))
                                     <a href="{{ route('member.local-forms.edit', $form->id) }}" class="btn btn-primary">Fill Out</a>
-                                @elseif(in_array($form->status, ['pending', 'submitted', 'rejected']))
+                                @elseif(in_array($form->status, ['pending', 'submitted', 'declined']))
                                     <a style="background-color: #e2b742" href="{{ route('member.local-forms.edit', $form->id) }}" class="btn btn-primary">Edit</a>
                                 @endif
                             </td>

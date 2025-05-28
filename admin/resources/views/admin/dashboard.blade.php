@@ -100,7 +100,7 @@
         color: black;
     }
 
-    .badge-rejected {
+    .badge-declined {
         background-color: #dc3545;
         color: white;
     }
@@ -250,7 +250,7 @@
                                 $badgeClass = match($status) {
                                     'approved' => 'badge-approved',
                                     'pending' => 'badge-pending',
-                                    'rejected' => 'badge-rejected',
+                                    'declined' => 'badge-declined',
                                     default => 'badge-default'
                                 };
                             @endphp
@@ -299,7 +299,7 @@
                                 $badgeClass = match($status) {
                                     'approved' => 'badge-approved',
                                     'pending' => 'badge-pending',
-                                    'rejected' => 'badge-rejected',
+                                    'declined' => 'badge-declined',
                                     default => 'badge-default'
                                 };
                             @endphp
@@ -360,7 +360,7 @@
                     modal.show();
 
                     fetch(`/admin/travel-calendar/details/${date}`)
-                        .then(res => res.ok ? res.json() : Promise.reject(res.status))
+                        .then(res => res.ok ? res.json() : Promise.decline(res.status))
                         .then(data => {
                             let html = `<h5>Traveling Members (${data.traveling.length})</h5>`;
                             html += data.traveling.length ? '<ul>' + data.traveling.map(n => `<li>${n}</li>`).join('') + '</ul>' : '<p>None</p>';

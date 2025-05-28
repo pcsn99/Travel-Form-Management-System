@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Notifications\TravelFormApproved;
-use App\Notifications\TravelFormRejected;
+use App\Notifications\TravelFormDeclined;
 use Illuminate\Http\Request;
 use App\Models\OverseasTravelForm;
 
@@ -39,18 +39,18 @@ class OverseasFormController extends Controller
         return redirect()->route('Overseas-forms.index')->with('success', 'Form approved.');
     }
     
-    public function reject(Request $request, $id)
+    public function decline(Request $request, $id)
     {
         $form = OverseasTravelForm::findOrFail($id);
-        $form->status = 'rejected';
+        $form->status = 'declined';
         $form->admin_comment = $request->admin_comment;
-        $form->rejected_at = now();
+        $form->declined_at = now();
         $form->save();
     
         
-        $form->request->user->notify(new TravelFormRejected($form));
+        $form->request->user->notify(new TravelFormDeclined($form));
     
-        return redirect()->route('Overseas-forms.index')->with('success', 'Form rejected.');
+        return redirect()->route('Overseas-forms.index')->with('success', 'Form declined.');
     }
     
 

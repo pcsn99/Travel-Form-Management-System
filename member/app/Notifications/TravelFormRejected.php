@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class TravelFormRejected extends Notification
+class TravelFormDeclined extends Notification
 {
     use Queueable;
 
@@ -20,16 +20,16 @@ class TravelFormRejected extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Form Rejected')
-                    ->line('A notification regarding TravelFormRejected.')
+                    ->subject('Form Declined')
+                    ->line('A notification regarding TravelFormDeclined.')
                     ->action('View Details', url('/dashboard'));
     }
 
     public function toDatabase($notifiable)
     {
         return [
-            'title' => 'Form Rejected',
-            'message' => 'A notification about TravelFormRejected.',
+            'title' => 'Form Declined',
+            'message' => 'A notification about TravelFormDeclined.',
             'url' => '/dashboard'
         ];
     }
@@ -37,8 +37,8 @@ class TravelFormRejected extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'title' => 'Form Rejected',
-            'message' => 'A notification about TravelFormRejected.',
+            'title' => 'Form Declined',
+            'message' => 'A notification about TravelFormDeclined.',
             'url' => '/dashboard'
         ]);
     }

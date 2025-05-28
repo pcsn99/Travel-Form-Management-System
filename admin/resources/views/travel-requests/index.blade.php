@@ -109,7 +109,7 @@
         background-color: #28a745;
     }
 
-    .status-links a[href*="rejected"] {
+    .status-links a[href*="declined"] {
         background-color: #dc3545;
     }
 
@@ -232,7 +232,7 @@
             <div class="status-links">
                 <a href="?status=pending">Pending</a>
                 <a href="?status=approved">Approved</a>
-                <a href="?status=rejected">Rejected</a>
+                <a href="?status=declined">Declined</a>
             </div>
 
             @if($requests->count())

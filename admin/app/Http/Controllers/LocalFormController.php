@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\LocalTravelForm;
-use App\Notifications\TravelFormRejected;
+use App\Notifications\TravelFormDeclined;
 use App\Notifications\TravelFormApproved;
 
 class LocalFormController extends Controller
@@ -40,18 +40,18 @@ class LocalFormController extends Controller
         return redirect()->route('local-forms.index')->with('success', 'Form approved.');
     }
     
-    public function reject(Request $request, $id)
+    public function decline(Request $request, $id)
     {
         $form = LocalTravelForm::findOrFail($id);
-        $form->status = 'rejected';
+        $form->status = 'declined';
         $form->admin_comment = $request->admin_comment;
-        $form->rejected_at = now();
+        $form->declined_at = now();
         $form->save();
     
         
-        $form->request->user->notify(new TravelFormRejected($form));
+        $form->request->user->notify(new TravelFormDeclined($form));
     
-        return redirect()->route('local-forms.index')->with('success', 'Form rejected.');
+        return redirect()->route('local-forms.index')->with('success', 'Form declined.');
     }
     public function edit($id)
     {

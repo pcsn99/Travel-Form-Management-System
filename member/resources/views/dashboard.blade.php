@@ -111,7 +111,7 @@
         color: white;
     }
 
-    .badge-rejected {
+    .badge-declined {
         background-color: #dc3545;
         color: white;
     }
@@ -252,7 +252,7 @@
                                 $badgeClass = match(strtolower($form->status)) {
                                     'submitted' => 'badge-submitted',
                                     'approved' => 'badge-approved',
-                                    'rejected' => 'badge-rejected',
+                                    'declined' => 'badge-declined',
                                     default => 'badge-pending'
                                 };
                             @endphp

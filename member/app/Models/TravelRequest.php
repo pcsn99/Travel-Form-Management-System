@@ -9,7 +9,7 @@ class TravelRequest extends Model
 {
     protected $fillable = [
         'user_id', 'type', 'status', 'intended_departure_date', 'intended_return_date',
-        'admin_comment', 'approved_at', 'rejected_at'
+        'admin_comment', 'approved_at', 'declined_at'
     ];
 
     public function user()

@@ -181,7 +181,7 @@
     </script>
 
     @php
-        $showUpload = in_array($form->status, ['submitted', 'rejected']);
+        $showUpload = in_array($form->status, ['submitted', 'declined']);
     @endphp
 
     @if($showUpload)

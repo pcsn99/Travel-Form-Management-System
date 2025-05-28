@@ -130,7 +130,7 @@
         @endforeach
     </div>
 
-    @if(in_array(strtolower($form->status), ['pending', 'submitted', 'rejected']))
+    @if(in_array(strtolower($form->status), ['pending', 'submitted', 'declined']))
         <div class="text-end mt-3">
             <a href="{{ route('member.local-forms.edit', $form->id) }}" class="btn btn-primary">
                 <i class="bi bi-pencil-square me-1"></i> Edit

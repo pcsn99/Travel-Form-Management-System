@@ -154,7 +154,7 @@
         </form>
     </div>
 
-    @if($form->status === 'submitted' || 'rejected')
+    @if($form->status === 'submitted' || 'declined')
     <div class="card">
         <h4>📤 Upload Additional Requirement</h4>
         <form action="{{ route('attachments.upload') }}" method="POST" enctype="multipart/form-data">

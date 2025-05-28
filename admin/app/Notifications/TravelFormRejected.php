@@ -8,7 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Support\Str;
 
-class TravelFormRejected extends Notification
+class TravelFormDeclined extends Notification
 {
     use Queueable;
 
@@ -30,8 +30,8 @@ class TravelFormRejected extends Notification
         $url = rtrim(config('app.member_url'), '/') . "/{$type}-forms/{$this->form->id}/view";
 
         return (new MailMessage)
-            ->subject('❌ Travel Form Rejected')
-            ->line('Your ' . ucfirst($type) . ' travel form has been rejected.')
+            ->subject('❌ Travel Form Declined')
+            ->line('Your ' . ucfirst($type) . ' travel form has been declined.')
             ->action('View Details', $url)
             ->line('Please review the form and make necessary corrections if applicable.');
     }
@@ -42,8 +42,8 @@ class TravelFormRejected extends Notification
         $url = rtrim(config('app.member_url'), '/') . "/{$type}-forms/{$this->form->id}/view";
 
         return [
-            'title' => 'Travel Form Rejected',
-            'message' => '❌ Your ' . ucfirst($type) . ' travel form was rejected.',
+            'title' => 'Travel Form Declined',
+            'message' => '❌ Your ' . ucfirst($type) . ' travel form was declined.',
             'url' => $url,
         ];
     }
@@ -54,8 +54,8 @@ class TravelFormRejected extends Notification
         $url = rtrim(config('app.member_url'), '/') . "/{$type}-forms/{$this->form->id}/view";
 
         return new BroadcastMessage([
-            'title' => 'Travel Form Rejected',
-            'message' => '❌ Your ' . ucfirst($type) . ' travel form was rejected.',
+            'title' => 'Travel Form Declined',
+            'message' => '❌ Your ' . ucfirst($type) . ' travel form was declined.',
             'url' => $url,
         ]);
     }

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('type', ['local', 'overseas']);
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'approved', 'declined'])->default('pending');
             $table->date('intended_departure_date');
             $table->date('intended_return_date');
             $table->text('admin_comment')->nullable();
@@ -52,12 +52,12 @@ return new class extends Migration
         Schema::create('local_travel_forms', function (Blueprint $table) {
             $table->id();
             $table->foreignId('travel_request_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['pending', 'submitted', 'approved', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'submitted', 'approved', 'declined'])->default('pending');
             $table->text('admin_comment')->nullable();
             $table->foreignId('local_supervisor')->nullable()->constrained('users');
             $table->timestamp('submitted_at')->nullable();
             $table->timestamp('approved_at')->nullable();
-            $table->timestamp('rejected_at')->nullable();
+            $table->timestamp('declined_at')->nullable();
             $table->timestamps();
         });
 
@@ -86,12 +86,12 @@ return new class extends Migration
         Schema::create('overseas_travel_forms', function (Blueprint $table) {
             $table->id();
             $table->foreignId('travel_request_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['pending', 'submitted', 'approved', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'submitted', 'approved', 'declined'])->default('pending');
             $table->text('admin_comment')->nullable();
             $table->foreignId('overseas_supervisor')->nullable()->constrained('users');
             $table->timestamp('submitted_at')->nullable();
             $table->timestamp('approved_at')->nullable();
-            $table->timestamp('rejected_at')->nullable();
+            $table->timestamp('declined_at')->nullable();
             $table->timestamps();
         });
 

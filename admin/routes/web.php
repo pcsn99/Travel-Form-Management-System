@@ -40,19 +40,19 @@ Route::middleware('auth.admin')->group(function () {
     Route::get('/travel-requests', [TravelRequestController::class, 'index'])->name('travel-requests.index');
     Route::get('/travel-requests/{id}', [TravelRequestController::class, 'show'])->name('travel-requests.show');
     Route::post('/travel-requests/{id}/approve', [TravelRequestController::class, 'approve'])->name('travel-requests.approve');
-    Route::post('/travel-requests/{id}/reject', [TravelRequestController::class, 'reject'])->name('travel-requests.reject');
+    Route::post('/travel-requests/{id}/decline', [TravelRequestController::class, 'decline'])->name('travel-requests.decline');
     Route::post('/travel-requests/{id}/reset', [TravelRequestController::class, 'resetStatus'])->name('travel-requests.reset');
 
 
     Route::get('/local-forms', [LocalFormController::class, 'index'])->name('local-forms.index');
     Route::get('/local-forms/{id}', [LocalFormController::class, 'show'])->name('local-forms.show');
     Route::post('/local-forms/{id}/approve', [LocalFormController::class, 'approve'])->name('local-forms.approve');
-    Route::post('/local-forms/{id}/reject', [LocalFormController::class, 'reject'])->name('local-forms.reject');
+    Route::post('/local-forms/{id}/decline', [LocalFormController::class, 'decline'])->name('local-forms.decline');
 
     Route::get('/Overseas-forms', [OverseasFormController::class, 'index'])->name('Overseas-forms.index');
     Route::get('/Overseas-forms/{id}', [OverseasFormController::class, 'show'])->name('Overseas-forms.show');
     Route::post('/Overseas-forms/{id}/approve', [OverseasFormController::class, 'approve'])->name('Overseas-forms.approve');
-    Route::post('/Overseas-forms/{id}/reject', [OverseasFormController::class, 'reject'])->name('Overseas-forms.reject');
+    Route::post('/Overseas-forms/{id}/decline', [OverseasFormController::class, 'decline'])->name('Overseas-forms.decline');
 
     Route::resource('local-form-questions', LocalFormQuestionController::class)->except(['show']);
     Route::resource('Overseas-form-questions', OverseasFormQuestionController::class)->except(['show']);

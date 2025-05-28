@@ -8,7 +8,7 @@ use App\Models\LocalTravelForm;
 use App\Models\OverseasTravelForm;
 use App\Models\TravelRequestAnswer;
 use App\Notifications\TravelRequestApproved;
-use App\Notifications\TravelRequestRejected;
+use App\Notifications\TravelRequestDeclined;
 
 class TravelRequestController extends Controller
 {
@@ -60,15 +60,15 @@ class TravelRequestController extends Controller
         return redirect()->route('travel-requests.index')->with('success', 'Request approved.');
     }
 
-    public function reject(Request $request, $id)
+    public function decline(Request $request, $id)
     {
         $travelRequest = TravelRequest::findOrFail($id);
-        $travelRequest->status = 'rejected';
+        $travelRequest->status = 'declined';
         $travelRequest->admin_comment = $request->admin_comment;
         $travelRequest->save();
 
-        $travelRequest->user->notify(new TravelRequestRejected($travelRequest));
-        return redirect()->route('travel-requests.index')->with('success', 'Request rejected.');
+        $travelRequest->user->notify(new TravelRequestDeclined($travelRequest));
+        return redirect()->route('travel-requests.index')->with('success', 'Request declined.');
     }
 
     public function resetStatus($id)

@@ -68,9 +68,9 @@ class LocalFormController extends Controller
             return redirect()->back()->with('error', 'Only submitted forms can be cancelled.');
         }
 
-        $form->status = 'rejected';
+        $form->status = 'declined';
         $form->admin_comment = 'Cancelled by user.';
-        $form->rejected_at = now();
+        $form->declined_at = now();
         $form->save();
 
         return redirect()->route('dashboard')->with('success', 'Travel form cancelled successfully.');

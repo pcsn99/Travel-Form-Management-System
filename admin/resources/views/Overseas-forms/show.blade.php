@@ -114,7 +114,7 @@
 
     <!-- Action Buttons -->
     <div class="form-actions">
-        @if(in_array($form->status, ['submitted', 'pending', 'rejected']))
+        @if(in_array($form->status, ['submitted', 'pending', 'declined']))
             <form action="{{ route('Overseas-forms.edit', $form->id) }}" method="GET">
                 <button type="submit" class="btn btn-secondary">Edit Form</button>
             </form>
@@ -211,8 +211,8 @@
                     <button type="button" class="btn btn-dark fw-bold" data-bs-toggle="modal" data-bs-target="#approveModal">
                         <i class="bi bi-check-circle-fill"></i> Approve
                     </button>
-                    <button type="button" class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#rejectModal">
-                        <i class="bi bi-x-circle-fill"></i> Reject
+                    <button type="button" class="btn btn-danger fw-bold" data-bs-toggle="modal" data-bs-target="#declineModal">
+                        <i class="bi bi-x-circle-fill"></i> Decline
                     </button>
                 @else
                     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#uploadSignatureModal">
@@ -284,23 +284,23 @@ Best regards,
     </div>
 </div>
 
-<!-- Reject Modal -->
-<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+<!-- Decline Modal -->
+<div class="modal fade" id="declineModal" tabindex="-1" aria-labelledby="declineModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form method="POST" action="{{ route('Overseas-forms.reject', $form->id) }}">
+        <form method="POST" action="{{ route('Overseas-forms.decline', $form->id) }}">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="rejectModalLabel">Confirm Rejection</h5>
+                    <h5 class="modal-title" id="declineModalLabel">Confirm Declineion</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <label>Reason for Rejection:</label>
-                    <textarea name="admin_comment" class="form-control" required placeholder="Reason for rejection..."></textarea>
+                    <label>Reason for Declineion:</label>
+                    <textarea name="admin_comment" class="form-control" required placeholder="Reason for declineion..."></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger">❌ Reject</button>
+                    <button type="submit" class="btn btn-danger">❌ Decline</button>
                 </div>
             </div>
         </form>

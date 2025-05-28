@@ -101,7 +101,7 @@
         color: black;
     }
 
-    .badge-rejected {
+    .badge-declined {
         background-color: #dc3545;
         color: white;
     }
@@ -168,7 +168,7 @@
                                         $badgeClass = match($status) {
                                             'approved' => 'badge-approved',
                                             'pending' => 'badge-pending',
-                                            'rejected' => 'badge-rejected',
+                                            'declined' => 'badge-declined',
                                             default => 'badge-default'
                                         };
                                     @endphp
