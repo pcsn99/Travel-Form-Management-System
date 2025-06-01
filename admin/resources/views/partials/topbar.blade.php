@@ -1,25 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>@yield('title', 'Admin Panel')</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <!-- Bootstrap & Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-    @yield('styles')
-
-    <style>
-         html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        overflow-x: hidden;
-    }
-
+<style>
     .topbar {
         background-color: #17224D;
         padding: 10px 20px;
@@ -72,13 +51,8 @@
     .admin-menu-popup a {
         color: white !important;
         text-decoration: none;
-        padding: 10px;
-        border-radius: 6px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        background-color: rgba(255, 255, 255, 0.03);
-        transition: background-color 0.2s ease, border 0.2s ease;
-        margin-bottom: 6px;
-        font-size: 1rem;
+        padding: 6px 10px;
+        border-radius: 4px;
     }
 
     .admin-menu-popup a:hover {
@@ -97,34 +71,31 @@
         display: none;
     }
 
-    @media (max-width: 700px), (max-height: 500px) {
+    @media (max-width: 700px) {
+        .topbar {
+            height: 70px !important;
+            padding: 10px 15px;
+        }
+
+        .topbar .btn {
+            padding: 10px 14px;
+            font-size: 20px;
+        }
+
+        .topbar .bi-bell {
+            font-size: 24px;
+        }
+
         .admin-menu-popup {
             left: 0;
             right: 0;
             top: 60px;
-            width: 100vw;
-            max-width: 100vw;
+            width: 100%;
+            max-width: 100%;
             height: calc(100vh - 60px);
             overflow-y: auto;
             border-radius: 0;
-            padding: 20px 10px 100px;
-            background-color: #1e2b50;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            box-sizing: border-box;
-        }
-
-        .admin-menu-popup a {
-            width: 95%;
-            font-size: 0.9rem;
-            padding: 8px;
-        }
-
-        .admin-menu-popup .btn-secondary {
-            font-size: 0.9rem;
-            padding: 6px 12px;
+            padding: 20px 20px 100px;
         }
 
         .logout-desktop {
@@ -139,13 +110,9 @@
             right: 0;
             padding: 10px 20px;
             z-index: 1110;
-            background-color: #1a1a1a;
         }
     }
-    </style>
-</head>
-<body>
-
+</style>
 
 <div class="topbar">
     <div class="admin-dropdown-menu">
@@ -256,15 +223,3 @@
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
-    <div class="content" id="content">
-        <div class="container mt-4">
-            @yield('content')
-        </div>
-    </div>
-
-
-    @yield('scripts')
-</body>
-</html>
