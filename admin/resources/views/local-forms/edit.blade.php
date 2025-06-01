@@ -128,7 +128,7 @@
                 </div>
             @endforeach
             <button type="submit">✅ Save Changes</button>
-            <a href="{{ route('local-forms.show', $form->id) }}" class="btn-link" style="margin-left: 10px;">🔙 Cancel</a>
+            <a href="{{ route('local-forms.show', $form->id) }}" class="btn-link" style="margin-left: 10px;">Cancel</a>
         </form>
     </div>
 

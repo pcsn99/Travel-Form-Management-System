@@ -141,6 +141,11 @@
             z-index: 1110;
             background-color: #1a1a1a;
         }
+        .topbar .dropdown-menu .dropdown-item {
+            font-size: 13px;
+            padding: 8px 10px;
+            white-space: normal;
+        }
     }
     </style>
 </head>
@@ -164,17 +169,13 @@
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="max-height: 300px; overflow-y: auto;">
                 @forelse($notifications as $notif)
                     <li class="dropdown-item d-flex justify-content-between align-items-center">
-                        <a href="{{ route('notifications.read', $notif->id) }}"
-                           onclick="event.preventDefault(); markAsReadAndRedirect(this);"
-                           data-url="{{ $notif->data['url'] ?? '#' }}"
-                           class="mark-as-read"
+                        <a href="{{ $notif->data['url'] ?? '#' }}"
+                           onclick="event.preventDefault(); markAsReadAndRedirect('{{ route('notifications.read', $notif->id) }}', this);"
+                           class="mark-as-read d-block"
                            style="text-decoration: none; color: inherit; flex: 1;">
-                            {{ $notif->data['message'] ?? 'New notification' }}
+                           {{ $notif->data['message'] ?? 'New notification' }}
                         </a>
-                        <form action="{{ route('notifications.read', $notif->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-sm btn-link p-0 ms-2">✔</button>
-                        </form>
+
                     </li>
                 @empty
                     <li class="dropdown-item text-muted">No new notifications</li>
@@ -228,18 +229,27 @@
         submenu.classList.toggle('d-none');
     }
 
-    function markAsReadAndRedirect(element) {
-        const notifUrl = element.getAttribute('href');
-        const redirectUrl = element.getAttribute('data-url');
-
-        fetch(notifUrl, {
+    function markAsReadAndRedirect(postUrl, anchor) {
+        fetch(postUrl, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 'Accept': 'application/json'
             }
         }).then(() => {
-            window.location.href = redirectUrl;
+            window.location.href = anchor.getAttribute('href');
+        });
+    }
+    
+    function markAsReadOnly(postUrl, btn) {
+        fetch(postUrl, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            }
+        }).then(() => {
+            btn.closest('li').remove(); // optionally hide it
         });
     }
 
@@ -259,8 +269,8 @@
 
 
     <div class="content" id="content">
-        <div class="container mt-4">
-            @yield('content')
+        <div class="container mt-4" style="padding-top: 40px">
+            @yield('content') 
         </div>
     </div>
 

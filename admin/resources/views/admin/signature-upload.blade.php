@@ -57,7 +57,7 @@
 
     .form-group {
         display: flex;
-        align-items: center;
+        flex-wrap: wrap;
         gap: 15px;
         margin-bottom: 20px;
     }
@@ -98,6 +98,26 @@
         font-weight: bold;
         text-align: center;
         margin-bottom: 20px;
+    }
+
+    @media screen and (max-width: 768px) {
+        .form-group {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        input[type="file"],
+        button {
+            width: 100%;
+        }
+
+        .header-banner h2 {
+            font-size: 22px;
+        }
+
+        body {
+            padding: 20px;
+        }
     }
 </style>
 @endsection

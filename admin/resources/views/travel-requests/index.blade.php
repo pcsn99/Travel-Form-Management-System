@@ -85,66 +85,66 @@
         text-align: center;
     }
 
-    .status-links {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .status-links a {
-        font-size: 16px;
-        font-weight: bold;
-        text-decoration: none;
-        color: white;
-        margin: 0 10px;
-        padding: 8px 14px;
-        border-radius: 6px;
-        transition: background-color 0.3s ease;
-    }
-
-    .status-links a[href*="pending"] {
-        background-color: #ffc107;
-    }
-
-    .status-links a[href*="approved"] {
-        background-color: #28a745;
-    }
-
-    .status-links a[href*="declined"] {
-        background-color: #dc3545;
-    }
-
-    .status-links a:hover {
-        filter: brightness(90%);
-    }
-
-    .view-btn {
-        background-color: #17224D;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 6px;
-        font-size: 14px;
-        text-decoration: none;
-        display: inline-block;
-    }
-
-    .view-btn:hover {
-        background-color: #1f2f5f;
-    
-    }
-
     .table-responsive-custom {
         overflow-x: auto;
-        width: 100%;
+        position: relative;
+    }
+
+    .table-responsive-custom::after {
+        
+        position: absolute;
+        bottom: 8px;
+        right: 12px;
+        font-size: 12px;
+        color: #888;
     }
 
     .table-responsive-custom table {
         white-space: nowrap;
     }
-    
-    .container-custom {
-        max-width: 100%;
-        margin: auto;
-        padding-top: 20px;
+
+    .table thead th {
+        position: sticky;
+        top: 0;
+        background-color: #17224D;
+        color: white;
+        z-index: 2;
+    }
+
+    @media (max-width: 700px) {
+        .header-banner h2 {
+            font-size: 20px;
+        }
+
+        .create-btn {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        body {
+            padding: 20px;
+        }
+
+        .card {
+            padding: 20px;
+        }
+
+        .card-header {
+            font-size: 16px;
+            padding: 10px;
+        }
+
+        .view-btn {
+            font-size: 12px;
+            padding: 6px 10px;
+        }
+
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter {
+            float: none;
+            text-align: center;
+        }
     }
 </style>
 <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -221,7 +221,7 @@
     @endif
 
 
-    <div class="header-banner">
+    <div class="header-banner" style="margin-top: 30px;">
         <h2>Manage Travel Requests</h2>
         <a href="{{ route('admin-travel-requests.search') }}" class="create-btn">+ Create Travel Request for Member</a>
     </div>
@@ -229,15 +229,16 @@
     <div class="card">
         <div class="card-header">Travel Requests ({{ ucfirst($status) }})</div>
         <div class="card-body">
-            <div class="status-links">
-                <a href="?status=pending">Pending</a>
-                <a href="?status=approved">Approved</a>
-                <a href="?status=declined">Declined</a>
+            <div class="btn-group mb-3 w-100 justify-content-center" role="group">
+                <a href="?status=pending" class="btn {{ $status == 'pending' ? 'btn-warning text-dark' : 'btn-outline-warning' }}">Pending</a>
+                <a href="?status=approved" class="btn {{ $status == 'approved' ? 'btn-success' : 'btn-outline-success' }}">Approved</a>
+                <a href="?status=declined" class="btn {{ $status == 'declined' ? 'btn-danger' : 'btn-outline-danger' }}">Declined</a>
             </div>
 
+
             @if($requests->count())
-                <div class="table-responsive-custom">    
-                    <table id="requests-table" class="display" style="width:100%">
+                <div class="table-responsive-custom" style="overflow-x: auto;">
+                    <table id="requests-table" class="display nowrap" style="width:100%">
                 
                         @php
                             $questions = \App\Models\TravelRequestQuestion::where('status', 'active')->get();
@@ -247,9 +248,10 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Type</th>
+                                <th>Submitted</th>
                                 <th>Departure</th>
                                 <th>Return</th>
-                                <th>Submitted</th>
+                                
                                 @foreach($questions as $q)
                                     <th>{{ \Illuminate\Support\Str::limit($q->question, 20) }}</th>
                                 @endforeach
@@ -261,9 +263,10 @@
                                 <tr>
                                     <td>{{ $req->user->name }}</td>
                                     <td>{{ ucfirst($req->type) }}</td>
+                                    <td>{{ $req->created_at->format('F d, Y') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($req->intended_departure_date)->format('F d, Y') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($req->intended_return_date)->format('F d, Y') }}</td>
-                                    <td>{{ $req->created_at->format('F d, Y') }}</td>
+                                    
                                     @foreach($questions as $q)
                                         @php
                                             $answer = $req->answers->firstWhere('question_id', $q->id);
@@ -271,7 +274,9 @@
                                         <td>{{ \Illuminate\Support\Str::limit($answer ? $answer->answer : '-', 30) }}</td>
                                     @endforeach
                                     <td>
-                                        <a href="{{ route('travel-requests.show', $req->id) }}" class="view-btn">View</a>
+                                        <a href="{{ route('travel-requests.show', $req->id) }}" class="view-btn">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -291,9 +296,24 @@
 @section('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#requests-table').DataTable();
+        $('#requests-table').DataTable({
+            responsive: false,
+            scrollX: true,
+            order: [[2, 'desc']], // order by 'Submitted'
+            columnDefs: [
+                { targets: 0, width: '120px' },
+                { targets: 1, width: '90px' },
+                { targets: 2, width: '130px' },
+                { targets: 3, width: '130px' },
+                { targets: 4, width: '130px' },
+                { targets: -1, width: '80px' }
+            ]
+        });
     });
 </script>
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
 @endsection
+

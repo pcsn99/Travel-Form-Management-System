@@ -204,11 +204,11 @@
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="declineModalLabel">Confirm Declineion</h5>
+                        <h5 class="modal-title" id="declineModalLabel">Confirm Decline</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Please provide a reason for declineion:</p>
+                        <p>Please provide a reason for declining:</p>
                         <textarea name="admin_comment" class="form-control" placeholder="Reason..."></textarea>
                     </div>
                     <div class="modal-footer">
@@ -245,8 +245,6 @@
         </div>
     @endif
 
-    <a href="{{ route('local-forms.index') }}" class="btn btn-link">
-        <i class="bi bi-arrow-left"></i> Back to Local Forms
-    </a>
+
 </div>
 @endsection

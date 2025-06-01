@@ -170,6 +170,6 @@
         <a href="{{ route('admin.members.history', $member->id) }}">View Full Travel History</a>
     </div>
 
-    <a href="{{ route('admin.members.index') }}" class="back-btn">⬅ Back to Member List</a>
+    <a href="{{ route('admin.members.index') }}" class="back-btn">Back to Member List</a>
 </div>
 @endsection

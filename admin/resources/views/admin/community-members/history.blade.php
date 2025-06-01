@@ -17,9 +17,9 @@
         padding-top: 20px;
     }
 
-    h2 {
+    .header-title {
         text-align: center;
-        font-size: 26px;
+        font-size: 28px;
         font-weight: bold;
         margin-bottom: 30px;
     }
@@ -28,7 +28,6 @@
         border-radius: 12px;
         box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
         background: rgba(255, 255, 255, 0.97);
-        padding: 25px;
         margin-bottom: 30px;
     }
 
@@ -37,16 +36,34 @@
         color: white;
         font-size: 18px;
         font-weight: bold;
-        border-radius: 6px 6px 0 0;
+        border-radius: 12px 12px 0 0;
         padding: 15px;
         text-align: center;
     }
 
+    .card-body {
+        padding: 0;
+    }
+
+    .table-responsive-custom {
+        overflow-x: auto;
+        position: relative;
+        padding: 25px;
+    }
+
+    .table-responsive-custom::after {
+        content: '⇠ Scroll ⇢';
+        position: absolute;
+        bottom: 8px;
+        right: 12px;
+        font-size: 12px;
+        color: #888;
+    }
+
     table {
         width: 100%;
-        border-radius: 8px;
+        white-space: nowrap;
         border-collapse: collapse;
-        background: white;
     }
 
     table th, table td {
@@ -94,19 +111,26 @@
             font-size: 14px;
             padding: 8px;
         }
+
+        .table-responsive-custom::after {
+            font-size: 10px;
+            right: 10px;
+            bottom: 4px;
+        }
     }
 </style>
+<link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
 @endsection
 
 @section('content')
 <div class="container-custom">
-    <h2>Travel History: {{ $member->name }}</h2>
+    <h2 class="header-title">Travel History: {{ $member->name }}</h2>
 
     <div class="card">
         <div class="card-header">Travel Requests</div>
-        <div class="card-body">
+        <div class="card-body table-responsive-custom">
             @if($travelRequests->count())
-                <table id="requests-table">
+                <table id="requests-table" class="display nowrap">
                     <thead>
                         <tr>
                             <th>Type</th>
@@ -125,16 +149,16 @@
                     </tbody>
                 </table>
             @else
-                <p><i>No travel requests.</i></p>
+                <p class="p-3"><i>No travel requests.</i></p>
             @endif
         </div>
     </div>
 
     <div class="card">
         <div class="card-header">Local Travel Forms</div>
-        <div class="card-body">
+        <div class="card-body table-responsive-custom">
             @if($localForms->count())
-                <table id="local-forms-table">
+                <table id="local-forms-table" class="display nowrap">
                     <thead>
                         <tr>
                             <th>Status</th>
@@ -155,16 +179,16 @@
                     </tbody>
                 </table>
             @else
-                <p><i>No local travel forms.</i></p>
+                <p class="p-3"><i>No local travel forms.</i></p>
             @endif
         </div>
     </div>
 
     <div class="card">
         <div class="card-header">Overseas Travel Forms</div>
-        <div class="card-body">
+        <div class="card-body table-responsive-custom">
             @if($OverseasForms->count())
-                <table id="overseas-forms-table">
+                <table id="overseas-forms-table" class="display nowrap">
                     <thead>
                         <tr>
                             <th>Status</th>
@@ -185,23 +209,23 @@
                     </tbody>
                 </table>
             @else
-                <p><i>No overseas travel forms.</i></p>
+                <p class="p-3"><i>No overseas travel forms.</i></p>
             @endif
         </div>
     </div>
 
     <a href="{{ route('admin.members.show', $member->id) }}" class="back-btn">⬅ Back to Profile</a>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            $('#requests-table').DataTable();
-            $('#local-forms-table').DataTable();
-            $('#overseas-forms-table').DataTable();
-        });
-    </script>
 </div>
+@endsection
+
+@section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#requests-table').DataTable();
+        $('#local-forms-table').DataTable({ scrollX: true });
+        $('#overseas-forms-table').DataTable({ scrollX: true });
+    });
+</script>
 @endsection

@@ -8,7 +8,7 @@
         background-color: #f0f2f5;
         color: #17224D;
         font-family: 'Inter', sans-serif;
-        padding: 40px;
+        padding: 40px 20px;
     }
 
     .container-custom {
@@ -16,155 +16,104 @@
         margin: auto;
     }
 
-    .header-banner {
-        position: relative;
-        background-image: url('/images/bg.jpeg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        padding: 30px;
-        border-radius: 12px;
-        margin-bottom: 30px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        text-align: center;
-        color: white;
-    }
-
-    .header-banner::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.75);
-        border-radius: 12px;
-        z-index: 0;
-    }
-
-    .header-banner h2 {
-        position: relative;
-        z-index: 1;
-        font-size: 28px;
-    }
-
     .card {
         background-color: white;
         border-radius: 12px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-        padding: 30px;
-        margin-bottom: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        margin-bottom: 25px;
+        overflow: hidden;
     }
 
-    .card h4 {
-        font-size: 20px;
-        margin-bottom: 15px;
-        border-bottom: 2px solid #ccc;
-        padding-bottom: 5px;
-    }
-
-    ul li {
-        margin-bottom: 10px;
-    }
-
-    textarea {
-        width: 100%;
-        padding: 10px;
-        margin-top: 10px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-    }
-
-    .btn-link, .action-button {
-        display: inline-block;
-        margin-top: 15px;
-        text-align: center;
+    .card-header {
+        background-color: #17224D;
+        color: white;
+        font-size: 18px;
+        padding: 15px 20px;
         font-weight: bold;
-        text-decoration: none;
-        border-radius: 6px;
-        padding: 10px 18px;
-        transition: background-color 0.3s;
     }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .info-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 15px;
+    }
+
+    .info-label {
+        flex: 1 1 45%;
+        font-weight: 600;
+    }
+
+    .badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+    }
+
+    .list-group-item {
+        border: none;
+        padding: 15px 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .form-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .form-actions button,
+    .form-actions form button {
+        flex: 1 1 auto;
+        padding: 10px 15px;
+        font-weight: bold;
+        border: none;
+        border-radius: 6px;
+    }
+
+    .approve-btn { background-color: #198754; color: white; }
+    .decline-btn { background-color: #dc3545; color: white; }
+    .reset-btn { background-color: #ffc107; color: black; }
 
     .btn-link {
-        color: #007bff;
+        display: inline-block;
+        margin-top: 20px;
+        color: #0d6efd;
+        font-weight: 500;
+        text-decoration: none;
     }
 
     .btn-link:hover {
         text-decoration: underline;
     }
 
-    .approve-btn {
-        background-color: #198754;
-        color: white;
-    }
-
-    .approve-btn:hover {
-        background-color: #157347;
-    }
-
-    .decline-btn {
-        background-color: #dc3545;
-        color: white;
-    }
-
-    .decline-btn:hover {
-        background-color: #bb2d3b;
-    }
-
-    .view-form-btn {
-        background-color: #6a4c93;
-        color: white;
-        padding: 10px 24px;
-        border-radius: 6px;
-        display: inline-block;
-        text-decoration: none;
-        font-weight: bold;
-        margin-top: 15px;
-        width: auto;
-    }
-
-    .view-form-btn:hover {
-        background-color: #563d7c;
-    }
-
-    .form-actions {
-        display: flex;
-        gap: 10px;
-        justify-content: flex-start;
-        margin-top: 15px;
+    @media (max-width: 600px) {
+        .info-label { flex: 1 1 100%; }
+        .form-actions { flex-direction: column; }
     }
 </style>
 @endsection
 
 @section('content')
-<div class="container-custom">
-
-
-
-    <!-- Header -->
-    <div class="card mb-4 shadow-sm border-0">
-        <div class="card-header bg-primary text-white d-flex align-items-center">
-            <i class="bi bi-info-circle-fill me-2 fs-5"></i>
-            <h5 class="mb-0">Travel Request Details</h5>
+<div class="container-custom" >
+    <div class="card">
+        <div class="card-header">
+            Travel Request Information
         </div>
         <div class="card-body">
-            <div class="row mb-2">
-                <div class="col-md-6"><strong>Name:</strong> {{ $request->user->name }}</div>
-                <div class="col-md-6"><strong>Type:</strong> {{ ucfirst($request->type) }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-6"><strong>Departure:</strong> {{ \Carbon\Carbon::parse($request->intended_departure_date)->format('F d, Y') }}</div>
-                <div class="col-md-6"><strong>Return:</strong> {{ \Carbon\Carbon::parse($request->intended_return_date)->format('F d, Y') }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-6">
-                    <strong>Status:</strong>
-                    <span class="badge 
-                        {{ 
-                            $request->status === 'approved' ? 'bg-success' : 
-                            ($request->status === 'declined' ? 'bg-danger' : 'bg-warning text-dark') 
-                        }}">
+            <div class="info-row">
+                <div class="info-label">Name: {{ $request->user->name }}</div>
+                <div class="info-label">Type: {{ ucfirst($request->type) }}</div>
+                <div class="info-label">Departure: {{ \Carbon\Carbon::parse($request->intended_departure_date)->format('F d, Y') }}</div>
+                <div class="info-label">Return: {{ \Carbon\Carbon::parse($request->intended_return_date)->format('F d, Y') }}</div>
+                <div class="info-label">
+                    Status:
+                    <span class="badge {{ $request->status === 'approved' ? 'bg-success' : ($request->status === 'declined' ? 'bg-danger' : 'bg-warning text-dark') }}">
                         {{ ucfirst($request->status) }}
                     </span>
                 </div>
@@ -172,106 +121,53 @@
 
             @if($request->status === 'approved')
                 @if(strtolower($request->type) === 'overseas' && $request->OverseasForm)
-                    <a href="{{ route('Overseas-forms.show', $request->OverseasForm->id) }}" class="btn btn-outline-primary mt-3">
-                        <i class="bi bi-globe2 me-1"></i> View Overseas Travel Form
-                    </a>
+                    <a href="{{ route('Overseas-forms.show', $request->OverseasForm->id) }}" class="btn btn-outline-primary">View Overseas Travel Form</a>
                 @elseif(strtolower($request->type) === 'local' && $request->localForm)
-                    <a href="{{ route('local-forms.show', $request->localForm->id) }}" class="btn btn-outline-primary mt-3">
-                        <i class="bi bi-house-door-fill me-1"></i> View Local Travel Form
-                    </a>
+                    <a href="{{ route('local-forms.show', $request->localForm->id) }}" class="btn btn-outline-primary">View Local Travel Form</a>
                 @endif
             @endif
         </div>
     </div>
 
-    <!-- Answers -->
-    <div class="card mb-4 shadow-sm border-0">
-        <div class="card-header bg-dark text-white d-flex align-items-center">
-            <i class="bi bi-chat-dots-fill me-2 fs-5"></i>
-            <h5 class="mb-0">Submitted Answers</h5>
+    <div class="card">
+        <div class="card-header">
+            Submitted Answers
         </div>
         <div class="card-body p-0">
             <ul class="list-group list-group-flush">
                 @foreach($request->answers as $answer)
-                    <li class="list-group-item py-3 px-4">
-                        <strong>{{ $answer->question->question }}:</strong>
-                        <span class="text-muted">{{ $answer->answer }}</span>
+                    <li class="list-group-item">
+                        <strong>{{ $answer->question->question }}:</strong><br>
+                        {{ $answer->answer }}
                     </li>
                 @endforeach
             </ul>
         </div>
     </div>
 
-
     @if($request->status === 'pending')
-    <div class="card">
-        <div class="form-actions">
-            <button type="button" class="approve-btn" data-bs-toggle="modal" data-bs-target="#approveModal">Approve</button>
-            <button type="button" class="decline-btn" data-bs-toggle="modal" data-bs-target="#declineModal">Decline</button>
-        </div>
+    <div class="form-actions">
+        <button class="approve-btn" data-bs-toggle="modal" data-bs-target="#approveModal">Approve</button>
+        <button class="decline-btn" data-bs-toggle="modal" data-bs-target="#declineModal">Decline</button>
     </div>
     @else
     <div class="card">
-        <p><strong>Admin Comment:</strong> {{ $request->admin_comment }}</p>
+        <div class="card-body">
+            <strong>Admin Comment:</strong><br>
+            {{ $request->admin_comment }}
+        </div>
     </div>
     @endif
 
     @if($request->status !== 'pending')
-        <form method="POST" action="{{ route('travel-requests.reset', $request->id) }}" onsubmit="return confirm('Reset this request back to pending status? This will delete any travel forms related to this request');">
-            @csrf
-            <button type="submit" style="background-color: #ffc107; color: black;">🔁 Set Status to Pending</button>
-        </form>
+    <form method="POST" action="{{ route('travel-requests.reset', $request->id) }}" onsubmit="return confirm('Reset this request back to pending status? This will delete any travel forms related to this request.');">
+        @csrf
+        <button type="submit" class="reset-btn" style="text-align: center">🔁 Set Status Back to Pending</button>
+    </form>
     @endif
 
-
-    <a href="{{ route('travel-requests.index') }}" class="btn-link">⬅ Back to Travel Requests</a>
+ 
 </div>
 
-
-
-<!-- Modal for Approve -->
-<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="POST" action="{{ route('travel-requests.approve', $request->id) }}">
-        @csrf
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="approveModalLabel">Approve Request</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <label>Admin Comment (Optional):</label>
-                <textarea name="admin_comment" class="form-control" placeholder="Add comment..."></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-success">Confirm Approve</button>
-            </div>
-        </div>
-    </form>
-  </div>
-</div>
-
-<!-- Modal for Decline -->
-<div class="modal fade" id="declineModal" tabindex="-1" aria-labelledby="declineModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="POST" action="{{ route('travel-requests.decline', $request->id) }}">
-        @csrf
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="declineModalLabel">Decline Request</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <label>Declineion Comment (Optional):</label>
-                <textarea name="admin_comment" class="form-control" placeholder="Add comment..."></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-danger">Confirm Decline</button>
-            </div>
-        </div>
-    </form>
-  </div>
-</div>
+@include('partials.modals.travel_request_modals', ['request' => $request])
 @endsection
