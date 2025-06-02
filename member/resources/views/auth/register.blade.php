@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Registration</title>
+
+    <!-- Bootstrap (optional for modal use or future scaling) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         html, body {
             margin: 0;
@@ -22,22 +27,21 @@
         }
 
         .register-container {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
         }
 
         .register-form {
             color: #17224D;
-            text-align: left;
         }
 
         .register-form h2 {
-            font-size: 36px;
-            margin-bottom: 5px;
+            font-size: 32px;
+            margin-bottom: 10px;
             text-align: center;
         }
 
@@ -51,30 +55,30 @@
         input[type="email"],
         input[type="password"] {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 16px;
-            box-sizing: border-box;
             background-color: #f9f9f9;
         }
 
         .button-wrapper {
             display: flex;
             justify-content: center;
-            margin-top: 5px;
+            margin-top: 10px;
         }
 
         button {
-            padding: 10px 30px;
+            width: 100%;
+            padding: 14px;
             background-color: #17224D;
             color: white;
             border: none;
             border-radius: 6px;
             font-weight: bold;
-            cursor: pointer;
             font-size: 16px;
+            cursor: pointer;
         }
 
         button:hover {
@@ -96,6 +100,31 @@
 
         a:hover {
             opacity: 0.8;
+        }
+
+        @media (max-width: 700px) {
+            .register-container {
+                padding: 30px 20px;
+                margin: 0 15px;
+            }
+
+            .register-form h2 {
+                font-size: 24px;
+            }
+
+            input,
+            button,
+            a {
+                font-size: 16px !important;
+            }
+
+            input {
+                padding: 16px;
+            }
+
+            button {
+                padding: 16px;
+            }
         }
     </style>
 </head>
@@ -124,9 +153,7 @@
                 </div>
             </form>
 
-            <p>
-                Already have an account? <a href="{{ route('login') }}">Login</a>
-            </p>
+            <p>Already have an account? <a href="{{ route('login') }}">Login</a></p>
         </div>
     </div>
 </body>

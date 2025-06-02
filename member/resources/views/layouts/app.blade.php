@@ -3,258 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Member Portal')</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    @yield('styles')
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
             background-color: #f0f2f5;
-            padding-top: 60px;
-            display: flex;
         }
 
         .topbar {
             background-color: #17224D;
-            padding: 10px 20px;
             color: white;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 100%;
+            height: 60px;
             position: fixed;
             top: 0;
             left: 0;
-            height: 50px;
+            width: 100%;
             z-index: 1000;
-        }
-
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
         }
 
         .notif-badge {
             position: absolute;
-            top: -3px;
-            right: -6px;
+            top: -5px;
+            right: -8px;
             background-color: red;
             color: white;
-            font-size: 10px;
-            font-weight: bold;
-            padding: 3px 6px;
+            font-size: 11px;
+            padding: 4px 7px;
             border-radius: 50%;
         }
 
-        .logout-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            color: #f8f9fa;
-        }
-
         .sidebar {
-            width: 260px;
-            background-color: #17224D;
-            color: white;
-            padding: 20px 10px;
             position: fixed;
-            left: 0;
             top: 60px;
+            left: 0;
+            background-color: #17224D;
+            width: 250px;
             height: calc(100vh - 60px);
-            transition: width 0.3s ease;
-            overflow: hidden;
+            overflow-y: auto;
+            padding: 20px 10px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 1040;
         }
 
-        .sidebar.collapsed {
-            width: 60px;
+        .sidebar.show {
+            transform: translateX(0);
         }
 
         .sidebar a {
             display: flex;
             align-items: center;
-            padding: 12px;
-            text-decoration: none;
+            padding: 10px;
             color: white;
-            border-radius: 8px;
+            text-decoration: none;
+            border-radius: 6px;
             font-size: 16px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.2s;
         }
 
         .sidebar a i {
-            font-size: 20px;
-            width: 30px;
-            text-align: center;
-            min-width: 30px;
-            margin-left: -9px;
+            width: 25px;
+            margin-right: 10px;
         }
 
-        .sidebar a:hover {
-            background-color: #1c2e5a;
-        }
-
+        .sidebar a:hover,
         .sidebar a.active {
             background-color: #1e3a8a;
-            font-weight: bold;
-            box-shadow: 0 0 5px #00bfff;
-        }
-
-        .nav-text {
-            margin-left: 8px;
-            opacity: 1;
-            transition: opacity 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .hide-text {
-            opacity: 0;
-            pointer-events: none;
-            width: 0;
-            overflow: hidden;
         }
 
         .content {
-            flex: 1;
-            padding: 30px;
-            background-color: white;
-            margin-left: 260px;
-            transition: margin-left 0.3s ease;
+            padding: 80px 20px 30px;
         }
 
-        .content.full {
-            margin-left: 80px;
-        }
+        @media (max-width: 768px) {
+            .topbar {
+                font-size: 18px;
+            }
 
-        .toggle-btn {
-            cursor: pointer;
-            font-size: 20px;
-            background: none;
-            border: none;
-            color: white;
-            padding: 5px 10px;
+            .sidebar a {
+                font-size: 15px;
+                padding: 12px;
+            }
+
+            .content {
+                padding: 100px 15px;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+                height: calc(100vh - 60px);
+            }
         }
     </style>
-
-    @yield('styles')
 </head>
 <body>
     <div class="topbar">
-        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+        <button class="btn btn-sm btn-light" onclick="toggleSidebar()">☰</button>
 
-        <div class="topbar-right">
-            <div class="dropdown me-3 position-relative">
-                @php
-                    $notifications = Auth::user()->unreadNotifications;
-                @endphp
-
-                <button class="btn btn-light dropdown-toggle position-relative" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-bell"></i>
-                    @if($notifications->count())
-                        <span class="notif-badge">{{ $notifications->count() }}</span>
-                    @endif
-                </button>
-
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown" style="max-height: 300px; overflow-y: auto;">
-                    @forelse($notifications as $notif)
-                        <li class="dropdown-item d-flex justify-content-between align-items-center">
-                            <a href="{{ route('notifications.read', $notif->id) }}" 
-                                onclick="event.preventDefault(); markAsReadAndRedirect(this);" 
-                                data-url="{{ $notif->data['url'] ?? '#' }}" 
-                                class="mark-as-read" 
-                                style="text-decoration: none; color: inherit; flex: 1;">
-                                {{ $notif->data['message'] ?? 'New notification' }}
-                            </a>
-                            <form action="{{ route('notifications.read', $notif->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-sm btn-link p-0 ms-2">✔</button>
-                            </form>
-                        </li>
-                    @empty
-                        <li class="dropdown-item text-muted">No new notifications</li>
-                    @endforelse
-                </ul>
-            </div>
-
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="logout-btn">Logout</button>
-            </form>
+        <div class="dropdown me-3 position-relative">
+            @php $notifications = Auth::user()->unreadNotifications; @endphp
+            <button class="btn btn-light dropdown-toggle position-relative" id="notifDropdown" data-bs-toggle="dropdown">
+                <i class="bi bi-bell"></i>
+                @if($notifications->count())
+                    <span class="notif-badge">{{ $notifications->count() }}</span>
+                @endif
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" style="max-height: 300px; overflow-y: auto;">
+                @forelse($notifications as $notif)
+                    <li class="dropdown-item d-flex justify-content-between align-items-center">
+                        <a href="{{ route('notifications.read', $notif->id) }}"
+                           onclick="event.preventDefault(); markAsReadAndRedirect(this);"
+                           data-url="{{ $notif->data['url'] ?? '#' }}"
+                           class="mark-as-read"
+                           style="text-decoration: none; color: inherit; flex: 1;">
+                            {{ $notif->data['message'] ?? 'New notification' }}
+                        </a>
+                    </li>
+                @empty
+                    <li class="dropdown-item text-muted">No new notifications</li>
+                @endforelse
+            </ul>
         </div>
     </div>
 
     <div class="sidebar" id="sidebar">
         <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-            <i class="bi bi-speedometer2"></i><span class="nav-text">Dashboard</span>
+            <i class="bi bi-speedometer2"></i> Dashboard
         </a>
-
         <a href="{{ route('account.show') }}" class="{{ request()->routeIs('account.show') ? 'active' : '' }}">
-            <i class="bi bi-person-circle"></i><span class="nav-text">My Account</span>
+            <i class="bi bi-person"></i> My Account
         </a>
-
         <a href="{{ route('travel-requests.create') }}" class="{{ request()->routeIs('travel-requests.create') ? 'active' : '' }}">
-            <i class="bi bi-journal-plus"></i><span class="nav-text">Create Travel Request</span>
+            <i class="bi bi-journal-plus"></i> Create Travel Request
         </a>
-
         <a href="{{ route('member.local-forms.all') }}" class="{{ request()->is('member/local-forms*') ? 'active' : '' }}">
-            <i class="bi bi-geo-alt"></i><span class="nav-text">Local Forms</span>
+            <i class="bi bi-geo-alt"></i> Local Forms
         </a>
-
         <a href="{{ route('member.Overseas-forms.all') }}" class="{{ request()->is('member/Overseas-forms*') ? 'active' : '' }}">
-            <i class="bi bi-globe"></i><span class="nav-text">Overseas Forms</span>
+            <i class="bi bi-globe"></i> Overseas Forms
         </a>
 
-
+        <form action="{{ route('logout') }}" method="POST" class="mt-4">
+            @csrf
+            <button type="submit" class="btn btn-danger w-100">Logout</button>
+        </form>
     </div>
 
     <div class="content" id="content">
-        <div class="container mt-4">
+        <div class="container" style="padding-top: 10px">
             @yield('content')
         </div>
     </div>
 
     <script>
         function toggleSidebar() {
-            const sidebar = document.getElementById("sidebar");
-            const content = document.getElementById("content");
-            const spans = sidebar.querySelectorAll(".nav-text");
-
-            const collapsed = sidebar.classList.toggle("collapsed");
-            content.classList.toggle("full");
-
-            spans.forEach(span => {
-                if (collapsed) {
-                    span.classList.add("hide-text");
-                } else {
-                    span.classList.remove("hide-text");
-                }
-            });
-
+            document.getElementById('sidebar').classList.toggle('show');
         }
 
-        document.querySelectorAll('.sidebar a').forEach(link => {
-            link.setAttribute('title', link.innerText.trim());
-        });
-    </script>
-
-    <script>
         function markAsReadAndRedirect(element) {
             const notifUrl = element.getAttribute('href');
             const redirectUrl = element.getAttribute('data-url');
-        
+
             fetch(notifUrl, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                     'Accept': 'application/json'
                 }
             }).then(() => {

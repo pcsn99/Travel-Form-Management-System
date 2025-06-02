@@ -8,7 +8,7 @@
         background-color: #f0f2f5;
         color: #17224D;
         font-family: 'Inter', sans-serif;
-        padding: 40px;
+        padding: 20px;
     }
 
     .dashboard-header {
@@ -16,13 +16,13 @@
             linear-gradient(to right, rgba(23, 34, 77, 0.85), rgba(23, 34, 77, 0.85)),
             url('/images/bg.jpeg') no-repeat center center;
         background-size: cover;
-        padding: 40px 20px;
-        font-size: 26px;
+        padding: 30px 20px;
+        font-size: 24px;
         font-weight: bold;
         text-align: center;
         color: white;
         border-bottom: 3px solid #17224D;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
         border-radius: 8px;
     }
@@ -30,19 +30,31 @@
     .container-custom {
         max-width: 100%;
         margin: auto;
+        padding: 0 10px;
     }
 
     .card {
         border-radius: 12px;
         box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
         background: rgba(255, 255, 255, 0.95);
-        padding: 30px;
-        margin-bottom: 50px;
+        padding: 20px;
+        margin-bottom: 40px;
+        overflow-x: auto;
     }
 
     .table-responsive-custom {
-        overflow-x: auto;
         width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+    }
+
+    .table {
+        width: 100%;
+        min-width: 900px; 
+        white-space: nowrap;
+        background: rgba(255, 255, 255, 0.95);
+        border-collapse: collapse;
     }
 
     .table-responsive-custom table {
@@ -50,22 +62,15 @@
         white-space: nowrap;
     }
 
-    .table {
-        min-width: 1400px;
-        width: 100%;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.95);
-        white-space: nowrap;
-    }
 
     .table thead {
         background-color: #17224D;
         color: white;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .table th, .table td {
-        padding: 12px;
+        padding: 10px;
         border: 1px solid #17224D;
         vertical-align: middle;
     }
@@ -73,8 +78,8 @@
     .btn-primary {
         background-color: #17224D;
         border: none;
-        padding: 8px 12px;
-        font-size: 14px;
+        padding: 6px 10px;
+        font-size: 13px;
         font-weight: bold;
         border-radius: 6px;
         margin: 2px 0;
@@ -83,33 +88,51 @@
     .status-badge {
         display: inline-block;
         padding: 5px 10px;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: bold;
         border-radius: 12px;
         text-transform: capitalize;
     }
 
-    .badge-approved {
-        background-color: #198754;
-        color: white;
-    }
+    .badge-approved { background-color: #198754; color: white; }
+    .badge-pending { background-color: #ffc107; color: black; }
+    .badge-submitted { background-color: #0d6efd; color: white; }
+    .badge-declined { background-color: #dc3545; color: white; }
 
-    .badge-pending {
-        background-color: #ffc107;
-        color: black;
-    }
+    /* ---------- MOBILE STYLES ---------- */
+    @media (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
 
-    .badge-submitted {
-        background-color: #0d6efd;
-        color: white;
-    }
+        .dashboard-header {
+            font-size: 20px;
+            padding: 20px;
+        }
 
-    .badge-declined {
-        background-color: #dc3545;
-        color: white;
+        .table {
+            font-size: 13px;
+            min-width: unset;
+            width: max-content;
+        }
+
+        .table th, .table td {
+            padding: 8px;
+        }
+
+        .btn-primary {
+            font-size: 12px;
+            padding: 5px 8px;
+        }
+
+        .status-badge {
+            font-size: 11px;
+            padding: 4px 8px;
+        }
     }
 </style>
 @endsection
+
 
 @section('content')
 <!-- DataTables CSS -->

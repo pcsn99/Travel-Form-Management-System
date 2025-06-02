@@ -125,6 +125,57 @@
         a:hover {
             opacity: 0.8;
         }
+
+
+    @media (max-width: 700px) {
+        .title-card h1 {
+            font-size: 24px;
+        }
+
+        .title-card p,
+        .login-form p,
+        label,
+        input,
+        button,
+        a {
+            font-size: 17px !important;
+        }
+
+        .login-container {
+            padding: 30px;
+        }
+
+        .login-form h2 {
+            font-size: 26px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            padding: 16px;
+            font-size: 18px;
+        }
+
+        .button-wrapper button {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+        }
+
+        .modal-content {
+            font-size: 17px;
+        }
+
+        .modal-body input {
+            padding: 14px;
+            font-size: 16px;
+        }
+
+        .modal-footer button {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+        }
+    }
     </style>
 </head>
 <body>
